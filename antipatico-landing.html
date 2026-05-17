@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ANTIPÁTICO — Radar de Pessoas Indesejadas</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Syne:wght@400;600;800&family=Syne+Mono&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --green: #00e676;
+    --red: #ff2d2d;
+    --orange: #ff8c00;
+    --yellow: #ffe600;
+    --bg: #060809;
+    --bg2: #0c1014;
+    --border: rgba(255,255,255,0.07);
+    --text: #d0d8e0;
+    --muted: #4a5568;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CURSOR */
+  #cursor {
+    position: fixed; width: 10px; height: 10px;
+    background: var(--green); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, background 0.2s;
+    box-shadow: 0 0 12px var(--green);
+  }
+  #cursor-ring {
+    position: fixed; width: 36px; height: 36px;
+    border: 1px solid rgba(0,230,118,0.4); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.18s ease, width 0.2s, height 0.2s;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1000; opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+    padding: 18px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(6,8,9,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900; font-size: 18px;
+    letter-spacing: 4px; color: #fff;
+  }
+  .nav-logo span { color: var(--green); }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a {
+    font-family: 'Syne Mono', monospace;
+    font-size: 11px; letter-spacing: 2px;
+    color: var(--muted); text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--green); }
+  .nav-cta {
+    background: var(--green); color: #000 !important;
+    padding: 8px 20px; border-radius: 4px;
+    font-weight: 700 !important; letter-spacing: 2px !important;
+  }
+  .nav-cta:hover { background: #00ff88 !important; color: #000 !important; }
+
+  /* SECTIONS */
+  section { position: relative; }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 100px 24px 60px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero-bg-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,230,118,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,230,118,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridShift 20s linear infinite;
+  }
+  @keyframes gridShift { from{background-position:0 0} to{background-position:60px 60px} }
+
+  .hero-glow {
+    position: absolute; width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,230,118,0.06) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    font-family: 'Syne Mono', monospace;
+    font-size: 10px; letter-spacing: 4px;
+    color: var(--green);
+    border: 1px solid rgba(0,230,118,0.3);
+    padding: 6px 16px; border-radius: 20px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s ease both;
+    background: rgba(0,230,118,0.05);
+  }
+
+  h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(42px, 8vw, 90px);
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: -1px;
+    color: #fff;
+    animation: fadeUp 0.9s 0.1s ease both;
+    position: relative; z-index: 1;
+  }
+  h1 .danger { color: var(--red); display: block; }
+
+  .hero-sub {
+    max-width: 540px;
+    font-size: 17px; line-height: 1.7;
+    color: #7a8a9a; margin: 24px auto 40px;
+    animation: fadeUp 1s 0.2s ease both;
+    position: relative; z-index: 1;
+  }
+
+  .hero-btns {
+    display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+    animation: fadeUp 1s 0.3s ease both;
+    position: relative; z-index: 1;
+  }
+  .btn-primary {
+    background: var(--green); color: #000;
+    padding: 14px 32px; border-radius: 6px;
+    font-family: 'Orbitron', monospace;
+    font-size: 12px; font-weight: 700; letter-spacing: 2px;
+    border: none; cursor: none;
+    transition: all 0.2s;
+    box-shadow: 0 0 24px rgba(0,230,118,0.3);
+  }
+  .btn-primary:hover { background: #00ff88; transform: translateY(-2px); box-shadow: 0 0 40px rgba(0,230,118,0.5); }
+  .btn-ghost {
+    background: transparent; color: var(--text);
+    padding: 14px 32px; border-radius: 6px;
+    font-family: 'Syne Mono', monospace;
+    font-size: 12px; letter-spacing: 2px;
+    border: 1px solid var(--border); cursor: none;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.2); color: #fff; }
+
+  .hero-scroll {
+    position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+    font-family: 'Syne Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: var(--muted);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    animation: bounce 2s infinite;
+  }
+  .hero-scroll::after {
+    content: ''; width: 1px; height: 40px;
+    background: linear-gradient(var(--muted), transparent);
+  }
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+  /* STORY */
+  #story {
+    padding: 120px 24px;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .section-tag {
+    font-family: 'Syne Mono', monospace;
+    font-size: 10px; letter-spacing: 4px;
+    color: var(--green); text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px; margin-top: 60px;
+  }
+  .story-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 32px 28px;
+    position: relative; overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .story-card:hover { border-color: rgba(0,230,118,0.2); }
+  .story-card::before {
+    content: attr(data-num);
+    position: absolute; top: -10px; right: 20px;
+    font-family: 'Orbitron', monospace;
+    font-size: 80px; font-weight: 900;
+    color: rgba(255,255,255,0.03);
+    line-height: 1;
+  }
+  .story-icon { font-size: 32px; margin-bottom: 16px; display: block; }
+  .story-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px; font-weight: 700;
+    color: #fff; letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .story-text { font-size: 14px; line-height: 1.8; color: #6a7a8a; }
+
+  /* RADAR DEMO SECTION */
+  #demo {
+    padding: 120px 24px;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .demo-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+  }
+  .demo-text .section-tag { margin-bottom: 20px; }
+  .demo-h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 900; color: #fff;
+    line-height: 1.2; margin-bottom: 24px;
+  }
+  .demo-desc { font-size: 15px; line-height: 1.9; color: #6a7a8a; margin-bottom: 32px; }
+  .demo-features { display: flex; flex-direction: column; gap: 14px; }
+  .demo-feat {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 14px 16px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: border-color 0.2s;
+  }
+  .demo-feat:hover { border-color: rgba(0,230,118,0.2); }
+  .feat-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    margin-top: 5px; flex-shrink: 0;
+  }
+  .feat-label { font-size: 13px; font-weight: 600; color: #ccc; margin-bottom: 4px; }
+  .feat-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* RADAR CANVAS */
+  .radar-wrapper {
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+  }
+  #radarCanvas {
+    border-radius: 50%;
+    border: 1px solid rgba(0,230,118,0.15);
+    box-shadow: 0 0 60px rgba(0,230,118,0.05), inset 0 0 60px rgba(0,0,0,0.5);
+  }
+  .radar-legend {
+    display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;
+  }
+  .leg-item {
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'Syne Mono', monospace;
+    font-size: 10px; letter-spacing: 1px; color: var(--muted);
+  }
+  .leg-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* COMO FUNCIONA */
+  #como {
+    padding: 120px 24px;
+    max-width: 900px; margin: 0 auto;
+    text-align: center;
+  }
+  .como-h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(22px, 3vw, 34px);
+    font-weight: 900; color: #fff;
+    margin-bottom: 16px;
+  }
+  .como-sub { font-size: 15px; color: #6a7a8a; margin-bottom: 70px; }
+  .steps {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 2px; position: relative;
+  }
+  .steps::before {
+    content: '';
+    position: absolute; top: 32px; left: 12.5%; right: 12.5%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,230,118,0.3), transparent);
+  }
+  .step {
+    padding: 28px 20px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .step:hover { border-color: rgba(0,230,118,0.2); transform: translateY(-4px); }
+  .step-num {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(0,230,118,0.1);
+    border: 1px solid rgba(0,230,118,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Orbitron', monospace;
+    font-size: 16px; font-weight: 900; color: var(--green);
+    margin: 0 auto 20px;
+  }
+  .step-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px; font-weight: 700;
+    color: #fff; letter-spacing: 1px; margin-bottom: 10px;
+  }
+  .step-text { font-size: 13px; color: #6a7a8a; line-height: 1.7; }
+
+  /* PRICING */
+  #pricing {
+    padding: 120px 24px;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+  }
+  .pricing-inner { max-width: 1000px; margin: 0 auto; text-align: center; }
+  .pricing-h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(24px, 3vw, 38px);
+    font-weight: 900; color: #fff; margin-bottom: 14px;
+  }
+  .pricing-sub { font-size: 15px; color: #6a7a8a; margin-bottom: 60px; }
+  .plans {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; align-items: start;
+  }
+  .plan {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 40px 28px 36px;
+    position: relative; text-align: left;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .plan:hover { transform: translateY(-4px); }
+  .plan.featured {
+    border-color: rgba(0,230,118,0.4);
+    background: rgba(0,230,118,0.03);
+    transform: translateY(-8px);
+  }
+  .plan.featured:hover { transform: translateY(-12px); }
+  .plan-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--green); color: #000;
+    font-family: 'Orbitron', monospace;
+    font-size: 9px; font-weight: 900; letter-spacing: 2px;
+    padding: 4px 14px; border-radius: 20px;
+    white-space: nowrap;
+  }
+  .plan-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px; letter-spacing: 3px; color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .plan-price {
+    display: flex; align-items: baseline; gap: 4px;
+    margin-bottom: 8px;
+  }
+  .price-val {
+    font-family: 'Orbitron', monospace;
+    font-size: 44px; font-weight: 900; color: #fff;
+    line-height: 1;
+  }
+  .price-cur {
+    font-family: 'Syne Mono', monospace;
+    font-size: 16px; color: var(--muted);
+    align-self: flex-start; margin-top: 8px;
+  }
+  .price-per {
+    font-size: 12px; color: var(--muted);
+    font-family: 'Syne Mono', monospace;
+  }
+  .plan-desc {
+    font-size: 13px; color: #6a7a8a;
+    margin-bottom: 28px; line-height: 1.6;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .plan-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+  .plan-features li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 13px; color: #8a9aaa; line-height: 1.5;
+  }
+  .plan-features li .check { color: var(--green); flex-shrink: 0; margin-top: 1px; }
+  .plan-features li .cross { color: #333; flex-shrink: 0; margin-top: 1px; }
+  .plan-features li.disabled { opacity: 0.4; }
+  .plan-btn {
+    width: 100%;
+    padding: 13px;
+    font-family: 'Orbitron', monospace;
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    border-radius: 6px; cursor: none;
+    transition: all 0.2s;
+  }
+  .plan-btn.primary {
+    background: var(--green); color: #000; border: none;
+    box-shadow: 0 0 24px rgba(0,230,118,0.2);
+  }
+  .plan-btn.primary:hover { background: #00ff88; box-shadow: 0 0 40px rgba(0,230,118,0.4); }
+  .plan-btn.ghost {
+    background: transparent; color: #aaa;
+    border: 1px solid var(--border);
+  }
+  .plan-btn.ghost:hover { border-color: rgba(255,255,255,0.2); color: #fff; }
+
+  .pricing-note {
+    margin-top: 40px;
+    font-family: 'Syne Mono', monospace;
+    font-size: 11px; color: var(--muted); letter-spacing: 1px;
+  }
+
+  /* ALERT TICKER */
+  .ticker {
+    background: rgba(255,45,45,0.08);
+    border-top: 1px solid rgba(255,45,45,0.2);
+    border-bottom: 1px solid rgba(255,45,45,0.2);
+    padding: 10px 0; overflow: hidden;
+    position: relative;
+  }
+  .ticker-inner {
+    display: flex; gap: 60px;
+    animation: ticker 20s linear infinite;
+    white-space: nowrap;
+  }
+  .ticker-item {
+    font-family: 'Syne Mono', monospace;
+    font-size: 11px; letter-spacing: 2px;
+    color: var(--red); display: flex; align-items: center; gap: 8px;
+  }
+  @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* TESTIMONIALS */
+  #depoimentos {
+    padding: 120px 24px;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .dep-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; margin-top: 60px;
+  }
+  .dep-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 28px 24px;
+    transition: border-color 0.3s;
+  }
+  .dep-card:hover { border-color: rgba(0,230,118,0.15); }
+  .dep-stars { color: var(--green); font-size: 13px; margin-bottom: 14px; letter-spacing: 2px; }
+  .dep-text { font-size: 14px; color: #8a9aaa; line-height: 1.8; margin-bottom: 20px; font-style: italic; }
+  .dep-author { display: flex; align-items: center; gap: 12px; }
+  .dep-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(0,230,118,0.1);
+    border: 1px solid rgba(0,230,118,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .dep-name { font-size: 13px; font-weight: 700; color: #ccc; }
+  .dep-role { font-size: 11px; color: var(--muted); font-family: 'Syne Mono', monospace; }
+
+  /* FAQ */
+  #faq {
+    padding: 100px 24px;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+  }
+  .faq-inner { max-width: 700px; margin: 0 auto; }
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+    padding: 24px 0;
+  }
+  .faq-q {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px; font-weight: 700; color: #ddd;
+    cursor: none; display: flex; justify-content: space-between; align-items: center;
+    gap: 16px;
+    transition: color 0.2s;
+  }
+  .faq-q:hover { color: var(--green); }
+  .faq-q .arrow { transition: transform 0.3s; color: var(--muted); font-size: 18px; }
+  .faq-q.open .arrow { transform: rotate(45deg); color: var(--green); }
+  .faq-a {
+    font-size: 14px; color: #6a7a8a; line-height: 1.8;
+    max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s;
+  }
+  .faq-a.open { max-height: 200px; padding-top: 14px; }
+
+  /* CTA */
+  #cta {
+    padding: 140px 24px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  #cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(0,230,118,0.07) 0%, transparent 70%);
+  }
+  .cta-h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(28px, 5vw, 56px);
+    font-weight: 900; color: #fff;
+    margin-bottom: 20px; position: relative; z-index: 1;
+  }
+  .cta-sub { font-size: 16px; color: #6a7a8a; margin-bottom: 40px; position: relative; z-index: 1; }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 24px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .footer-logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px; font-weight: 900; letter-spacing: 3px; color: #333;
+  }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a {
+    font-family: 'Syne Mono', monospace;
+    font-size: 10px; letter-spacing: 2px; color: #333;
+    text-decoration: none; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--green); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* MOBILE */
+  @media(max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    .story-grid, .plans, .dep-grid { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .demo-inner { grid-template-columns: 1fr; }
+    .plan.featured { transform: none; }
+    body { cursor: auto; }
+    #cursor, #cursor-ring { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">ANTI<span>PÁTICO</span></div>
+  <div class="nav-links">
+    <a href="#demo">Como funciona</a>
+    <a href="#pricing">Planos</a>
+    <a href="#faq">FAQ</a>
+    <a href="#pricing" class="nav-cta">COMEÇAR GRÁTIS</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-badge">● SISTEMA ATIVO · BETA ABERTO</div>
+  <h1>
+    NUNCA MAIS
+    <span class="danger">ENCONTROS</span>
+    INDESEJADOS.
+  </h1>
+  <p class="hero-sub">
+    Radar em tempo real que detecta quando pessoas que você prefere evitar estão se aproximando. Ex-namorados, parentes chatos, ex-chefes — você avisa antes de cruzar o caminho.
+  </p>
+  <div class="hero-btns">
+    <button class="btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">ATIVAR RADAR GRÁTIS</button>
+    <button class="btn-ghost" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">VER COMO FUNCIONA</button>
+  </div>
+
+  <div class="hero-scroll">ROLAR</div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner" id="tickerInner"></div>
+</div>
+
+<!-- STORY -->
+<section id="story">
+  <div class="section-tag reveal">// O PROBLEMA</div>
+  <h2 style="font-family:'Orbitron',monospace;font-size:clamp(22px,3vw,36px);font-weight:900;color:#fff;max-width:600px;" class="reveal">
+    Já sentiu aquele frio na barriga no corredor do mercado?
+  </h2>
+
+  <div class="story-grid reveal">
+    <div class="story-card" data-num="01">
+      <span class="story-icon">💔</span>
+      <div class="story-title">O EX QUE NÃO SOME</div>
+      <div class="story-text">Você finalmente está bem. Aí entra no shopping e lá está ele — com outra pessoa, obviamente. Seu dia acabou.</div>
+    </div>
+    <div class="story-card" data-num="02">
+      <span class="story-icon">😬</span>
+      <div class="story-title">A PARENTE CURIOSA</div>
+      <div class="story-text">"Quando você vai casar?" "Tá engordando, né?" Sua tia não precisa saber que você estava no mesmo supermercado.</div>
+    </div>
+    <div class="story-card" data-num="03">
+      <span class="story-icon">😤</span>
+      <div class="story-title">O CHEFE ANTIGO</div>
+      <div class="story-text">Você pediu demissão na raça. Cruzar com ele na academia às 7h da manhã não estava nos planos.</div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section id="demo">
+  <div class="demo-inner">
+    <div class="demo-text reveal">
+      <div class="section-tag">// O RADAR</div>
+      <h2 class="demo-h2">Tecnologia militar. Uso civil. Para fugir de gente chata.</h2>
+      <p class="demo-desc">
+        O ANTIPÁTICO cruza sua localização GPS com a das pessoas cadastradas. Quando alguém se aproxima, você recebe alertas antes de qualquer encontro indesejado.
+      </p>
+      <div class="demo-features">
+        <div class="demo-feat">
+          <div class="feat-dot" style="background:var(--green)"></div>
+          <div>
+            <div class="feat-label">RAIO DE 2.5KM</div>
+            <div class="feat-desc">Monitoramento contínuo em tempo real, atualizado a cada 30 segundos.</div>
+          </div>
+        </div>
+        <div class="demo-feat">
+          <div class="feat-dot" style="background:var(--orange)"></div>
+          <div>
+            <div class="feat-label">4 NÍVEIS DE ALERTA</div>
+            <div class="feat-desc">De SEGURO a PERIGO — você sabe exatamente quanto tempo tem para escapar.</div>
+          </div>
+        </div>
+        <div class="demo-feat">
+          <div class="feat-dot" style="background:var(--red)"></div>
+          <div>
+            <div class="feat-label">NOTIFICAÇÃO SILENCIOSA</div>
+            <div class="feat-desc">Vibração discreta. Ninguém precisa saber que você está monitorando ninguém.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="radar-wrapper reveal">
+      <canvas id="radarCanvas" width="300" height="300"></canvas>
+      <div class="radar-legend">
+        <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div>SEGURO +1.5km</div>
+        <div class="leg-item"><div class="leg-dot" style="background:var(--yellow)"></div>ATENÇÃO</div>
+        <div class="leg-item"><div class="leg-dot" style="background:var(--orange)"></div>ALERTA</div>
+        <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div>PERIGO -300m</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section id="como">
+  <div class="section-tag reveal" style="text-align:center">// COMO FUNCIONA</div>
+  <h2 class="como-h2 reveal">3 passos para nunca mais ser pego de surpresa</h2>
+  <p class="como-sub reveal">Simples como bloquear alguém. Só que funciona no mundo real.</p>
+
+  <div class="steps reveal">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-title">BAIXE O APP</div>
+      <div class="step-text">Disponível para iOS e Android. Cadastro em 30 segundos com Google ou Apple.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-title">CADASTRE AS AMEAÇAS</div>
+      <div class="step-text">Adicione até 3 pessoas no plano grátis. Coloque nome, foto e apelido.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-title">ATIVE O RADAR</div>
+      <div class="step-text">O app roda em background. Você vive sua vida. Nós cuidamos das ameaças.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-title">FUJA EM PAZ</div>
+      <div class="step-text">Alerta chega antes do encontro. Mude de corredor. Vire na esquina. Salvo.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="pricing-inner">
+    <div class="section-tag reveal" style="text-align:center">// PLANOS</div>
+    <h2 class="pricing-h2 reveal">Quanto custa sua paz?</h2>
+    <p class="pricing-sub reveal">Comece grátis. Escale conforme a lista de inimigos cresce.</p>
+
+    <div class="plans reveal">
+
+      <!-- FREE -->
+      <div class="plan">
+        <div class="plan-name">MODO SOBREVIVÊNCIA</div>
+        <div class="plan-price">
+          <span class="price-cur">R$</span>
+          <span class="price-val">0</span>
+        </div>
+        <div class="price-per" style="margin-bottom:12px">para sempre grátis</div>
+        <div class="plan-desc">Para quem tem poucos inimigos. Ou só um ex muito persistente.</div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span> Até 3 pessoas monitoradas</li>
+          <li><span class="check">✓</span> Raio de 1km</li>
+          <li><span class="check">✓</span> Alertas básicos no app</li>
+          <li><span class="check">✓</span> Radar em tempo real</li>
+          <li class="disabled"><span class="cross">✗</span> Rota de fuga automática</li>
+          <li class="disabled"><span class="cross">✗</span> Histórico de avistamentos</li>
+          <li class="disabled"><span class="cross">✗</span> Modo stealth avançado</li>
+        </ul>
+        <button class="plan-btn ghost">COMEÇAR GRÁTIS</button>
+      </div>
+
+      <!-- PRO -->
+      <div class="plan featured">
+        <div class="plan-badge">MAIS POPULAR</div>
+        <div class="plan-name">MODO OPERACIONAL</div>
+        <div class="plan-price">
+          <span class="price-cur">R$</span>
+          <span class="price-val">19</span>
+        </div>
+        <div class="price-per" style="margin-bottom:12px">/mês · cancele quando quiser</div>
+        <div class="plan-desc">Para quem tem uma vida social complicada e não tem tempo pra drama.</div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span> Até <strong style="color:#fff">15 pessoas</strong> monitoradas</li>
+          <li><span class="check">✓</span> Raio de 2.5km</li>
+          <li><span class="check">✓</span> Alertas push + vibração silenciosa</li>
+          <li><span class="check">✓</span> <strong style="color:#fff">Rota de fuga automática</strong></li>
+          <li><span class="check">✓</span> Histórico dos últimos 30 dias</li>
+          <li><span class="check">✓</span> Modo stealth (sem ícone na tela)</li>
+          <li class="disabled"><span class="cross">✗</span> Múltiplos perfis / família</li>
+        </ul>
+        <button class="plan-btn primary">ASSINAR AGORA</button>
+      </div>
+
+      <!-- ELITE -->
+      <div class="plan">
+        <div class="plan-name">MODO ELITE</div>
+        <div class="plan-price">
+          <span class="price-cur">R$</span>
+          <span class="price-val">49</span>
+        </div>
+        <div class="price-per" style="margin-bottom:12px">/mês por família</div>
+        <div class="plan-desc">Para famílias inteiras que precisam de proteção coletiva de ex e parentes chatos.</div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span> <strong style="color:#fff">Ilimitado</strong> — sem teto de pessoas</li>
+          <li><span class="check">✓</span> Raio de 5km</li>
+          <li><span class="check">✓</span> Até 5 perfis de usuário</li>
+          <li><span class="check">✓</span> Alertas compartilhados na família</li>
+          <li><span class="check">✓</span> Histórico completo + exportação</li>
+          <li><span class="check">✓</span> Inteligência preditiva de rotas</li>
+          <li><span class="check">✓</span> Suporte prioritário 24/7</li>
+        </ul>
+        <button class="plan-btn ghost">ASSINAR ELITE</button>
+      </div>
+
+    </div>
+
+    <p class="pricing-note reveal">
+      ★ Pagamento via PIX, cartão ou boleto · Sem fidelidade · Cancele em 1 clique
+    </p>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section id="depoimentos">
+  <div class="section-tag reveal">// QUEM JÁ ESCAPOU</div>
+  <h2 style="font-family:'Orbitron',monospace;font-size:clamp(20px,3vw,32px);font-weight:900;color:#fff;" class="reveal">
+    Histórias reais de sobrevivência social
+  </h2>
+
+  <div class="dep-grid reveal">
+    <div class="dep-card">
+      <div class="dep-stars">★★★★★</div>
+      <p class="dep-text">"Meu ex estava no mesmo corredor do Extra. O ANTIPÁTICO alertou 40 metros antes. Virei no azeite e fui embora sem drama. Produto essencial."</p>
+      <div class="dep-author">
+        <div class="dep-avatar">🙍‍♀️</div>
+        <div>
+          <div class="dep-name">Camila R.</div>
+          <div class="dep-role">São Paulo · Plano Pro</div>
+        </div>
+      </div>
+    </div>
+    <div class="dep-card">
+      <div class="dep-stars">★★★★★</div>
+      <p class="dep-text">"Cadastrei meu chefe antigo e minha sogra. Dois pássaros, uma pedrada. Nunca mais passei por situação constrangedora no shopping."</p>
+      <div class="dep-author">
+        <div class="dep-avatar">🙍‍♂️</div>
+        <div>
+          <div class="dep-name">Roberto M.</div>
+          <div class="dep-role">Belo Horizonte · Plano Elite</div>
+        </div>
+      </div>
+    </div>
+    <div class="dep-card">
+      <div class="dep-stars">★★★★☆</div>
+      <p class="dep-text">"Funciona demais. O único problema é que eu precisava de mais de 3 pessoas no grátis. Assinei o Pro e agora tenho os 15 slots preenchidos com orgulho."</p>
+      <div class="dep-author">
+        <div class="dep-avatar">🙍‍♀️</div>
+        <div>
+          <div class="dep-name">Fernanda K.</div>
+          <div class="dep-role">Curitiba · Plano Pro</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="faq-inner">
+    <div class="section-tag reveal" style="text-align:center">// PERGUNTAS</div>
+    <h2 style="font-family:'Orbitron',monospace;font-size:clamp(20px,2.5vw,28px);font-weight:900;color:#fff;text-align:center;margin-bottom:50px;" class="reveal">
+      Dúvidas frequentes
+    </h2>
+
+    <div id="faqList"></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <h2 class="cta-h2">Pronto para nunca ser<br>pego de surpresa?</h2>
+  <p class="cta-sub">3 pessoas grátis. Sem cartão. Sem desculpa.</p>
+  <button class="btn-primary" style="font-size:14px;padding:18px 48px;" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">
+    ATIVAR MEU RADAR AGORA
+  </button>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">ANTIPÁTICO</div>
+  <div class="footer-links">
+    <a href="#">Privacidade</a>
+    <a href="#">Termos</a>
+    <a href="#">Contato</a>
+    <a href="#">Blog</a>
+  </div>
+  <div style="font-family:'Syne Mono',monospace;font-size:10px;color:#222;letter-spacing:2px;">
+    © 2026 ANTIPÁTICO LTDA
+  </div>
+</footer>
+
+<script>
+// CURSOR
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  setTimeout(() => {
+    ring.style.left = e.clientX + 'px';
+    ring.style.top = e.clientY + 'px';
+  }, 60);
+});
+document.querySelectorAll('button, a').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.transform = 'translate(-50%,-50%) scale(2)'; ring.style.width = '60px'; ring.style.height = '60px'; });
+  el.addEventListener('mouseleave', () => { cursor.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.width = '36px'; ring.style.height = '36px'; });
+});
+
+// TICKER
+const alerts = [
+  "⚠ EX-NAMORADO DETECTADO A 400M — SAÍDA B RECOMENDADA",
+  "⚠ TIA MARLENE A 200M — ABANDONE O CARRINHO",
+  "⚠ CHEFE ANTIGO NO ESTACIONAMENTO — AGUARDE 5 MIN",
+  "⚠ COLEGA DA ESCOLA NO CAIXA 3 — USE O SELF-CHECKOUT",
+  "⚠ EX-MELHOR-AMIGA DETECTADA — ROTA DE FUGA CALCULANDO",
+  "✓ ÁREA LIBERADA — RISCO MÍNIMO DETECTADO",
+];
+const ti = document.getElementById('tickerInner');
+[...alerts,...alerts].forEach(t => {
+  const el = document.createElement('div');
+  el.className = 'ticker-item';
+  el.innerHTML = `<span>●</span>${t}`;
+  ti.appendChild(el);
+});
+
+// RADAR CANVAS
+const canvas = document.getElementById('radarCanvas');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height, CX = W/2, CY = H/2, R = W/2 - 10;
+
+const threats = [
+  { name: "💔 Ex", angle: 0.8, dist: 0.35, speed: 0.004, color: '#ff2d2d' },
+  { name: "😬 Tia", angle: 2.3, dist: 0.7, speed: -0.003, color: '#00e676' },
+  { name: "😤 Chefe", angle: 4.1, dist: 0.55, speed: 0.005, color: '#ff8c00' },
+  { name: "🙄 Colega", angle: 5.5, dist: 0.85, speed: -0.002, color: '#00e676' },
+];
+let sweep = 0;
+
+function getColor(dist) {
+  if (dist < 0.35) return '#ff2d2d';
+  if (dist < 0.55) return '#ff8c00';
+  if (dist < 0.75) return '#ffe600';
+  return '#00e676';
+}
+
+function drawRadar() {
+  ctx.clearRect(0, 0, W, H);
+
+  // bg
+  ctx.fillStyle = '#060c0e';
+  ctx.beginPath(); ctx.arc(CX, CY, R, 0, Math.PI*2); ctx.fill();
+
+  // rings
+  for (let i = 1; i <= 4; i++) {
+    ctx.beginPath();
+    ctx.arc(CX, CY, R * i/4, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(0,230,118,0.12)';
+    ctx.lineWidth = 1; ctx.stroke();
+  }
+
+  // crosshairs
+  ctx.strokeStyle = 'rgba(0,230,118,0.08)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(CX-R, CY); ctx.lineTo(CX+R, CY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(CX, CY-R); ctx.lineTo(CX, CY+R); ctx.stroke();
+
+  // sweep gradient
+  const grad = ctx.createConicalGradient ? null : null;
+  ctx.save();
+  ctx.translate(CX, CY);
+  ctx.rotate(sweep);
+  const sweepGrad = ctx.createLinearGradient(0, 0, R, 0);
+  sweepGrad.addColorStop(0, 'rgba(0,230,118,0.5)');
+  sweepGrad.addColorStop(1, 'rgba(0,230,118,0)');
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.arc(0, 0, R, -0.3, 0);
+  ctx.closePath();
+  ctx.fillStyle = sweepGrad;
+  ctx.fill();
+
+  // sweep line
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(R, 0);
+  ctx.strokeStyle = 'rgba(0,230,118,0.9)';
+  ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.restore();
+
+  // threats
+  threats.forEach(t => {
+    t.angle += t.speed;
+    const dist = t.dist + Math.sin(Date.now()*0.0005 + t.angle) * 0.08;
+    const x = CX + Math.cos(t.angle) * R * dist;
+    const y = CY + Math.sin(t.angle) * R * dist;
+    const col = getColor(dist);
+
+    // glow
+    const grd = ctx.createRadialGradient(x, y, 0, x, y, 14);
+    grd.addColorStop(0, col + '66');
+    grd.addColorStop(1, 'transparent');
+    ctx.beginPath(); ctx.arc(x, y, 14, 0, Math.PI*2);
+    ctx.fillStyle = grd; ctx.fill();
+
+    // dot
+    ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI*2);
+    ctx.fillStyle = col;
+    ctx.shadowColor = col; ctx.shadowBlur = 10;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // label
+    ctx.font = '11px Syne Mono, monospace';
+    ctx.fillStyle = col + 'cc';
+    ctx.fillText(t.name, x + 8, y - 6);
+  });
+
+  // center — YOU
+  ctx.beginPath(); ctx.arc(CX, CY, 6, 0, Math.PI*2);
+  ctx.fillStyle = '#fff';
+  ctx.shadowColor = '#fff'; ctx.shadowBlur = 12;
+  ctx.fill(); ctx.shadowBlur = 0;
+
+  ctx.font = '9px Syne Mono, monospace';
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.fillText('VOCÊ', CX + 9, CY + 4);
+
+  sweep += 0.025;
+  requestAnimationFrame(drawRadar);
+}
+drawRadar();
+
+// FAQ
+const faqs = [
+  { q: "A outra pessoa precisa instalar o app?", a: "Sim — para que o cruzamento de localização funcione, a pessoa monitorada precisa ter o ANTIPÁTICO instalado. Mas não precisa saber que você a está monitorando; ela só vê o app como um app de 'localização social'." },
+  { q: "Minha localização fica salva em algum servidor?", a: "Sua localização GPS é processada em tempo real e nunca armazenada permanentemente. Usamos criptografia ponta a ponta. Leia nossa política de privacidade para detalhes completos." },
+  { q: "Funciona em qualquer lugar?", a: "Sim, em qualquer lugar com sinal GPS ou Wi-Fi. Funciona em shoppings, supermercados, parques, aeroportos — em qualquer ambiente. A precisão pode variar em locais fechados com pouco sinal." },
+  { q: "Posso cancelar a qualquer momento?", a: "Sim, sem multa e sem burocracia. Cancele direto no app em menos de 1 minuto. Você continua com acesso até o fim do período pago." },
+  { q: "E se eu quiser adicionar mais de 15 pessoas no Pro?", a: "O plano Elite oferece monitoramento ilimitado para até 5 perfis de usuário. Ideal para famílias com ex-parceiros, sogras e amigos da escola problemáticos em abundância." },
+];
+
+const faqList = document.getElementById('faqList');
+faqs.forEach((f, i) => {
+  const item = document.createElement('div');
+  item.className = 'faq-item';
+  item.innerHTML = `
+    <div class="faq-q" id="fq${i}">
+      ${f.q}
+      <span class="arrow">+</span>
+    </div>
+    <div class="faq-a" id="fa${i}">${f.a}</div>
+  `;
+  faqList.appendChild(item);
+  item.querySelector('.faq-q').addEventListener('click', () => {
+    const q = document.getElementById('fq'+i);
+    const a = document.getElementById('fa'+i);
+    const isOpen = a.classList.contains('open');
+    document.querySelectorAll('.faq-a').forEach(el => el.classList.remove('open'));
+    document.querySelectorAll('.faq-q').forEach(el => el.classList.remove('open'));
+    if (!isOpen) { a.classList.add('open'); q.classList.add('open'); }
+  });
+});
+
+// SCROLL REVEAL
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+revealEls.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
