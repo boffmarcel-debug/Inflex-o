@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Formação em Consultoria de Investimentos — GuiaInvest</title>
+<meta name="description" content="O programa que forma consultores de investimentos que o mercado de alta renda respeita. Da certificação à atuação real — pela GuiaInvest." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============== GUIAINVEST BRAND TOKENS ============== */
+  :root {
+    /* Cores institucionais GuiaInvest */
+    --gi-green: #A4D900;          /* Verde-lima principal da marca */
+    --gi-green-deep: #8BBA00;     /* Verde mais escuro para hover/depth */
+    --gi-green-soft: #E8F5C2;     /* Verde claro para backgrounds suaves */
+    --gi-green-bg: #F4FAE0;       /* Background bem suave */
+    --gi-dark: #0E1413;           /* Quase preto, com leve toque esverdeado */
+    --gi-graphite: #1F2725;       /* Cinza-grafite para seções escuras */
+    --gi-ink: #14201D;            /* Texto principal */
+    --gi-text: #2A2F2D;           /* Texto corpo */
+    --gi-muted: #6B7672;          /* Texto secundário */
+    --gi-line: #E5E7E3;           /* Linhas/divisores */
+    --gi-line-dark: rgba(255,255,255,0.12);
+    --gi-paper: #FFFFFF;
+    --gi-paper-warm: #FAFAF7;     /* Off-white sutil */
+    --gi-alert: #D9482F;
+
+    /* Tipografia */
+    --sans: 'Manrope', -apple-system, system-ui, sans-serif;
+    --serif: 'Fraunces', Georgia, serif;
+    --mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+
+    /* Layout */
+    --maxw: 1280px;
+    --gutter: clamp(20px, 4vw, 64px);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--gi-paper);
+    color: var(--gi-text);
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--gi-green); color: var(--gi-dark); }
+
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+
+  /* ============== TYPOGRAPHY ============== */
+  .display {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-variation-settings: "opsz" 144;
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    color: var(--gi-ink);
+  }
+  .display .it {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--gi-green-deep);
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gi-green-deep);
+  }
+
+  .lead {
+    font-size: clamp(18px, 1.5vw, 21px);
+    line-height: 1.55;
+    color: var(--gi-text);
+    font-weight: 400;
+  }
+
+  strong { font-weight: 600; color: var(--gi-ink); }
+
+  /* ============== LOGO ============== */
+  .logo-gi {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--sans);
+  }
+  .logo-mark {
+    width: 36px; height: 36px;
+    background: var(--gi-green);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+    font-size: 17px;
+    color: var(--gi-dark);
+    letter-spacing: -0.04em;
+  }
+  .logo-text {
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    color: var(--gi-ink);
+  }
+  .logo-text span { color: var(--gi-green-deep); font-weight: 500; }
+
+  /* dark contexts */
+  .on-dark .logo-text { color: var(--gi-paper); }
+  .on-dark .logo-text span { color: var(--gi-green); }
+
+  /* ============== NAV ============== */
+  nav.top {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 50;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: rgba(255, 255, 255, 0.85);
+    border-bottom: 1px solid var(--gi-line);
+  }
+  nav.top .wrap {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 16px; padding-bottom: 16px;
+  }
+  .nav-cta {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 22px;
+    background: var(--gi-green);
+    color: var(--gi-dark);
+    border-radius: 999px;
+    transition: all .25s ease;
+    letter-spacing: -0.005em;
+  }
+  .nav-cta:hover { background: var(--gi-green-deep); color: var(--gi-dark); }
+
+  /* ============== HERO ============== */
+  .hero {
+    position: relative;
+    padding: 160px 0 120px;
+    overflow: hidden;
+    background: var(--gi-paper);
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -10%; right: -15%;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, var(--gi-green-soft) 0%, transparent 60%);
+    pointer-events: none;
+    opacity: 0.7;
+  }
+  /* Grid pattern */
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--gi-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--gi-line) 1px, transparent 1px);
+    background-size: 80px 80px;
+    background-position: -1px -1px;
+    mask-image: linear-gradient(180deg, rgba(0,0,0,0.5), transparent 80%);
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.5), transparent 80%);
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  .hero .wrap { position: relative; z-index: 2; }
+
+  .hero-meta {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    margin-bottom: 48px;
+    align-items: center;
+  }
+  .hero-meta .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--gi-green);
+    box-shadow: 0 0 0 4px rgba(164, 217, 0, 0.2);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(164, 217, 0, 0.2); }
+    50% { box-shadow: 0 0 0 10px rgba(164, 217, 0, 0); }
+  }
+
+  .partnership-badge {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: var(--gi-green-bg);
+    border: 1px solid var(--gi-green-soft);
+    border-radius: 999px;
+    padding: 8px 16px 8px 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gi-ink);
+    margin-bottom: 32px;
+  }
+  .partnership-badge .mark {
+    width: 18px; height: 18px;
+    background: var(--gi-green);
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .hero h1 {
+    font-size: clamp(42px, 7vw, 108px);
+    max-width: 14ch;
+    margin-bottom: 36px;
+  }
+
+  .hero .lead {
+    max-width: 60ch;
+    margin-bottom: 48px;
+    color: var(--gi-text);
+  }
+
+  /* ============== BUTTONS ============== */
+  .cta-group {
+    display: flex; flex-wrap: wrap; gap: 14px; align-items: center;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 18px 30px;
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.005em;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    transition: all .25s ease;
+    position: relative;
+  }
+  .btn-primary {
+    background: var(--gi-green);
+    color: var(--gi-dark);
+  }
+  .btn-primary::after {
+    content: "→";
+    font-size: 16px;
+    transition: transform .25s ease;
+  }
+  .btn-primary:hover {
+    background: var(--gi-green-deep);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px -8px rgba(164, 217, 0, 0.5);
+  }
+  .btn-primary:hover::after { transform: translateX(4px); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--gi-ink);
+    border: 1px solid var(--gi-line);
+  }
+  .btn-ghost:hover { border-color: var(--gi-ink); }
+
+  .btn-dark {
+    background: var(--gi-dark);
+    color: var(--gi-paper);
+  }
+  .btn-dark:hover { background: var(--gi-graphite); }
+
+  .cta-micro {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gi-muted);
+    margin-top: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .cta-micro .alert {
+    width: 6px; height: 6px;
+    background: var(--gi-alert);
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  /* ============== ARC MARKER ============== */
+  .arc-marker {
+    display: flex; align-items: center; gap: 20px;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--gi-line);
+  }
+  .arc-num {
+    width: 64px; height: 64px;
+    background: var(--gi-green);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif);
+    font-weight: 500;
+    font-style: italic;
+    font-size: 32px;
+    color: var(--gi-dark);
+    letter-spacing: -0.02em;
+  }
+  .arc-info { display: flex; flex-direction: column; gap: 4px; }
+  .arc-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gi-muted);
+  }
+  .arc-title {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 22px;
+    color: var(--gi-ink);
+    letter-spacing: -0.01em;
+  }
+
+  /* ============== SECTIONS ============== */
+  section { padding: 120px 0; position: relative; }
+  section.alt { background: var(--gi-paper-warm); }
+  section.dark {
+    background: var(--gi-dark);
+    color: var(--gi-paper);
+  }
+  section.dark .display { color: var(--gi-paper); }
+  section.dark .lead { color: rgba(255,255,255,0.78); }
+  section.dark strong { color: var(--gi-paper); }
+
+  .section-title {
+    font-size: clamp(38px, 5.5vw, 76px);
+    max-width: 18ch;
+    margin-bottom: 32px;
+  }
+
+  /* ============== ARCO 1: DOR ============== */
+  .dor-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .dor-list { display: grid; gap: 0; margin-top: 24px; }
+  .dor-item {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 20px;
+    padding: 28px 0;
+    border-top: 1px solid var(--gi-line);
+    align-items: start;
+  }
+  .dor-item:last-child { border-bottom: 1px solid var(--gi-line); }
+  .dor-item .marker {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--gi-green-deep);
+    letter-spacing: 0.1em;
+    font-weight: 500;
+    padding-top: 6px;
+  }
+  .dor-item p {
+    font-family: var(--serif);
+    font-size: 22px;
+    line-height: 1.4;
+    color: var(--gi-ink);
+    letter-spacing: -0.005em;
+    font-weight: 500;
+  }
+  .dor-item p em {
+    font-style: italic;
+    color: var(--gi-green-deep);
+    font-weight: 400;
+  }
+
+  /* ============== INFLEXAO BANNER (escuro) ============== */
+  .inflexao {
+    background: var(--gi-dark);
+    color: var(--gi-paper);
+    padding: 140px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .inflexao::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gi-green), transparent);
+  }
+  .inflexao::after {
+    content: "";
+    position: absolute;
+    bottom: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(164, 217, 0, 0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .inflexao .wrap { position: relative; z-index: 2; }
+  .inflexao .display { color: var(--gi-paper); }
+  .inflexao .display .it { color: var(--gi-green); }
+  .inflexao .lead { color: rgba(255,255,255,0.78); max-width: 60ch; }
+
+  /* ============== PILARES ============== */
+  .pilares {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin: 64px 0;
+  }
+  .pilar {
+    background: var(--gi-paper);
+    border: 1px solid var(--gi-line);
+    border-radius: 16px;
+    padding: 36px 32px;
+    transition: all .35s ease;
+    position: relative;
+  }
+  .pilar:hover {
+    border-color: var(--gi-green);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px -16px rgba(0,0,0,0.08);
+  }
+  .pilar-num {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gi-green-deep);
+    margin-bottom: 24px;
+    padding: 6px 12px;
+    background: var(--gi-green-bg);
+    border-radius: 999px;
+  }
+  .pilar h3 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 26px;
+    line-height: 1.15;
+    margin-bottom: 14px;
+    letter-spacing: -0.015em;
+    color: var(--gi-ink);
+  }
+  .pilar p {
+    color: var(--gi-text);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ============== CTA CALLOUT ============== */
+  .cta-callout {
+    background: var(--gi-dark);
+    color: var(--gi-paper);
+    border-radius: 20px;
+    padding: 56px;
+    margin: 80px 0 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-callout::before {
+    content: "";
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(164, 217, 0, 0.25) 0%, transparent 60%);
+  }
+  .cta-callout::after {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--gi-green);
+  }
+  .cta-callout .inner { position: relative; z-index: 2; }
+  .cta-callout h4 {
+    font-family: var(--serif);
+    font-size: clamp(28px, 3.6vw, 44px);
+    font-weight: 500;
+    line-height: 1.15;
+    max-width: 24ch;
+    margin-bottom: 16px;
+    letter-spacing: -0.015em;
+    color: var(--gi-paper);
+  }
+  .cta-callout h4 .it { font-style: italic; color: var(--gi-green); font-weight: 400; }
+  .cta-callout p {
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 32px;
+    max-width: 56ch;
+  }
+
+  /* ============== JORNADA / MÓDULOS ============== */
+  .jornada {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .modulos-lista { display: grid; gap: 0; }
+  .modulo {
+    display: grid;
+    grid-template-columns: 56px 1fr auto auto;
+    gap: 20px;
+    padding: 22px 0;
+    border-top: 1px solid var(--gi-line);
+    align-items: center;
+    transition: all .25s ease;
+    cursor: default;
+  }
+  .modulo:last-child { border-bottom: 1px solid var(--gi-line); }
+  .modulo:hover { padding-left: 12px; }
+  .modulo:hover .mod-title { color: var(--gi-green-deep); }
+  .modulo:hover .mod-arrow { color: var(--gi-green-deep); transform: translateX(4px); }
+  .mod-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gi-green-deep);
+    letter-spacing: 0.1em;
+    font-weight: 500;
+  }
+  .mod-title {
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--gi-ink);
+    transition: color .25s ease;
+  }
+  .mod-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--gi-muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    background: var(--gi-paper-warm);
+    border-radius: 999px;
+  }
+  .mod-arrow {
+    color: var(--gi-muted);
+    transition: all .25s ease;
+    font-size: 16px;
+  }
+
+  /* ============== VERSUS ============== */
+  .versus {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 64px;
+  }
+  .versus-col {
+    padding: 40px 36px;
+    border-radius: 16px;
+    border: 1px solid var(--gi-line);
+  }
+  .versus-col.before {
+    background: var(--gi-paper);
+  }
+  .versus-col.after {
+    background: var(--gi-dark);
+    color: var(--gi-paper);
+    border-color: var(--gi-dark);
+  }
+  .versus-col h5 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    font-weight: 600;
+  }
+  .versus-col.before h5 { color: var(--gi-alert); }
+  .versus-col.after h5 { color: var(--gi-green); }
+  .versus-col ul { list-style: none; display: grid; gap: 18px; }
+  .versus-col li {
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    gap: 14px;
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.4;
+    align-items: start;
+  }
+  .versus-col li::before {
+    content: "";
+    width: 8px; height: 8px;
+    margin-top: 11px;
+    border-radius: 50%;
+  }
+  .versus-col.before li::before { background: var(--gi-alert); }
+  .versus-col.after li::before { background: var(--gi-green); }
+  .versus-col.before li { color: var(--gi-ink); }
+  .versus-col.after li { color: var(--gi-paper); }
+
+  /* ============== STATS ============== */
+  .detalhes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: 72px;
+    padding-top: 56px;
+    border-top: 1px solid var(--gi-line);
+  }
+  section.dark .detalhes { border-top-color: var(--gi-line-dark); }
+  .detalhe-num {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(52px, 5vw, 76px);
+    color: var(--gi-green-deep);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  section.dark .detalhe-num { color: var(--gi-green); }
+  .detalhe-num .small { font-size: 0.45em; color: var(--gi-muted); margin-left: 4px; font-weight: 400; }
+  .detalhe p {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gi-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1.5;
+  }
+
+  /* ============== FINAL / HIRING DAY ============== */
+  .final {
+    background:
+      radial-gradient(ellipse at top, rgba(164, 217, 0, 0.12) 0%, transparent 50%),
+      var(--gi-dark);
+    color: var(--gi-paper);
+    padding: 160px 0 140px;
+    position: relative;
+    text-align: center;
+  }
+  .final::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 80%; max-width: 600px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gi-green), transparent);
+  }
+  .final .selo {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 10px 20px;
+    background: rgba(164, 217, 0, 0.12);
+    border: 1px solid rgba(164, 217, 0, 0.5);
+    border-radius: 999px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gi-green);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+  .final .selo .ping {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--gi-green);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  .final h2 {
+    font-size: clamp(44px, 6.5vw, 96px);
+    max-width: 18ch;
+    margin: 0 auto 28px;
+    color: var(--gi-paper);
+  }
+  .final .lead {
+    max-width: 56ch;
+    margin: 0 auto 40px;
+    color: rgba(255,255,255,0.8);
+  }
+  .final .cta-group { justify-content: center; }
+  .final .btn-primary { padding: 22px 38px; font-size: 16px; }
+
+  .hiring {
+    margin-top: 80px;
+    padding: 48px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(10px);
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 32px;
+    align-items: center;
+    text-align: left;
+  }
+  .hiring-icon {
+    width: 80px; height: 80px;
+    background: var(--gi-green);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 36px;
+    color: var(--gi-dark);
+    font-weight: 500;
+  }
+  .hiring h4 {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    color: var(--gi-paper);
+  }
+  .hiring h4 .it { font-style: italic; color: var(--gi-green); font-weight: 400; }
+  .hiring p { color: rgba(255,255,255,0.7); }
+
+  /* ============== FAQ ============== */
+  .faq { display: grid; gap: 0; max-width: 820px; margin: 56px auto 0; }
+  .faq-item {
+    border-top: 1px solid var(--gi-line);
+    padding: 28px 0;
+  }
+  .faq-item:last-child { border-bottom: 1px solid var(--gi-line); }
+  .faq-item summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--gi-ink);
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after {
+    content: "+";
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--gi-green-deep);
+    transition: transform .3s ease;
+    flex-shrink: 0;
+  }
+  .faq-item[open] summary::after { transform: rotate(45deg); }
+  .faq-item p {
+    color: var(--gi-text);
+    margin-top: 16px;
+    line-height: 1.65;
+    max-width: 70ch;
+  }
+
+  /* ============== FOOTER ============== */
+  footer {
+    background: var(--gi-dark);
+    color: rgba(255,255,255,0.6);
+    padding: 64px 0 40px;
+  }
+  footer .wrap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+  }
+  .copy {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.05em;
+    text-align: right;
+    max-width: 50ch;
+  }
+  footer .logo-mark { width: 32px; height: 32px; font-size: 15px; }
+
+  /* ============== ANIMATIONS ============== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1);
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ============== MOBILE ============== */
+  @media (max-width: 900px) {
+    .dor-grid, .jornada { grid-template-columns: 1fr; gap: 48px; }
+    .pilares { grid-template-columns: 1fr; }
+    .versus { grid-template-columns: 1fr; }
+    .detalhes { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .hiring { grid-template-columns: 1fr; padding: 32px; gap: 20px; text-align: center; }
+    .hiring-icon { margin: 0 auto; }
+    .hero { padding: 120px 0 80px; }
+    section { padding: 80px 0; }
+    .inflexao, .final { padding: 100px 0; }
+    .cta-callout { padding: 36px 28px; }
+    .modulo { grid-template-columns: 38px 1fr auto; gap: 14px; }
+    .mod-arrow { display: none; }
+    .mod-title { font-size: 16px; }
+    .mod-tag { font-size: 9px; padding: 3px 8px; }
+    nav.top .nav-cta { padding: 8px 16px; font-size: 12px; }
+    .logo-text { display: none; }
+    footer .wrap { text-align: center; justify-content: center; }
+    footer .copy { text-align: center; }
+  }
+  @media (max-width: 480px) {
+    .detalhes { grid-template-columns: 1fr 1fr; }
+    .dor-item p { font-size: 17px; }
+    .versus-col li { font-size: 16px; }
+    .arc-num { width: 52px; height: 52px; font-size: 26px; }
+    .arc-title { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============== NAV ============== -->
+<nav class="top">
+  <div class="wrap">
+    <a href="#" class="logo-gi" aria-label="GuiaInvest">
+      <span class="logo-mark">GI</span>
+      <span class="logo-text">guia<span>invest</span></span>
+    </a>
+    <a href="#aplicar" class="nav-cta">Aplicar agora</a>
+  </div>
+</nav>
+
+<!-- ============== HERO (ARCO 1: SET) ============== -->
+<header class="hero">
+  <div class="wrap">
+    <div class="partnership-badge reveal">
+      <span class="mark"></span>
+      Uma formação GuiaInvest · Turma 04
+    </div>
+
+    <div class="hero-meta reveal">
+      <span class="dot"></span>
+      <span class="eyebrow">Processo seletivo aberto · vagas limitadas</span>
+    </div>
+
+    <h1 class="display reveal">
+      Você tirou a <span class="it">certificação.</span><br/>O mercado quer outra coisa.
+    </h1>
+
+    <p class="lead reveal">
+      O mercado de alta renda não está procurando mais um certificado pendurado no LinkedIn. Está procurando consultores que saibam <strong>atuar</strong> — conduzir uma reunião, contornar uma objeção, ler um patrimônio inteiro como sistema. Essa formação existe para preencher exatamente esse vão.
+    </p>
+
+    <div class="cta-group reveal">
+      <a href="#aplicar" class="btn btn-primary">Quero entender se sirvo</a>
+      <a href="#metodo" class="btn btn-ghost">Ver o método</a>
+    </div>
+    <p class="cta-micro reveal">
+      <span class="alert"></span>
+      Análise de perfil em até 72h · sem custo de inscrição
+    </p>
+  </div>
+</header>
+
+<!-- ============== ARCO 1: HOLD - A DOR ============== -->
+<section>
+  <div class="wrap">
+    <div class="arc-marker reveal">
+      <span class="arc-num">I</span>
+      <div class="arc-info">
+        <span class="arc-label">Arco 01 · O Espelho</span>
+        <span class="arc-title">Onde a maioria está hoje</span>
+      </div>
+    </div>
+
+    <div class="dor-grid">
+      <div class="reveal">
+        <h2 class="display section-title">Saber sobre investimentos não é <span class="it">saber atuar</span> como consultor.</h2>
+        <p class="lead">
+          Você estudou. Foi aprovado. Talvez tenha CEA, CFP, leia relatórios todo dia. Mas existe um abismo silencioso entre <strong>dominar a teoria</strong> e <strong>conduzir uma reunião com um empresário de R$ 5 milhões</strong> — e ninguém te avisou que esse abismo existia até você cair dentro dele.
+        </p>
+      </div>
+
+      <div class="dor-list reveal">
+        <div class="dor-item">
+          <span class="marker">01</span>
+          <p>Você sabe <em>o que dizer</em>, mas trava quando o cliente pergunta sobre <em>o que fazer</em> com a holding dele.</p>
+        </div>
+        <div class="dor-item">
+          <span class="marker">02</span>
+          <p>Você entende de alocação. Mas <em>nunca conduziu</em> uma R1 que terminasse com contrato assinado.</p>
+        </div>
+        <div class="dor-item">
+          <span class="marker">03</span>
+          <p>Você abre o LinkedIn e vê consultores piores que você fechando carteiras maiores que a sua.</p>
+        </div>
+        <div class="dor-item">
+          <span class="marker">04</span>
+          <p>Você sente que o próximo passo da carreira existe — mas <em>ninguém te mostrou</em> a porta.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== ARCO 1: LAND - A INFLEXÃO (CTA frio) ============== -->
+<section class="inflexao">
+  <div class="wrap">
+    <span class="eyebrow reveal" style="color: var(--gi-green);">A inflexão</span>
+    <h2 class="display reveal section-title" style="margin: 24px 0 32px; max-width: 22ch;">
+      Existe um ponto na carreira em que <span class="it">acumular mais conteúdo técnico</span> deixa de funcionar.
+    </h2>
+    <p class="lead reveal" style="margin-bottom: 48px;">
+      A partir desse ponto, o que separa quem cresce de quem estagna não é mais conhecimento. É método de atuação, postura comercial, leitura de patrimônio, capacidade de conduzir uma conversa de alta complexidade sem soar inseguro. É exatamente isso que essa formação treina.
+    </p>
+    <div class="cta-group reveal">
+      <a href="#metodo" class="btn btn-primary">Ver como a formação trabalha isso</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============== ARCO 2: SET - O MÉTODO ============== -->
+<section id="metodo" class="alt">
+  <div class="wrap">
+    <div class="arc-marker reveal">
+      <span class="arc-num">II</span>
+      <div class="arc-info">
+        <span class="arc-label">Arco 02 · O Método</span>
+        <span class="arc-title">Como se forma um consultor que o mercado respeita</span>
+      </div>
+    </div>
+
+    <h2 class="display section-title reveal">O <span class="it">Sistema Patrimonial Integrado.</span><br/>Não é um curso. É um método.</h2>
+    <p class="lead reveal" style="max-width: 64ch;">
+      O mercado tradicional trata o cliente em pedaços: o gestor cuida da carteira, o advogado da sucessão, o contador do tributário, o corretor do seguro. Cada peça parece boa — e o sistema todo continua quebrado. A nossa metodologia parte de uma premissa diferente: <strong>patrimônio é um sistema vivo, e precisa ser conduzido como tal.</strong>
+    </p>
+
+    <div class="pilares reveal">
+      <div class="pilar">
+        <span class="pilar-num">Pilar 01</span>
+        <h3>Gestão de Portfólio</h3>
+        <p>Não é escolher o melhor produto. É construir a carteira que sustenta os objetivos de vida do cliente com o menor risco necessário. Asset allocation como disciplina, não como evento.</p>
+      </div>
+      <div class="pilar">
+        <span class="pilar-num">Pilar 02</span>
+        <h3>Gestão de Risco</h3>
+        <p>O pilar mais ignorado pelo mercado. Aqui você aprende a dimensionar proteção real — vida, invalidez, doenças graves, reserva — e a apresentar gaps de proteção sem alarmismo.</p>
+      </div>
+      <div class="pilar">
+        <span class="pilar-num">Pilar 03</span>
+        <h3>Blindagem Patrimonial</h3>
+        <p>Holdings, separação de risco empresarial, offshore via PIC/LLC, eficiência fiscal. Você aprende a mapear vulnerabilidades sem invadir o campo do advogado — e quando acionar quem.</p>
+      </div>
+      <div class="pilar">
+        <span class="pilar-num">Pilar 04</span>
+        <h3>Sucessão Patrimonial</h3>
+        <p>Testamento, doação em vida, holding sucessória, ITCMD, governança familiar, Whole Life, offshore. O tema que o cliente adia — e que só um consultor de verdade traz à mesa.</p>
+      </div>
+    </div>
+
+    <h3 class="display reveal" style="font-size: clamp(28px, 4vw, 48px); margin-top: 40px; max-width: 24ch;">
+      A diferença entre <span class="it">vender produto</span> e <span class="it">prestar consultoria.</span>
+    </h3>
+
+    <div class="versus reveal">
+      <div class="versus-col before">
+        <h5>O modelo que está acabando</h5>
+        <ul>
+          <li>Atuação fragmentada, em silos</li>
+          <li>Conflito de interesse estrutural na receita</li>
+          <li>Vende produto disfarçado de consultoria</li>
+          <li>Diversificação que parece boa — e concentra riscos iguais</li>
+          <li>Cliente percebido como conta, não como sistema</li>
+        </ul>
+      </div>
+      <div class="versus-col after">
+        <h5>O modelo GuiaInvest</h5>
+        <ul>
+          <li>Visão integrada das 4 dimensões patrimoniais</li>
+          <li>Modelo fee-only, sem conflito embutido</li>
+          <li>Diagnóstico antes de qualquer recomendação</li>
+          <li>Carteira desenhada para sustentar objetivos de vida</li>
+          <li>Patrimônio conduzido como sistema vivo</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="detalhes reveal">
+      <div class="detalhe">
+        <div class="detalhe-num">11<span class="small">mód</span></div>
+        <p>Módulos<br/>estruturados</p>
+      </div>
+      <div class="detalhe">
+        <div class="detalhe-num">60<span class="small">h</span></div>
+        <p>De conteúdo<br/>aplicado</p>
+      </div>
+      <div class="detalhe">
+        <div class="detalhe-num">60<span class="small">%</span></div>
+        <p>Mentoria<br/>ao vivo</p>
+      </div>
+      <div class="detalhe">
+        <div class="detalhe-num">24<span class="small">/7</span></div>
+        <p>Suporte com<br/>tutor de IA</p>
+      </div>
+    </div>
+
+    <div class="cta-callout reveal">
+      <div class="inner">
+        <h4>Aprender o método é uma coisa. <span class="it">Ser treinado para executá-lo</span> é outra.</h4>
+        <p>Por isso 60% da formação acontece ao vivo — em role-plays, contorno de objeções, simulação de R1 e R2, laboratório de carteira. Você sai com prática real, não com mais um certificado para guardar.</p>
+        <div class="cta-group">
+          <a href="#jornada" class="btn btn-primary">Ver os módulos um a um</a>
+          <a href="#aplicar" class="btn btn-ghost" style="color: var(--gi-paper); border-color: rgba(255,255,255,0.2);">Quero aplicar agora</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== JORNADA ============== -->
+<section id="jornada">
+  <div class="wrap">
+    <div class="arc-marker reveal">
+      <span class="arc-num">III</span>
+      <div class="arc-info">
+        <span class="arc-label">Arco 03 · A Jornada</span>
+        <span class="arc-title">Da introdução ao Hiring Day — passo a passo</span>
+      </div>
+    </div>
+
+    <div class="jornada">
+      <div class="reveal">
+        <h2 class="display section-title">11 módulos. Uma <span class="it">trajetória.</span></h2>
+        <p class="lead">
+          O programa foi desenhado em sequência. Cada módulo te leva ao próximo — do posicionamento que constrói autoridade, passando por prospecção, vendas e relacionamento, até a leitura técnica completa do patrimônio do cliente. No final, você é avaliado em um Hiring Day real.
+        </p>
+
+        <div style="margin-top: 36px;">
+          <span class="eyebrow" style="display: block; margin-bottom: 12px;">Onde acontece</span>
+          <p style="color: var(--gi-text); font-size: 15px; line-height: 1.6;">
+            Hotmart (área de membros para conteúdo gravado), Zoom (mentorias ao vivo com salas de simulação), tutor de IA 24/7 treinado em todo o material do curso, e CRM real para treino do processo comercial.
+          </p>
+        </div>
+      </div>
+
+      <div class="modulos-lista reveal">
+        <div class="modulo"><span class="mod-num">01</span><span class="mod-title">Introdução & boas-vindas</span><span class="mod-tag">Onboarding</span><span class="mod-arrow">→</span></div>
+        <div class="modulo"><span class="mod-num">02</span><span class="mod-title">Posicionamento profissional</span><span class="mod-tag">Imagem</span><span class="mod-arrow">→</span></div>
+        <div class="modulo"><span class="mod-num">03</span><span class="mod-title">Prospecção de clientes</span><span class="mod-tag">Comercial</span><span class="mod-arrow">→</span></div>
+        <div class="modulo"><span class="mod-num">04</span><span class="mod-title">Vendas: R1, R2 e objeções</span><span class="mod-tag">Comercial</span><span class="mod-arrow">→</span></div>
+        <div class="modulo"><span class="mod-num">05</span><span class="mod-title">Relacionamento & onboarding do cliente</span><span class="mod-tag">Retenção</span><span class="mod-arrow">→</span></div>
+        <div class="modulo"><span class="mod-num">06</span><span class="mod-title">Sistema Patrimonial Integrado</span><span class="mod-tag">Método</span><span class="mod-arrow">→</span></div>
+        <div class="modulo"><span class="mod-num">07</span><span class="mod-title">Pilar 1 — Gestão de Portfólio</span><span class="mod-tag">Técnico</span><span class="mod-arrow">→</span></div>
+        <div class="modulo"><span class="mod-num">08</span><span class="mod-title">Pilar 2 — Gestão de Risco</span><span class="mod-tag">Técnico</span><span class="mod-arrow">→</span></div>
+        <div class="modulo"><span class="mod-num">09</span><span class="mod-title">Pilar 3 — Blindagem Patrimonial</span><span class="mod-tag">Técnico</span><span class="mod-arrow">→</span></div>
+        <div class="modulo"><span class="mod-num">10</span><span class="mod-title">Pilar 4 — Sucessão Patrimonial</span><span class="mod-tag">Técnico</span><span class="mod-arrow">→</span></div>
+        <div class="modulo"><span class="mod-num">11</span><span class="mod-title">Cultura & Filosofia GuiaInvest</span><span class="mod-tag">Fechamento</span><span class="mod-arrow">→</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== ARCO 3: LAND FINAL ============== -->
+<section class="final" id="aplicar">
+  <div class="wrap">
+    <div class="selo reveal">
+      <span class="ping"></span>
+      Turma 04 · Processo seletivo aberto
+    </div>
+
+    <h2 class="display reveal">
+      Esta formação não termina <span class="it">com um certificado.</span>
+    </h2>
+
+    <p class="lead reveal">
+      Termina com um Hiring Day. Os alunos com melhor desempenho, maior aderência ao método e postura mais consistente são convidados para uma entrevista de atuação dentro da própria estrutura GuiaInvest. Não é promessa de emprego — é a possibilidade real de fechar um ciclo completo: aprender o método, executar o método, e ser convidado a atuar no ambiente onde o método nasceu.
+    </p>
+
+    <div class="cta-group reveal">
+      <a href="#" class="btn btn-primary">Aplicar para a Turma 04</a>
+    </div>
+    <p class="cta-micro reveal" style="justify-content: center;">
+      <span class="alert"></span>
+      Vagas limitadas · seleção por análise de perfil
+    </p>
+
+    <div class="hiring reveal">
+      <div class="hiring-icon">★</div>
+      <div>
+        <h4>O dia em que sua trajetória pode <span class="it">virar a página.</span></h4>
+        <p>O último encontro da formação é uma avaliação prática completa. Os melhores alunos são convidados para um processo seletivo formal de atuação como consultores dentro da estrutura GuiaInvest. Não é garantido. É possível. E só é possível porque foi conquistado.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FAQ ============== -->
+<section style="padding-top: 120px;">
+  <div class="wrap">
+    <div class="reveal" style="text-align: center; max-width: 720px; margin: 0 auto;">
+      <span class="eyebrow">Antes de aplicar</span>
+      <h2 class="display section-title" style="margin: 16px auto 0; text-align: center; max-width: 16ch;">As perguntas que <span class="it">você precisa fazer.</span></h2>
+    </div>
+
+    <div class="faq reveal">
+      <details class="faq-item">
+        <summary>Eu já tenho CEA. Esse curso me dá mais alguma certificação?</summary>
+        <p>Não é o objetivo. Esse programa pressupõe que você já tem a base técnica e te ensina a coisa que nenhuma certificação ensina: como atuar, como vender consultoria, como conduzir uma reunião com um patrimônio relevante na mesa. Se você quer mais um certificado para o LinkedIn, este curso é caro. Se você quer parar de travar quando a conversa fica séria, é exatamente o que falta.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Quanto tempo dura e como funciona a entrega?</summary>
+        <p>De 8 a 12 semanas, com um encontro ao vivo por semana (2h, em geral 20h–22h), além do conteúdo gravado em plataforma. O formato é híbrido: cerca de 40% assíncrono (metodologia, CRM, compliance) e 60% ao vivo (role-plays, simulações de R1 e R2, laboratório de carteira, contorno de objeções, Hiring Day).</p>
+      </details>
+      <details class="faq-item">
+        <summary>Eu não tenho experiência com vendas. Isso é um problema?</summary>
+        <p>É exatamente uma das coisas que o programa treina. O módulo de Vendas trabalha agendamento, condução de R1 e R2, apresentação da proposta de valor, oferta comercial e contorno de objeções — com scripts, simulações e feedback comercial real. Você não sai com teoria. Sai com prática.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Eu preciso passar em alguma seleção para entrar?</summary>
+        <p>Sim. A turma é limitada e passa por análise de perfil. A formação é desenhada para quem tem maturidade profissional para chegar até o Hiring Day — e queremos garantir que cada aluno aproveite o programa por inteiro, e não pela metade.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Qual a chance real de ser contratado pela GuiaInvest no final?</summary>
+        <p>Depende de você. O programa não promete emprego. O que ele oferece é a única coisa que faz sentido prometer: se você se destacar dentro da metodologia, da postura e do desempenho ao longo das semanas, você será considerado para o processo seletivo interno. A possibilidade é real. A obrigação não existe — nem para você, nem para nós.</p>
+      </details>
+    </div>
+
+    <div class="reveal" style="text-align: center; margin-top: 56px;">
+      <a href="#aplicar" class="btn btn-primary">Iniciar aplicação</a>
+      <p class="cta-micro" style="justify-content: center;">Você responde · nós analisamos · retornamos em até 72h</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer>
+  <div class="wrap">
+    <div class="logo-gi on-dark">
+      <span class="logo-mark">GI</span>
+      <span class="logo-text">guia<span>invest</span></span>
+    </div>
+    <p class="copy">© GuiaInvest 2026 · Formação em Consultoria de Investimentos · Todos os direitos reservados</p>
+  </div>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Hero immediate reveal (staggered)
+  const heroReveals = document.querySelectorAll('.hero .reveal');
+  heroReveals.forEach((el, i) => {
+    el.style.transitionDelay = (i * 100) + 'ms';
+    requestAnimationFrame(() => el.classList.add('in'));
+  });
+</script>
+
+</body>
+</html>
