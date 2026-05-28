@@ -1,0 +1,3770 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semente · Simulador Comercial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Paleta Charcoal Minimal — herdada do material de Pensamento Crítico em IA */
+  --bg:            #FAFAF7;   /* off-white quente · fundo principal */
+  --bg-warm:       #F2EFE8;   /* bege suave · variação */
+  --bg-card:       #FFFFFF;   /* branco puro · cards */
+  --bg-dark:       #1A1A1A;   /* preto profundo · contraste */
+
+  --ink:           #1A1A1A;   /* texto principal */
+  --ink-mid:       #5F5E5A;   /* texto secundário */
+  --ink-soft:      #9B9892;   /* texto terciário */
+
+  --accent:        #B85042;   /* terracota · ÚNICO acento de cor */
+  --accent-soft:   #E8D5CF;   /* terracota desaturado · backgrounds */
+  --accent-deep:   #8E3D33;   /* terracota profundo · hover */
+
+  --line:          #D8D5CD;   /* linhas e divisores */
+  --line-soft:     #ECE9E2;   /* linhas muito sutis */
+
+  --shadow-soft:   rgba(26, 26, 26, 0.04);
+  --shadow-med:    rgba(26, 26, 26, 0.08);
+
+  /* Aliases para compatibilidade com o resto do CSS já escrito */
+  --semente-green:       var(--accent);
+  --semente-green-dark:  var(--accent-deep);
+  --semente-green-light: var(--accent);
+  --semente-cream:       var(--bg-warm);
+  --semente-cream-dark:  var(--line);
+  --semente-sand:        var(--line);
+  --semente-earth:       var(--accent);
+  --semente-orange:      var(--accent);
+  --semente-ink:         var(--ink);
+  --semente-ink-soft:    var(--ink-mid);
+  --semente-ink-faded:   var(--ink-soft);
+  --semente-red:         var(--accent);
+  --semente-blue:        var(--ink-mid);
+
+  /* compat dark scheme */
+  --bg-deep: var(--bg);
+  --bg-panel: var(--bg-card);
+  --bg-elevated: var(--bg-warm);
+  --bg-input: var(--bg-warm);
+  --border-subtle: var(--line-soft);
+  --border-medium: var(--line);
+  --gold: var(--accent);
+  --gold-bright: var(--accent);
+  --gold-deep: var(--accent-deep);
+  --gold-muted: var(--line);
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink-mid);
+  --text-muted: var(--ink-soft);
+  --text-dim: var(--ink-soft);
+  --accent-warm: var(--accent);
+  --accent-cool: var(--ink-mid);
+  --accent-life: var(--ink);
+  --accent-alert: var(--accent);
+  --shadow-gold: rgba(184, 80, 66, 0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.6;
+  font-feature-settings: "ss01", "cv11";
+}
+
+/* ─── TOP BAR ─────────────────────────────────────────────── */
+.topbar {
+  background: var(--bg);
+  color: var(--ink);
+  padding: 22px 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-mark {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+.brand-text {
+  font-family: 'Fraunces', 'Georgia', serif;
+  font-weight: 400;
+  font-size: 20px;
+  letter-spacing: -0.3px;
+  color: var(--ink);
+  font-style: italic;
+}
+.brand-text small {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 2.5px;
+  color: var(--ink-soft);
+  margin-top: 1px;
+  text-transform: uppercase;
+  font-style: normal;
+}
+
+.topbar-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.topbar-btn {
+  background: transparent;
+  border: none;
+  color: var(--ink-mid);
+  padding: 8px 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+.topbar-btn:hover {
+  color: var(--accent);
+}
+.topbar-btn.primary {
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  color: var(--bg);
+  padding: 10px 18px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+.topbar-btn.primary:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 36px 80px;
+}
+
+/* ─── CASE SELECTOR ───────────────────────────────────────── */
+.case-selector {
+  background: transparent;
+  padding: 60px 0 40px;
+  margin-bottom: 30px;
+}
+
+.selector-title {
+  font-family: 'Fraunces', 'Georgia', serif;
+  font-size: 42px;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.8px;
+  line-height: 1.1;
+  margin-bottom: 14px;
+  color: var(--ink);
+}
+.selector-subtitle {
+  color: var(--ink-mid);
+  margin-bottom: 50px;
+  font-size: 16px;
+  max-width: 640px;
+  line-height: 1.6;
+}
+
+.case-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.case-card {
+  background: var(--bg-card);
+  padding: 32px 28px 28px;
+  cursor: pointer;
+  transition: background 0.25s;
+  position: relative;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+}
+.case-card:hover {
+  background: var(--bg-warm);
+}
+.case-card .ctype {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+.case-card h3 {
+  font-family: 'Fraunces', 'Georgia', serif;
+  font-size: 26px;
+  font-weight: 400;
+  font-style: italic;
+  margin-bottom: 14px;
+  color: var(--ink);
+  line-height: 1.15;
+  letter-spacing: -0.4px;
+}
+.case-card p {
+  font-size: 14px;
+  color: var(--ink-mid);
+  line-height: 1.55;
+  margin-bottom: 22px;
+  flex: 1;
+}
+.case-card .meta {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: var(--ink-soft);
+  display: flex;
+  gap: 14px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line-soft);
+  letter-spacing: 0.3px;
+  display: flex;
+  gap: 12px;
+}
+.case-card .meta span::before { content: '· '; }
+.case-card .meta span:first-child::before { content: ''; }
+
+.case-card[data-color="field"],
+.case-card[data-color="inside"],
+.case-card[data-color="self"] { --accent-color: var(--accent); }
+
+/* ─── DOSSIE HEADER (during case) ─────────────────────────── */
+.dossie-header {
+  background: transparent;
+  padding: 40px 0 30px;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+
+.dossie-tag {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.dossie-title {
+  font-family: 'Fraunces', 'Georgia', serif;
+  font-size: clamp(28px, 4.5vw, 44px);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.8px;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.dossie-subtitle {
+  margin-top: 14px;
+  color: var(--ink-mid);
+  font-size: 16px;
+  font-style: italic;
+  font-family: 'Fraunces', 'Georgia', serif;
+}
+
+/* ─── HUD ─────────────────────────────────────────────────── */
+.hud {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0;
+  margin: 30px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.hud-item {
+  background: transparent;
+  padding: 20px 24px;
+  text-align: left;
+  border-right: 1px solid var(--line);
+}
+.hud-item:last-child { border-right: none; }
+.hud-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+.hud-value {
+  font-family: 'Fraunces', 'Georgia', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 28px;
+  color: var(--ink);
+  margin-top: 6px;
+  letter-spacing: -0.4px;
+}
+
+/* ─── SCREENS ─────────────────────────────────────────────── */
+.screen { display: none; animation: fadeIn 0.4s ease-out; }
+.screen.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── BRIEFING ────────────────────────────────────────────── */
+.briefing {
+  background: transparent;
+  padding: 40px 0;
+}
+.briefing h2 {
+  font-family: 'Fraunces', 'Georgia', serif;
+  font-size: 32px;
+  font-weight: 400;
+  font-style: italic;
+  margin-bottom: 30px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  letter-spacing: -0.5px;
+}
+.briefing-section { margin: 30px 0; }
+.briefing-section h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.briefing-section p {
+  font-size: 17px;
+  color: var(--ink);
+  line-height: 1.6;
+  max-width: 720px;
+}
+.briefing-section ul {
+  padding-left: 0;
+  margin-top: 10px;
+  list-style: none;
+}
+.briefing-section li {
+  margin-bottom: 10px;
+  font-size: 15px;
+  color: var(--ink-mid);
+  padding-left: 24px;
+  position: relative;
+  line-height: 1.55;
+  max-width: 720px;
+}
+.briefing-section li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* ─── INVESTIGATION GRID ──────────────────────────────────── */
+.investigation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  margin: 30px 0;
+}
+@media (max-width: 820px) {
+  .investigation { grid-template-columns: 1fr; }
+}
+
+.panel {
+  background: transparent;
+  padding: 20px 0;
+}
+.panel h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.panel h3 .count {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid var(--line);
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-size: 10px;
+  color: var(--ink-mid);
+  letter-spacing: 1px;
+}
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.card {
+  border: none;
+  border-bottom: 1px solid var(--line-soft);
+  background: transparent;
+  border-radius: 0;
+  padding: 16px 4px;
+  cursor: pointer;
+  transition: padding 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+}
+.card:hover {
+  padding-left: 12px;
+  background: linear-gradient(to right, var(--bg-warm) 0%, transparent 60%);
+}
+.card.consulted {
+  opacity: 0.55;
+}
+.card.consulted::after {
+  content: '✓ consultado';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 4px;
+  color: var(--ink-soft);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.card.locked {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.card-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', 'Georgia', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+/* todos os tipos compartilham o mesmo visual minimalista */
+.card-icon.doc,
+.card-icon.call,
+.card-icon.email,
+.card-icon.dash,
+.card-icon.crm { background: transparent; color: var(--ink); }
+
+.card-body { flex: 1; min-width: 0; padding-right: 80px; }
+.card-title {
+  font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 3px;
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+}
+.card-meta {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--ink-soft);
+  text-transform: lowercase;
+}
+
+/* ─── MODAL ───────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 26, 26, 0.45);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 20px;
+}
+.modal-overlay.active { display: flex; animation: fadeIn 0.25s; }
+
+.modal {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  max-width: 760px;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 44px 48px;
+  position: relative;
+  box-shadow: 0 20px 60px var(--shadow-med);
+}
+
+.modal-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: transparent;
+  border: 1px solid var(--line);
+  width: 32px;
+  height: 32px;
+  border-radius: 0;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--ink-mid);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.modal-close:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+
+.modal h2 {
+  font-family: 'Fraunces', 'Georgia', serif;
+  font-size: 30px;
+  font-weight: 400;
+  font-style: italic;
+  margin-bottom: 6px;
+  padding-right: 50px;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+}
+
+.modal-role {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.modal-bio {
+  font-style: italic;
+  color: var(--ink-mid);
+  margin-bottom: 22px;
+  font-size: 15px;
+  background: transparent;
+  padding: 0;
+  border-left: 2px solid var(--accent);
+  padding-left: 16px;
+  font-family: 'Fraunces', 'Georgia', serif;
+  line-height: 1.55;
+}
+
+/* ─── QUESTIONS ───────────────────────────────────────────── */
+.question-list { display: flex; flex-direction: column; gap: 0; }
+
+.question-btn {
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--line-soft);
+  border-radius: 0;
+  padding: 14px 0;
+  cursor: pointer;
+  font-family: 'Fraunces', 'Georgia', serif;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--ink);
+  transition: padding 0.2s;
+  line-height: 1.4;
+}
+.question-btn:hover {
+  padding-left: 12px;
+  color: var(--accent);
+}
+.question-btn.asked {
+  opacity: 0.4;
+  cursor: default;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+.question-btn.asked:hover {
+  padding-left: 0;
+  color: var(--ink-soft);
+}
+
+.answer-block {
+  margin-top: 18px;
+  padding: 20px 22px;
+  background: var(--bg-warm);
+  border-left: 2px solid var(--accent);
+  border-radius: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  animation: fadeIn 0.3s;
+}
+.answer-block .q {
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--ink-mid);
+  margin-bottom: 10px;
+  font-style: italic;
+  font-family: 'Fraunces', 'Georgia', serif;
+}
+.answer-block .a {
+  color: var(--ink);
+}
+
+/* ─── DOC / CALL / EMAIL / DASH RENDERERS ────────────────── */
+.doc-paper {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.75;
+  background: var(--bg-warm);
+  padding: 28px;
+  border: none;
+  border-left: 2px solid var(--ink);
+  border-radius: 0;
+  white-space: pre-wrap;
+  color: var(--ink);
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+.call-transcript {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  max-height: 480px;
+  overflow-y: auto;
+}
+.call-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--semente-ink-faded);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px dashed var(--semente-sand);
+}
+.call-line {
+  margin: 10px 0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.call-line.them {
+  background: var(--bg-warm);
+  border-left: 2px solid var(--ink);
+  border-radius: 0;
+}
+.call-line.us {
+  background: var(--accent-soft);
+  border-left: 2px solid var(--accent);
+  border-radius: 0;
+}
+.call-speaker {
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--semente-ink-faded);
+  margin-bottom: 2px;
+}
+.call-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--semente-ink-faded);
+  float: right;
+}
+
+.email-thread {
+  max-height: 480px;
+  overflow-y: auto;
+}
+.email {
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+}
+.email-header {
+  font-size: 12px;
+  color: var(--semente-ink-faded);
+  border-bottom: 1px solid var(--semente-cream);
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+.email-header b { color: var(--semente-ink); }
+.email-body {
+  font-size: 14px;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.dashboard {
+  background: transparent;
+  max-height: 520px;
+  overflow-y: auto;
+}
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0;
+  margin-bottom: 22px;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+.metric {
+  background: transparent;
+  padding: 16px 18px;
+  border-radius: 0;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.metric .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--semente-ink-faded);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.metric .value {
+  font-family: 'Fraunces', 'Georgia', serif;
+  font-size: 26px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+}
+.metric .delta {
+  font-size: 11px;
+  margin-top: 2px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.metric .delta.up { color: var(--ink); }
+.metric .delta.down { color: var(--accent); }
+.metric .delta.flat { color: var(--ink-soft); }
+
+.chart-section { margin-bottom: 18px; }
+.chart-section h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--semente-ink-soft);
+  margin-bottom: 10px;
+}
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 140px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--semente-sand);
+}
+.bar-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.bar {
+  width: 100%;
+  background: var(--ink);
+  border-radius: 0;
+  min-height: 4px;
+  transition: all 0.3s;
+  position: relative;
+}
+.bar.alt { background: var(--accent); }
+.bar:hover::after {
+  content: attr(data-val);
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--semente-ink);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', monospace;
+}
+.bar-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--semente-ink-faded);
+}
+.funnel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.funnel-stage {
+  background: linear-gradient(90deg, var(--semente-green) 0%, var(--semente-green) var(--w, 100%), var(--semente-cream-dark) var(--w, 100%));
+  padding: 12px 14px;
+  border-radius: 6px;
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.funnel-stage .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: rgba(255,255,255,0.2);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* ─── EVIDENCE BUTTON & TRAY ──────────────────────────────── */
+.evidence-mark-btn {
+  margin-top: 14px;
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 8px 16px;
+  border-radius: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.evidence-mark-btn:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+.evidence-mark-btn.marked {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+  cursor: default;
+}
+
+.evidence-tray {
+  background: transparent;
+  padding: 30px 0;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--line);
+}
+.evidence-tray h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.evidence-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.evidence-pill {
+  background: var(--accent-soft);
+  border: none;
+  color: var(--accent-deep);
+  padding: 5px 12px;
+  border-radius: 2px;
+  font-size: 12px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+}
+.evidence-empty {
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 14px;
+  font-family: 'Fraunces', 'Georgia', serif;
+}
+
+/* ─── NOTEBOOK ────────────────────────────────────────────── */
+.notebook {
+  background: transparent;
+  padding: 30px 0;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--line);
+}
+.notebook h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+.notebook-hint {
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-style: italic;
+  margin-bottom: 18px;
+  font-family: 'Fraunces', 'Georgia', serif;
+}
+.hipotese-field { margin: 16px 0; }
+.hipotese-field label {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-mid);
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
+}
+.hipotese-field textarea {
+  width: 100%;
+  min-height: 56px;
+  padding: 10px 0;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  resize: vertical;
+  color: var(--ink);
+}
+.hipotese-field textarea:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+.hipotese-field textarea::placeholder {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+/* ─── DILEMA (decisão bifurcada) ──────────────────────────── */
+.dilemma-banner {
+  background: linear-gradient(135deg, var(--semente-orange) 0%, #b06a35 100%);
+  color: white;
+  padding: 18px 24px;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 4px 16px rgba(200, 123, 63, 0.3);
+  animation: pulseAttention 2s ease-in-out infinite;
+}
+@keyframes pulseAttention {
+  0%, 100% { box-shadow: 0 4px 16px rgba(200, 123, 63, 0.3); }
+  50% { box-shadow: 0 4px 24px rgba(200, 123, 63, 0.5); }
+}
+.dilemma-banner h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.dilemma-banner p {
+  font-size: 13px;
+  opacity: 0.9;
+}
+.dilemma-banner button {
+  background: var(--bg-panel);
+  color: var(--semente-orange);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.dilemma-banner button:hover { transform: scale(1.05); }
+
+.dilemma-modal {
+  max-width: 720px;
+}
+.dilemma-modal h2 {
+  color: var(--ink);
+}
+.dilemma-modal .dilemma-context {
+  background: var(--bg-warm);
+  padding: 20px;
+  border-radius: 0;
+  border-left: 2px solid var(--accent);
+  margin-bottom: 26px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+.dilemma-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 18px 0;
+}
+.dilemma-option {
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.dilemma-option:hover {
+  border-color: var(--ink);
+  background: var(--bg-warm);
+}
+.dilemma-option.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.dilemma-option h5 {
+  font-family: 'Fraunces', 'Georgia', serif;
+  font-size: 18px;
+  font-weight: 400;
+  font-style: italic;
+  margin-bottom: 6px;
+  color: var(--ink);
+  letter-spacing: -0.2px;
+}
+.dilemma-option p {
+  font-size: 13px;
+  color: var(--ink-mid);
+  line-height: 1.55;
+}
+.dilemma-justify {
+  margin-top: 16px;
+}
+.dilemma-justify label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--semente-ink-soft);
+  margin-bottom: 6px;
+}
+.dilemma-justify textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  border-radius: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  resize: vertical;
+  color: var(--ink);
+}
+.dilemma-justify textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.dilemma-consequence {
+  margin-top: 16px;
+  padding: 14px;
+  background: var(--semente-cream);
+  border-left: 4px solid var(--semente-green);
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.6;
+  animation: fadeIn 0.3s;
+}
+
+/* ─── BUTTONS ─────────────────────────────────────────────── */
+button.btn-primary {
+  background: var(--ink);
+  color: var(--bg);
+  border: 1px solid var(--ink);
+  padding: 14px 28px;
+  border-radius: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+button.btn-primary:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+button.btn-primary:disabled {
+  background: var(--ink-soft);
+  border-color: var(--ink-soft);
+  cursor: not-allowed;
+}
+button.btn-secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 13px 24px;
+  border-radius: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+button.btn-secondary:hover {
+  border-color: var(--ink);
+  color: var(--accent);
+}
+
+.action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+/* ─── PROPOSAL FORM ───────────────────────────────────────── */
+.proposal-form {
+  background: transparent;
+  padding: 40px 0;
+}
+.proposal-form h2 {
+  font-family: 'Fraunces', 'Georgia', serif;
+  font-size: 32px;
+  font-weight: 400;
+  font-style: italic;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 18px;
+  margin-bottom: 30px;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+}
+.proposal-form-intro {
+  font-style: italic;
+  color: var(--ink-mid);
+  margin-bottom: 30px;
+  font-size: 16px;
+  font-family: 'Fraunces', 'Georgia', serif;
+  max-width: 720px;
+  line-height: 1.55;
+}
+.form-group { margin: 22px 0; max-width: 720px; }
+.form-group label {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--ink-mid);
+}
+.form-group textarea,
+.form-group input {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--bg);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.55;
+}
+.form-group textarea { min-height: 96px; resize: vertical; }
+.form-group textarea:focus,
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ─── REPORT ──────────────────────────────────────────────── */
+.report {
+  background: var(--bg-panel);
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 4px 24px var(--shadow-soft);
+  border: 1px solid var(--semente-sand);
+}
+.report-header {
+  text-align: center;
+  margin-bottom: 28px;
+  padding-bottom: 22px;
+  border-bottom: 2px solid var(--semente-cream-dark);
+}
+.report-stamp {
+  display: inline-block;
+  background: var(--semente-blue);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+.report-header h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--semente-green-dark);
+  margin-bottom: 8px;
+}
+.report-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--semente-ink-faded);
+}
+
+.report-section {
+  margin: 44px 0;
+  padding-bottom: 38px;
+  border-bottom: 1px solid var(--line);
+}
+.report-section:last-child { border-bottom: none; }
+.report-section h3 {
+  font-family: 'Fraunces', 'Georgia', serif;
+  font-size: 26px;
+  font-weight: 400;
+  font-style: italic;
+  margin-bottom: 22px;
+  color: var(--ink);
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  letter-spacing: -0.4px;
+}
+.report-section h3 .num {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+.timeline {
+  list-style: none;
+  padding-left: 0;
+}
+.timeline li {
+  padding: 10px 0 10px 26px;
+  position: relative;
+  border-left: 2px solid var(--semente-cream-dark);
+  margin-left: 6px;
+  font-size: 13px;
+}
+.timeline li::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: 16px;
+  width: 12px;
+  height: 12px;
+  background: var(--semente-green);
+  border: 2px solid white;
+  border-radius: 50%;
+}
+.timeline-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--semente-ink-faded);
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.bias-flag, .good-flag {
+  border-radius: 0;
+  padding: 18px 22px;
+  margin: 14px 0;
+  display: flex;
+  gap: 16px;
+}
+.bias-flag {
+  background: var(--accent-soft);
+  border-left: 2px solid var(--accent);
+}
+.good-flag {
+  background: var(--bg-warm);
+  border-left: 2px solid var(--ink);
+}
+.bias-flag-icon, .good-flag-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.bias-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.good-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.bias-detail, .good-detail {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.65;
+}
+
+.proposal-recap {
+  background: var(--bg-warm);
+  padding: 26px 28px;
+  border-radius: 0;
+  border: none;
+}
+.recap-item { margin: 18px 0; }
+.recap-item:first-child { margin-top: 0; }
+.recap-item:last-child { margin-bottom: 0; }
+.recap-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: 600;
+  color: var(--ink-mid);
+  text-transform: uppercase;
+}
+.recap-value {
+  font-size: 15px;
+  margin-top: 6px;
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+.dilemma-recap {
+  background: transparent;
+  border: none;
+  border-left: 2px solid var(--accent);
+  border-radius: 0;
+  padding: 16px 22px;
+  margin: 20px 0;
+}
+.dilemma-recap h4 {
+  font-family: 'Fraunces', 'Georgia', serif;
+  font-size: 20px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink);
+  margin-bottom: 10px;
+  letter-spacing: -0.3px;
+}
+.dilemma-recap .chose {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.dilemma-recap .not-chose {
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-style: italic;
+  margin-bottom: 14px;
+  font-family: 'Fraunces', 'Georgia', serif;
+}
+.dilemma-recap .why {
+  background: var(--bg-warm);
+  padding: 16px 20px;
+  border-radius: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink);
+  font-style: italic;
+  font-family: 'Fraunces', 'Georgia', serif;
+}
+.dilemma-recap .why::before {
+  content: '“ ';
+  font-size: 22px;
+  color: var(--accent);
+  font-family: 'Fraunces', 'Georgia', serif;
+  font-weight: 400;
+}
+.dilemma-recap .why::after {
+  content: ' ”';
+  font-size: 22px;
+  color: var(--accent);
+  font-family: 'Fraunces', 'Georgia', serif;
+}
+
+/* ─── FOOTER ──────────────────────────────────────────────── */
+footer {
+  margin-top: 80px;
+  padding: 30px 0;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+  color: var(--ink-soft);
+  text-align: center;
+}
+footer .powered {
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+footer strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+@media print {
+  .topbar, .action-bar, footer, .modal-overlay { display: none !important; }
+  body {
+    background: white !important;
+    color: #1a1a1a !important;
+  }
+  .report {
+    background: white !important;
+    padding: 0 !important;
+  }
+  .bias-flag { background: #f5e5e1 !important; border-left: 2px solid #B85042 !important; }
+  .good-flag { background: #f2efe8 !important; border-left: 2px solid #1a1a1a !important; }
+  .dilemma-recap { border-left: 2px solid #B85042 !important; }
+  .timeline li::before { background: #B85042 !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═════════════════ TOP BAR ═════════════════ -->
+<div class="topbar">
+  <div class="brand">
+    <!-- Logo SVG minimalista — semente como forma editorial -->
+    <svg class="brand-mark" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-label="Semente">
+      <!-- semente oval, formato sutil -->
+      <ellipse cx="30" cy="30" rx="14" ry="20" fill="#1A1A1A"/>
+      <!-- linha vertical que sugere germinação -->
+      <line x1="30" y1="20" x2="30" y2="40" stroke="#B85042" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <div class="brand-text">
+      semente
+      <small>simulador comercial</small>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <button class="topbar-btn" id="btnRestart" style="display:none;" onclick="restartCase()">↻ Recomeçar</button>
+    <button class="topbar-btn" id="btnBackToSelector" style="display:none;" onclick="backToSelector()">← Trocar de Case</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ═════════════════ SCREEN: CASE SELECTOR ═════════════════ -->
+  <div class="screen active" id="screen-selector">
+    <div class="case-selector">
+      <div class="selector-title">Escolha um Cenário Comercial</div>
+      <p class="selector-subtitle">
+        Três casos, três modelos de venda. Cada um simula um processo comercial distinto e seus dilemas característicos. Escolha o que mais combina com o que você quer treinar ou avaliar.
+      </p>
+      <div class="case-cards" id="caseCards">
+        <!-- Cards renderizados via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════ SCREEN: BRIEFING ═════════════════ -->
+  <div class="screen" id="screen-briefing">
+    <div class="dossie-header" id="dossieBriefing">
+      <div class="dossie-tag" id="briefingTag"></div>
+      <h1 class="dossie-title" id="briefingTitle"></h1>
+      <div class="dossie-subtitle" id="briefingSubtitle"></div>
+    </div>
+    <div class="briefing">
+      <h2>Briefing</h2>
+      <div class="briefing-section">
+        <h3>Sua Posição</h3>
+        <p id="briefingPosition"></p>
+      </div>
+      <div class="briefing-section">
+        <h3>O Alvo</h3>
+        <p id="briefingTarget"></p>
+      </div>
+      <div class="briefing-section">
+        <h3>Missão</h3>
+        <p id="briefingMission"></p>
+      </div>
+      <div class="briefing-section">
+        <h3>Regras</h3>
+        <ul id="briefingRules"></ul>
+      </div>
+      <div class="action-bar">
+        <button class="btn-secondary" onclick="backToSelector()">← Voltar</button>
+        <button class="btn-primary" onclick="startInvestigation()">Iniciar Investigação →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════ SCREEN: INVESTIGATION ═════════════════ -->
+  <div class="screen" id="screen-investigation">
+    <div class="dossie-header" id="dossieInvestigation">
+      <div class="dossie-tag" id="invTag"></div>
+      <h1 class="dossie-title" id="invTitle"></h1>
+    </div>
+
+    <div class="hud" id="hud">
+      <div class="hud-item">
+        <div class="hud-label">Tempo</div>
+        <div class="hud-value" id="timer">00:00</div>
+      </div>
+      <div class="hud-item">
+        <div class="hud-label">Fontes</div>
+        <div class="hud-value"><span id="sourceCount">0</span>/<span id="sourceTotal">0</span></div>
+      </div>
+      <div class="hud-item">
+        <div class="hud-label">Evidências</div>
+        <div class="hud-value" id="evidenceCount">0</div>
+      </div>
+      <div class="hud-item">
+        <div class="hud-label">Dilemas</div>
+        <div class="hud-value"><span id="dilemmaCount">0</span>/<span id="dilemmaTotal">0</span></div>
+      </div>
+    </div>
+
+    <div id="dilemmaBannerSlot"></div>
+
+    <div class="notebook">
+      <h3>📓 Caderno de Hipóteses</h3>
+      <p class="notebook-hint">Anote e revise suas hipóteses ao longo da investigação. A banca verá a evolução do seu raciocínio.</p>
+      <div class="hipotese-field">
+        <label>Ponto de dor principal</label>
+        <textarea id="hipotese-dor" placeholder="O que mais incomoda o cliente neste momento?"></textarea>
+      </div>
+      <div class="hipotese-field">
+        <label>Decisor de fato / processo de decisão</label>
+        <textarea id="hipotese-decisor" placeholder="Quem realmente decide? Quem influencia?"></textarea>
+      </div>
+      <div class="hipotese-field">
+        <label>Critério dominante</label>
+        <textarea id="hipotese-criterio" placeholder="Preço? ROI? Imagem? Conformidade? Outro?"></textarea>
+      </div>
+    </div>
+
+    <div class="evidence-tray">
+      <h3>🔍 Evidências Coletadas</h3>
+      <div id="evidencePills" class="evidence-pills">
+        <span class="evidence-empty">Nenhuma evidência marcada ainda. Marque trechos relevantes durante a investigação.</span>
+      </div>
+    </div>
+
+    <div class="investigation">
+      <div class="panel">
+        <h3>👥 Pessoas <span class="count" id="peopleCount">0</span></h3>
+        <div class="card-list" id="peopleList"></div>
+      </div>
+      <div class="panel">
+        <h3>📄 Fontes de Dados <span class="count" id="datasourceCount">0</span></h3>
+        <div class="card-list" id="datasourceList"></div>
+      </div>
+    </div>
+
+    <div class="action-bar">
+      <button class="btn-secondary" onclick="showScreen('briefing')">← Rever Briefing</button>
+      <button class="btn-primary" onclick="goToProposal()">Montar Proposta Final →</button>
+    </div>
+  </div>
+
+  <!-- ═════════════════ SCREEN: PROPOSAL ═════════════════ -->
+  <div class="screen" id="screen-proposal">
+    <div class="proposal-form">
+      <h2>Proposta Final</h2>
+      <p class="proposal-form-intro" id="proposalIntro"></p>
+      <div id="proposalFields"></div>
+      <div class="action-bar">
+        <button class="btn-secondary" onclick="showScreen('investigation')">← Voltar à Investigação</button>
+        <button class="btn-primary" onclick="submitProposal()">Fechar Proposta e Gerar Relatório →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════ SCREEN: REPORT ═════════════════ -->
+  <div class="screen" id="screen-report">
+    <div class="report" id="reportContent"></div>
+    <div class="action-bar">
+      <button class="btn-secondary" onclick="restartCase()">↻ Refazer Este Case</button>
+      <button class="btn-secondary" onclick="backToSelector()">← Outro Case</button>
+      <button class="btn-primary" onclick="window.print()">🖨 Imprimir / PDF</button>
+    </div>
+  </div>
+
+  <!-- ═════════════════ MODAL ═════════════════ -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal" id="modalContent"></div>
+  </div>
+
+  <footer>
+    <div class="powered">Semente · Simulador Comercial</div>
+    <div>Avaliação por trilha de raciocínio · v0.3</div>
+  </footer>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   SIMULADOR COMERCIAL · SEMENTE NEGÓCIOS
+   Engine de avaliação de raciocínio comercial por escape-room investigativo.
+
+   Arquitetura:
+   - CASES: array de objetos, cada um descrevendo um cenário comercial completo.
+   - ENGINE: código genérico que renderiza qualquer CASE.
+   Pra adicionar novo case, basta empurrar pro array CASES.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ===== CASES SERÃO INJETADOS AQUI ===== */
+/* ════════════════════════════════════════════════════════════════
+   CASE 1 · FIELD SALES · OPERAÇÃO CAMPUS VERDE
+   Venda complexa B2B · Ciclo longo · Múltiplos decisores
+   ════════════════════════════════════════════════════════════════ */
+
+const CASE_FIELD = {
+  id: "field-campus-verde",
+  type: "field",
+  typeLabel: "Field Sales",
+  typeDescription: "Venda B2B complexa com múltiplos decisores e ciclo longo. Você visita o cliente, mapeia stakeholders e constrói relacionamento.",
+  duration: "~30 min",
+  difficulty: "Intermediário",
+  color: "field",
+
+  meta: {
+    title: "Operação Campus Verde",
+    subtitle: "Universidade São Marcos · Proposta de Gestão de Resíduos",
+    position: "Você é Consultor(a) Comercial Sênior da EcoFlux Soluções Ambientais — empresa especializada em logística reversa, compostagem e gestão integrada de resíduos para grandes geradores. Seu time pediu que você feche o maior contrato do trimestre.",
+    target: "Universidade São Marcos (USM), instituição privada de Porto Alegre/RS. 18.500 alunos, 3 campi, faturamento anual de R$ 340 milhões. Tem orçamento de R$ 1,2 milhão alocado para 'iniciativas de sustentabilidade' em 2026.",
+    mission: "Coletar evidências suficientes para apresentar uma proposta comercial vencedora à USM. Você não tem o briefing pronto — precisa investigar pessoalmente e nos documentos disponíveis."
+  },
+
+  rules: [
+    "Você tem acesso a 4 stakeholders entrevistáveis e 4 documentos.",
+    "A ordem é livre — cada ação fica registrada.",
+    "Stakeholders têm agendas conflitantes. Cruze fontes antes de concluir.",
+    "Você enfrentará <strong>dilemas em momentos-chave</strong>. Cada escolha exige justificativa registrada e tem consequência.",
+    "Marque evidências críticas — devem sustentar sua proposta final.",
+    "Ao fechar a proposta, o sistema gera relatório completo de trilha pra banca."
+  ],
+
+  sources: {
+    people: [
+      {
+        id: "diretor-op",
+        name: "Augusto Ramires",
+        role: "Diretor de Operações da USM",
+        type: "person",
+        icon: "A",
+        bio: "Toca a operação do dia a dia. Comprou contratos com terceirizadas a vida inteira. Cético com 'modismo verde'.",
+        questions: [
+          { q: "Qual o principal problema da USM hoje em gestão de resíduos?",
+            a: "Olha, sinceramente, o problema é custo. A gente paga uma fortuna pra empresa atual coletar lixo e meio que joga em algum aterro. Geramos em torno de 4 toneladas por mês entre os três campi. Mas é estimativa minha, viu? Não tenho número exato.",
+            evidenceTag: "Diretor estima 4t/mês (sem dado oficial)" },
+          { q: "Sustentabilidade é prioridade pra USM?",
+            a: "Vou ser honesto: na operação, não. É papo bonito pra evento, pra folder. Mas se você me trouxer proposta que CORTE custo E ainda dê fachada verde, aí sim. Custo primeiro, marketing depois.",
+            evidenceTag: "Diretor de Operações prioriza CUSTO sobre ESG" },
+          { q: "Quem decide a compra de um serviço como esse?",
+            a: "Tecnicamente eu assino. Mas pra valor desse, passa pelo conselho. E a Beatriz, da sustentabilidade, virou figura forte ali — tem ouvido da reitoria. Antigamente era só decisão minha. Hoje não é mais.",
+            evidenceTag: "Decisão envolve conselho + influência da coord. sustentabilidade" },
+          { q: "Já trabalharam com fornecedores como nós antes?",
+            a: "Tem a empresa atual, a LogeAmbiental. Contrato venceu mês passado, estamos em aditivo emergencial. Fazem o básico. Não inovam. Mas é barato.",
+            evidenceTag: "Concorrente atual: LogeAmbiental — contrato em aditivo" }
+        ]
+      },
+      {
+        id: "coord-sust",
+        name: "Beatriz Vilanova",
+        role: "Coordenadora de Sustentabilidade",
+        type: "person",
+        icon: "B",
+        bio: "Contratada há 2 anos. Vinda de uma multinacional. Tem mandato direto da reitoria pra 'tornar a USM referência em ESG no sul do país'.",
+        questions: [
+          { q: "Qual a prioridade número um da sua área em 2026?",
+            a: "O Relatório GRI. A USM nunca publicou um e a reitoria quer publicar até dezembro. Pra isso, eu PRECISO de fornecedores que me entreguem dados rastreáveis: quanto foi coletado, reciclado, virou compostagem, emissão CO2 evitada. A LogeAmbiental atual NÃO me dá isso. Planilha Excel com 'kg total' e acabou.",
+            evidenceTag: "Dor real Beatriz: rastreabilidade pro Relatório GRI 2026" },
+          { q: "Como você descreveria o engajamento dos alunos?",
+            a: "Os alunos cobram. A gente recebe e-mail toda semana sobre reciclagem. O DCE pegou pesado ano passado com campanha. A reitoria sentiu — virou pauta de conselho.",
+            evidenceTag: "Pressão estudantil via DCE — pauta no conselho" },
+          { q: "Vocês têm orçamento dedicado?",
+            a: "Sim. R$ 1,2 milhão pra 2026, no bloco 'iniciativas de sustentabilidade'. Mas atenção: NÃO é só pra resíduo. Divido entre resíduo, energia solar e mobilidade. Pra resíduo, na prática, tenho uns R$ 600 mil.",
+            evidenceTag: "Budget visível pra resíduo: R$ 600k (não R$ 1,2M)" },
+          { q: "Você decide ou recomenda?",
+            a: "Recomendo pro conselho. Mas a reitora me pediu, em reunião fechada, pra liderar essa frente. O Augusto vai querer enfiar o dedo, mas se eu chegar com proposta sólida ligada ao GRI, a reitora me apoia. Já vi acontecer.",
+            evidenceTag: "Beatriz tem apoio direto da reitora — influenciadora-chave" }
+        ]
+      },
+      {
+        id: "gerente-fin",
+        name: "Heitor Caldeira",
+        role: "Gerente Financeiro",
+        type: "person",
+        icon: "H",
+        bio: "Engenheiro de formação, financeiro de carreira. Avalia tudo por TIR e payback. Não decide, mas pode vetar.",
+        questions: [
+          { q: "Como o financeiro avalia propostas como a nossa?",
+            a: "Payback. Não aprovo nada com payback acima de 24 meses pra contrato operacional. Capex, posso esticar pra 36. Mas serviço recorrente, 24 meses é teto.",
+            evidenceTag: "Critério financeiro: payback ≤ 24 meses" },
+          { q: "Histórico de gasto com LogeAmbiental?",
+            a: "Tenho. 2025 fechou R$ 38 mil/mês, ou seja, R$ 456 mil/ano. E esse número não bate com o que o Augusto te falou se ele te disse 4 toneladas. Pelo nosso último laudo, a USM gera mais de 6 toneladas/mês. Ou a LogeAmbiental cobra mal ou o Augusto chuta por baixo. Te aviso.",
+            evidenceTag: "DADO OFICIAL: 6t/mês de resíduo — Augusto subestima" },
+          { q: "Restrições contratuais que devemos saber?",
+            a: "Sim. Por estatuto, contratos acima de R$ 500 mil/ano precisam de três cotações. E o reitor exige que duas sejam de fornecedores com sede no RS — política regional. Vocês são de onde?",
+            evidenceTag: "Regra: >R$500k/ano = 3 cotações + 2 fornecedores do RS" },
+          { q: "Quanto o conselho realmente investe?",
+            a: "A Beatriz fala em R$ 600 mil, mas é o que ALMEJA. O conselho aprovou teto de R$ 720 mil/ano pra resíduo se justificar bem. Sei porque participei. Mas isso não circula. Use com cuidado.",
+            evidenceTag: "Teto real do conselho: R$ 720k/ano (insider)" }
+        ]
+      },
+      {
+        id: "rep-dce",
+        name: "Letícia Pinheiro",
+        role: "DCE / Conselho Estudantil",
+        type: "person",
+        icon: "L",
+        bio: "Aluna do último ano de Eng. Ambiental. Lidera 'USM Verde' há 18 meses. Convidada pra conselho como ouvinte.",
+        questions: [
+          { q: "O que os alunos cobram da USM em sustentabilidade?",
+            a: "AÇÃO, não papel. A LogeAmbiental atual é piada — vi caminhão deles misturar reciclável com orgânico na saída do campus mês passado. Tem foto, está no Instagram do DCE. A reitora viu. Foi vexame.",
+            evidenceTag: "Incidente público: LogeAmbiental misturou resíduos" },
+          { q: "Vocês influenciam decisão da reitoria?",
+            a: "Não temos voto, mas temos voz. E Instagram com 14 mil seguidores. Quando postamos crítica, vira ruído. A reitora aprende rápido.",
+            evidenceTag: "DCE = pressão de mídia social ativa" },
+          { q: "Que tipo de proposta vocês apoiariam publicamente?",
+            a: "Uma que ENVOLVA o aluno. Lixeiras inteligentes com gamificação, programa de compostagem aberto pra comunidade, certificação visível tipo selo nos blocos. Não adianta só caminhão melhor.",
+            evidenceTag: "Alunos querem engajamento ativo + visibilidade + comunidade" }
+        ]
+      }
+    ],
+    documents: [
+      {
+        id: "doc-laudo",
+        title: "Laudo Ambiental USM 2024",
+        type: "doc",
+        icon: "📊",
+        meta: "12 págs · oficial",
+        content: `LAUDO AMBIENTAL ANUAL — UNIVERSIDADE SÃO MARCOS
+Exercício 2024 · Emitido 12/01/2025
+Responsável: Eng. Amb. R. Stein, CREA 187432
+
+═══════════════════════════════════════════════
+RESUMO EXECUTIVO
+
+Geração média mensal (3 campi):
+  Orgânicos       :  2.450 kg
+  Recicláveis     :  2.180 kg
+  Não-recicláveis :  1.530 kg
+  E-lixo          :     95 kg
+  TOTAL           :  6.255 kg ≈ 6,2 toneladas
+
+Geração anual estimada: 75 toneladas
+Taxa de reciclagem efetiva: 12%
+Benchmark setor educacional Sul: 38%
+
+═══════════════════════════════════════════════
+DESTINAÇÃO ATUAL
+
+Operadora: LogeAmbiental Ltda.
+Modelo: coleta indiferenciada + triagem em CT própria
+Reciclagem relatada (não auditada): 31%
+Reciclagem auditada por amostragem: 12%
+DIVERGÊNCIA: 19 p.p.
+
+Recomendação: contratar fornecedor com
+rastreabilidade ponta-a-ponta para
+auditoria GRI.
+
+═══════════════════════════════════════════════
+CUSTO ATUAL
+
+Contrato LogeAmbiental: R$ 456.000/ano
+Custo por tonelada: ≈ R$ 6.080
+Benchmark setor (c/ rastreabilidade): R$ 4.800–7.200/t`
+      },
+      {
+        id: "doc-orcamento",
+        title: "Orçamento Sustentabilidade 2026",
+        type: "doc",
+        icon: "💰",
+        meta: "ERP · 1 pág",
+        content: `ORÇAMENTO 2026 — BLOCO SUSTENTABILIDADE
+USM · Aprovação 18/11/2025
+
+═══════════════════════════════════════════════
+ALOCAÇÃO TOTAL: R$ 1.200.000
+
+  Linha 1 — Gestão de Resíduos       R$ 600.000
+  Linha 2 — Energia Solar (C. Sul)   R$ 380.000
+  Linha 3 — Programa Mobilidade      R$ 150.000
+  Linha 4 — Reserva Contingência     R$  70.000
+
+═══════════════════════════════════════════════
+OBSERVAÇÃO EM RODAPÉ (assinada pelo CFO):
+
+"A Linha 1 (Resíduos) pode ser ampliada até
+R$ 720.000 mediante apresentação de proposta com
+TIR > 18% ao ano e garantia de conformidade GRI.
+Aprovação a critério do Conselho Gestor."
+
+═══════════════════════════════════════════════
+HISTÓRICO LINHA RESÍDUOS:
+  2024: R$ 456.000 (LogeAmbiental)
+  2025: R$ 456.000 (mesmo, em aditivo)
+  2026: R$ 600.000 base | R$ 720.000 c/ gatilho`
+      },
+      {
+        id: "doc-edital",
+        title: "Edital 2022 (a USM perdeu p/ LogeAmbiental)",
+        type: "doc",
+        icon: "📜",
+        meta: "histórico · 8 págs",
+        content: `EDITAL DE COTAÇÃO Nº 14/2022
+Objeto: Gestão de resíduos sólidos universitários
+
+═══════════════════════════════════════════════
+CRITÉRIOS DE JULGAMENTO:
+
+  1. Preço global anual         40%
+  2. Capacidade operacional     25%
+  3. Sede ou filial no RS       20%  ←
+  4. Certificações ambientais   10%
+  5. Plano de inovação           5%
+
+═══════════════════════════════════════════════
+RESULTADO:
+  1º LogeAmbiental Ltda. (POA)    8,9
+  2º EcoFlux Soluções Amb. (SP)   7,2
+  3º GreenWaste (Curitiba)        6,8
+
+═══════════════════════════════════════════════
+DESCLASSIFICAÇÃO PARCIAL ECOFLUX:
+
+"Apesar de proposta técnica superior, a EcoFlux
+foi desclassificada parcialmente no critério
+'sede no RS' (pontuação zero), o que impactou
+de forma decisiva o resultado final."`
+      },
+      {
+        id: "doc-ata",
+        title: "Ata Conselho Gestor · Out/2025",
+        type: "doc",
+        icon: "📋",
+        meta: "restrita · 4 págs",
+        content: `ATA CONSELHO GESTOR USM
+14 de outubro de 2025 · Sala da Reitoria
+
+═══════════════════════════════════════════════
+PRESENTES:
+  Reitora: Profa. M. Saldanha
+  Diretor Op.: A. Ramires
+  Ger. Fin.: H. Caldeira
+  Coord. Sust.: B. Vilanova
+  Conselheiros (3)
+  Ouvinte: L. Pinheiro (DCE)
+
+═══════════════════════════════════════════════
+ITEM 4 — GESTÃO DE RESÍDUOS / GRI
+
+Beatriz Vilanova relatou impossibilidade técnica
+de publicar Relatório GRI 2026 sem fornecedor
+com rastreabilidade ponta-a-ponta. Apresentou
+caso do incidente público de mistura de resíduos
+(jul/2025) divulgado pelo DCE.
+
+Reitora: "Não vamos mais ser pauta de Instagram
+do DCE por algo evitável. Quero proposta nova até
+março de 2026. E quero proposta amarrada ao GRI,
+não apenas ao custo."
+
+Augusto Ramires registrou divergência: "Custo
+operacional não pode subir mais de 20% sobre o
+contrato atual sem comprometer outras frentes."
+
+ENCAMINHAMENTO:
+  · Beatriz lidera processo
+  · Augusto valida operacional
+  · Heitor valida TIR e payback (≤24m)
+  · Cotações: 3 mínimas, 2 com base no RS
+  · Prazo: 31/03/2026
+
+═══════════════════════════════════════════════
+OBS. FINAL:
+
+"A Reitora encerrou indicando que o critério
+'sede no RS' do edital de 2022 será flexibilizado
+para 'capacidade comprovada de operação no RS',
+desde que demonstre estrutura local equivalente."
+
+— assinado: M. Saldanha, Reitora`
+      }
+    ]
+  },
+
+  /* DILEMAS — pontos de bifurcação obrigatória */
+  dilemmas: [
+    {
+      id: "posicionamento",
+      trigger: { type: "afterSources", count: 3 },
+      title: "Dilema de Posicionamento",
+      context: "Você já coletou evidências suficientes pra entender o terreno. Mas existem duas narrativas possíveis pra construir sua proposta — e elas são <strong>incompatíveis</strong>. Você não consegue defender as duas ao mesmo tempo na mesa de venda. Escolha agora, porque tudo que vier depois precisa ser coerente com essa escolha.",
+      options: [
+        { id: "custo", title: "Vender por CUSTO", desc: "Briga direta com a LogeAmbiental. Foco em redução de custo operacional, TCO mais baixo, comparativo de preço por tonelada. Apelo principal: Augusto (Operações) + Heitor (Financeiro)." },
+        { id: "conformidade", title: "Vender por CONFORMIDADE / GRI", desc: "Foco em rastreabilidade, dados auditáveis, compliance pra Relatório GRI 2026. Premium justificado pela dor real da reitora. Apelo principal: Beatriz (Sustentabilidade) + reitora." },
+        { id: "engajamento", title: "Vender por ENGAJAMENTO ESTUDANTIL", desc: "Foco em lixeiras inteligentes, gamificação, programa comunitário visível. Diferenciação por experiência do usuário-aluno. Apelo principal: DCE + reitora preocupada com imagem." }
+      ]
+    },
+    {
+      id: "confronto-dado",
+      trigger: { type: "afterEvidences", count: 4 },
+      title: "Dilema de Confronto",
+      context: "Você descobriu que o Diretor de Operações (Augusto) estimou 4 toneladas/mês, mas o laudo oficial mostra 6,2 toneladas/mês — quase 50% a mais. Augusto não sabe ou não quis revelar. O que fazer com essa informação?",
+      options: [
+        { id: "confronta", title: "CONFRONTAR Augusto", desc: "Volta a falar com ele, mostra o dado oficial e força reconhecimento. Pode constranger, mas alinha narrativa. Risco: criar inimigo interno." },
+        { id: "guarda", title: "GUARDAR como trunfo", desc: "Não confronta. Usa o dado correto na proposta sem expor a divergência. Augusto descobre na hora da apresentação — pode reagir mal ou aceitar tacitamente." },
+        { id: "alia-beatriz", title: "ALIAR-SE com Beatriz", desc: "Compartilha o achado com a Beatriz, fortalecendo a narrativa de 'precisamos de dados rastreáveis' junto à reitora. Beatriz vira sua advogada interna." }
+      ]
+    },
+    {
+      id: "compliance",
+      trigger: { type: "beforeProposal" },
+      title: "Dilema de Compliance Regional",
+      context: "Pelo estatuto da USM, contratos acima de R$ 500 mil/ano precisam de 3 cotações com no mínimo 2 fornecedores do RS. A EcoFlux é sede SP. A ata de outubro indica flexibilização ('capacidade comprovada de operação no RS, com estrutura local equivalente'). Como você endereça isso na proposta?",
+      options: [
+        { id: "ignora", title: "IGNORAR o critério", desc: "Não menciona na proposta. Aposta que a flexibilização da ata se aplica automaticamente. Risco: ser descartado no primeiro filtro antes da banca avaliar mérito." },
+        { id: "filial", title: "PROMETER abertura de filial RS", desc: "Compromisso explícito: se contrato fechar, EcoFlux abre filial em POA. Custo real pra EcoFlux, mas resolve o critério. Risco: comprometer margem ou criar overhead." },
+        { id: "parceria", title: "PROPOR parceria com fornecedor local", desc: "Subcontrata um operador logístico do RS (ex: GreenWaste de Curitiba não serve; precisa RS). Mantém comando técnico, satisfaz critério regional. Risco: dependência de terceiro." }
+      ]
+    }
+  ],
+
+  proposalFields: [
+    { id: "problema", label: "Problema (na ótica do cliente)", placeholder: "Como você descreve o problema usando palavras do cliente?", type: "textarea" },
+    { id: "solucao", label: "Solução Proposta", placeholder: "O que você está vendendo? Seja específico.", type: "textarea" },
+    { id: "valor", label: "Justificativa de Valor", placeholder: "Por que esse cliente deveria comprar de você? Conecte ao ponto de dor.", type: "textarea" },
+    { id: "preco", label: "Investimento Proposto (R$/ano)", placeholder: "Ex: R$ 680.000", type: "input" },
+    { id: "aprov", label: "Estratégia de Aprovação", placeholder: "Quem você precisa convencer e em que ordem?", type: "textarea" },
+    { id: "objecoes", label: "Objeções Antecipadas", placeholder: "O que você espera ouvir como 'não'? Como responde?", type: "textarea" }
+  ],
+
+  evaluation: {
+    criticalEvidences: [
+      "DADO OFICIAL: 6t/mês de resíduo — Augusto subestima",
+      "Dor real Beatriz: rastreabilidade pro Relatório GRI 2026",
+      "Critério financeiro: payback ≤ 24 meses",
+      "Regra: >R$500k/ano = 3 cotações + 2 fornecedores do RS"
+    ],
+    biasTraps: [
+      { name: "Viés de Autoridade", trigger: (s) => s.consultedSources.has("diretor-op") && !s.consultedSources.has("gerente-fin"),
+        detail: "Você ouviu o Diretor de Operações mas não confrontou os dados dele com o Gerente Financeiro. Augusto chuta 4t; o laudo mostra 6,2t. Fechar proposta confiando no chute superdimensiona ou subdimensiona — perde competitividade ou margem." },
+      { name: "Viés de Ancoragem", trigger: (s) => { const p = parsePrice(s.proposal.preco); return p > 0 && p <= 600000 && !s.consultedSources.has("gerente-fin"); },
+        detail: "Você ancorou no número da Beatriz (R$ 600k) sem investigar o teto real do conselho (R$ 720k). Em venda premium, deixar R$ 120k na mesa por não ter perguntado é caro." },
+      { name: "Viés de Confirmação", trigger: (s) => s.consultedSources.size <= 2 && Object.values(s.proposal).some(v => v && v.length > 50),
+        detail: "Você fechou proposta tendo consultado ≤2 fontes. Trilha curta = hipótese formada cedo e não confrontada. Que evidência sustenta cada afirmação?" },
+      { name: "Cegueira a Critério Eliminatório", trigger: (s) => !s.consultedSources.has("doc-edital") && !s.consultedSources.has("doc-ata"),
+        detail: "Não consultou edital nem ata. Existe regra eliminatória clássica (3 cotações, 2 do RS) que descarta proposta antes da banca ler mérito." },
+      { name: "Foco Operacional Excessivo", trigger: (s) => { const v = (s.proposal.valor || "").toLowerCase(); return v.length > 30 && !v.includes("gri") && !v.includes("rastrea") && !v.includes("relat") && !v.includes("conform") && !v.includes("audit"); },
+        detail: "Sua justificativa de valor não menciona rastreabilidade/GRI/conformidade/auditoria. A dor pública da reitora é GRI. Vender por custo contra a LogeAmbiental é briga perdida." }
+    ],
+    goodMoves: [
+      { name: "Triangulação de Fontes", trigger: (s) => s.consultedSources.size >= 5,
+        detail: "Você cruzou múltiplas fontes com agendas diferentes antes de concluir. Maturidade de venda consultiva." },
+      { name: "Leitura Documental", trigger: (s) => Array.from(s.consultedSources).filter(id => id.startsWith("doc-")).length >= 3,
+        detail: "Consultou maioria dos documentos. Decisões ancoradas em evidência objetiva, não só fala de personagem." },
+      { name: "Hipótese Revisada", trigger: (s) => s.hypothesisHistory.length >= 2,
+        detail: "Sua hipótese evoluiu durante a investigação. Flexibilidade cognitiva." },
+      { name: "Compliance Endereçado", trigger: (s) => { const a = (s.proposal.aprov || "").toLowerCase(); return a.includes("rs") || a.includes("rio grande") || a.includes("cotaç") || a.includes("cotac") || a.includes("filial"); },
+        detail: "Você endereçou o critério regional/cotação tripla. Antecipa-se a critério eliminatório." }
+    ]
+  }
+};
+
+/* ════════════════════════════════════════════════════════════════
+   CASE 2 · INSIDE SALES · A CONTA QUE NÃO ASSINA
+   Venda remota SaaS B2B · Ciclo médio · Decisor + influenciador
+   ════════════════════════════════════════════════════════════════ */
+
+const CASE_INSIDE = {
+  id: "inside-conta-que-nao-assina",
+  type: "inside",
+  typeLabel: "Inside Sales",
+  typeDescription: "Venda remota de SaaS B2B. Você vê o cliente só por video-call e CRM. A investigação é leitura de sinais frios: histórico, comportamento de uso, emails.",
+  duration: "~25 min",
+  difficulty: "Intermediário",
+  color: "inside",
+
+  meta: {
+    title: "A Conta Que Não Assina",
+    subtitle: "Foliato HR · Renovação Travada · Q4",
+    position: "Você é Account Executive da PulsoPeople, plataforma SaaS de people analytics para empresas de 500–5.000 funcionários. Ticket médio R$ 84k/ano. Ciclo típico: 4–6 reuniões, 60–90 dias. Sua meta de Q4 depende de fechar a renovação + upsell da Foliato HR.",
+    target: "Foliato HR — consultoria de RH com 1.200 funcionários, cliente PulsoPeople há 18 meses no plano Growth (R$ 60k/ano). Contrato vence em 23 dias. Champion (Carla, Head of People) sumiu nos últimos 14 dias. Decisor (CFO Eduardo) entrou na conversa do nada.",
+    mission: "Você herdou essa conta há 3 semanas (vendedor anterior saiu). Tem CRM, histórico de calls e thread de email pra ler. Em 25 minutos, precisa entender o que está acontecendo e montar a abordagem da call decisiva de amanhã."
+  },
+
+  rules: [
+    "Você NÃO entrevista o cliente ao vivo. A investigação é toda em dados frios.",
+    "Disponível: histórico de calls (transcrições), thread de email, CRM (dashboard de uso) e notas internas do vendedor anterior.",
+    "Existe uma armadilha clássica de inside sales escondida nos dados. Encontre antes de fechar a proposta.",
+    "Você enfrentará <strong>dilemas estratégicos</strong> sobre como conduzir a call de amanhã.",
+    "Ao fim, sua proposta vira o script + estratégia da call. A banca avalia coerência entre dados encontrados e abordagem escolhida."
+  ],
+
+  sources: {
+    people: [
+      {
+        id: "carla-champion",
+        name: "Carla Mendes (champion)",
+        role: "Head of People · Foliato HR",
+        type: "person",
+        icon: "C",
+        bio: "Sua principal interlocutora desde o início. Comprou a PulsoPeople originalmente. Sumiu de scratch há 14 dias.",
+        questions: [
+          { q: "Ler última call com Carla (45 dias atrás)",
+            type: "call",
+            evidenceTag: "Carla disse há 45 dias: 'vou expandir uso pro time de Operações em Q4'",
+            content: {
+              meta: "Call de QBR · 18/09/2025 · 47 min · gravada",
+              lines: [
+                { who: "Carla", side: "them", time: "00:01:12", text: "Oi gente, tudo bem? Aqui é uma quinta corrida mas valeu agendar." },
+                { who: "Vendedor (Mateus)", side: "us", time: "00:01:30", text: "Bom te ver Carla. Hoje queria fazer um QBR rápido — review de resultados e olhar pra Q4 e renovação." },
+                { who: "Carla", side: "them", time: "00:04:22", text: "Olha, a parte de analytics que vocês entregam, eu uso muito. Pessoal de talent acquisition pegou ritmo. O que ainda está fraco é adoção na liderança." },
+                { who: "Vendedor", side: "us", time: "00:08:14", text: "Saquei. E pra Q4, tem alguma frente nova?" },
+                { who: "Carla", side: "them", time: "00:08:32", text: "Tem sim. Eu quero expandir uso pro time de Operações em Q4. O Daniel, que é o COO, está com sponsor reuniões de gestão e quer dashboard de turnover por área. Vocês têm isso?" },
+                { who: "Vendedor", side: "us", time: "00:09:01", text: "Temos no plano Scale, sim. Posso preparar uma proposta de upsell pra você. Esse tipo de expansão a gente costuma fechar junto com renovação." },
+                { who: "Carla", side: "them", time: "00:09:30", text: "Perfeito, manda. Eu valido com o Daniel e já encaminho pra renovação." },
+                { who: "Vendedor", side: "us", time: "00:32:00", text: "Algum bloqueio que vocês veem pra Q4?" },
+                { who: "Carla", side: "them", time: "00:32:15", text: "Bloqueio formal nenhum. O CFO sempre olha contrato acima de R$ 80k com lupa, mas pra renovação é tranquilo, ele confia em mim." }
+              ]
+            }
+          },
+          { q: "Ler última call com Carla (14 dias atrás)",
+            type: "call",
+            evidenceTag: "Carla 14 dias atrás: 'plano de Operações foi adiado, momento delicado aqui'",
+            content: {
+              meta: "Call · 21/10/2025 · 22 min · gravada · tom diferente do anterior",
+              lines: [
+                { who: "Carla", side: "them", time: "00:00:45", text: "Oi, desculpa o atraso, semana corrida." },
+                { who: "Vendedor (Mateus)", side: "us", time: "00:01:02", text: "Imagina. Quis confirmar contigo o avanço da proposta de upsell pro time de Operações, e a renovação. Vence em 38 dias." },
+                { who: "Carla", side: "them", time: "00:03:30", text: "Mateus, preciso ser honesta. O plano de Operações foi adiado. Momento delicado aqui dentro. Mas a renovação eu quero manter." },
+                { who: "Vendedor", side: "us", time: "00:04:00", text: "Sem problema, a gente foca na renovação. Quer manter no Growth atual ou aproveitar pra subir alguma coisa?" },
+                { who: "Carla", side: "them", time: "00:04:42", text: "Mantém Growth. Sem mudança. Pode me mandar a proposta de renovação com reajuste contratual padrão e a gente assina." },
+                { who: "Vendedor", side: "us", time: "00:05:00", text: "Beleza. Te mando até sexta." },
+                { who: "Carla", side: "them", time: "00:14:20", text: "Mateus, uma coisa. Se aparecer questionamento sobre custo aí na renovação, pode falar comigo primeiro? Não direto com o Eduardo." },
+                { who: "Vendedor", side: "us", time: "00:14:38", text: "Claro. Mas o Eduardo costuma se envolver em renovações?" },
+                { who: "Carla", side: "them", time: "00:14:55", text: "Normalmente não. Mas o momento é diferente. Você confia em mim, eu te aviso se precisar." }
+              ]
+            }
+          },
+          { q: "Ler emails enviados à Carla nos últimos 14 dias",
+            type: "email",
+            evidenceTag: "Carla não respondeu 3 dos 4 últimos emails — só o primeiro",
+            content: [
+              { from: "Vendedor (Mateus) <mateus@pulsopeople.com>", to: "Carla Mendes <carla@foliatohr.com>", date: "23/10/2025 14:30", subject: "Proposta de renovação Foliato — anexa",
+                body: "Oi Carla,\n\nSegue conforme combinado: proposta de renovação no plano Growth com reajuste IPCA + 3% (R$ 62.400/ano), vigência 12 meses, mantendo todos os módulos atuais. Termo em anexo, pronto pra DocuSign.\n\nQualquer ajuste me fala.\nAbs,\nMateus" },
+              { from: "Carla Mendes <carla@foliatohr.com>", to: "Vendedor <mateus@pulsopeople.com>", date: "24/10/2025 09:14", subject: "Re: Proposta de renovação",
+                body: "Recebido, Mateus. Vou olhar e te respondo segunda. abs" },
+              { from: "Vendedor (Mateus) <mateus@pulsopeople.com>", to: "Carla Mendes <carla@foliatohr.com>", date: "28/10/2025 10:00", subject: "Re: Re: Proposta — alguma sinal?",
+                body: "Oi Carla, tudo bem? Só conferindo se conseguiu olhar a proposta. Contrato vence em 30 dias e quero garantir transição tranquila.\n\nAbs,\nMateus" },
+              { from: "Vendedor (Mateus) <mateus@pulsopeople.com>", to: "Carla Mendes <carla@foliatohr.com>", date: "03/11/2025 16:00", subject: "Re: Re: Re: Carla, tudo bem aí?",
+                body: "Carla, não consigo te encontrar, manda um sinal? Renovação em 24 dias.\n\nMateus" },
+              { from: "Vendedor (Mateus) <mateus@pulsopeople.com>", to: "Carla Mendes <carla@foliatohr.com>", date: "07/11/2025 11:00", subject: "Re: Re: Re: Re: Tentando agendar 15 min",
+                body: "Carla, vou pegar a liberdade de marcar 15 min no seu Calendly pra próxima terça. Se não puder, me fala outro horário, eu me viro.\n\nMateus" }
+            ]
+          },
+          { q: "Verificar atividade dela no produto",
+            type: "dashboard",
+            evidenceTag: "Carla parou de usar PulsoPeople há 11 dias — login zero",
+            content: {
+              title: "PulsoPeople · Atividade do Usuário",
+              user: "Carla Mendes · carla@foliatohr.com · Foliato HR",
+              metrics: [
+                { label: "Logins / mês (6m média)", value: "23", delta: "—", deltaClass: "flat" },
+                { label: "Logins últimos 30 dias", value: "8", delta: "↓ 65%", deltaClass: "down" },
+                { label: "Último login", value: "há 11 dias", delta: "histórico: ≤3 dias", deltaClass: "down" },
+                { label: "Tickets de suporte abertos", value: "0", delta: "—", deltaClass: "flat" }
+              ],
+              chartTitle: "Logins por semana (últimas 12 semanas)",
+              bars: [
+                { label: "S-12", val: 5 }, { label: "S-11", val: 6 }, { label: "S-10", val: 5 },
+                { label: "S-9", val: 6 }, { label: "S-8", val: 4 }, { label: "S-7", val: 5 },
+                { label: "S-6", val: 6 }, { label: "S-5", val: 5 }, { label: "S-4", val: 4 },
+                { label: "S-3", val: 3 }, { label: "S-2", val: 1, alt: true }, { label: "S-1", val: 0, alt: true }
+              ],
+              barMax: 8,
+              note: "Queda abrupta a partir da semana -2. Padrão típico de: (a) férias, (b) saída/transição interna, (c) decisão de churn já tomada."
+            }
+          }
+        ]
+      },
+      {
+        id: "eduardo-cfo",
+        name: "Eduardo Vasco (CFO)",
+        role: "CFO · Foliato HR",
+        type: "person",
+        icon: "E",
+        bio: "Apareceu na conversa do nada há 10 dias. Pediu reunião direta sem CC à Carla. É a call de amanhã.",
+        questions: [
+          { q: "Ler email do CFO solicitando a reunião",
+            type: "email",
+            evidenceTag: "CFO pediu call direta SEM Carla em CC — quebra de protocolo",
+            content: [
+              { from: "Eduardo Vasco <eduardo@foliatohr.com>", to: "Vendedor <mateus@pulsopeople.com>", date: "30/10/2025 17:42", subject: "Conversa sobre PulsoPeople",
+                body: "Mateus, boa tarde.\n\nSou Eduardo, CFO da Foliato. Pegando a frente em algumas avaliações de fornecedores neste fim de ano. Gostaria de agendar 30 minutos contigo, idealmente sem outras pessoas da Foliato na call, pra entender melhor o contrato e o valor entregue.\n\nDisponível terça às 10h? Bloqueio na agenda.\n\nObrigado,\nEduardo Vasco\nCFO · Foliato HR" }
+            ]
+          },
+          { q: "Pesquisar Eduardo no LinkedIn / notas internas",
+            type: "doc",
+            evidenceTag: "Eduardo chegou há 4 meses · histórico de corte de custo em outras empresas",
+            content: `NOTAS · EDUARDO VASCO (CFO Foliato)
+Coletado pelo Mateus em 31/10
+
+═══════════════════════════════════════════════
+LINKEDIN
+
+· CFO Foliato HR desde JUNHO/2025 (4 meses)
+· Antes: CFO TechCloud Solutions (2 anos)
+· Antes disso: CFO MultiServ BPO (3 anos)
+· Formação: FGV-SP + MBA Insper
+
+OBS: Em TechCloud, foi citado em case Endeavor
+como "responsável por redução de 22% em
+gastos com SaaS em 12 meses, via consolidação
+de vendors e renegociação contratual agressiva."
+
+═══════════════════════════════════════════════
+NOTAS DE INTELIGÊNCIA (de colegas vendedores)
+
+· Caio (Salesforce) reportou que Eduardo está
+  cortando ~30% dos contratos de SaaS na
+  Foliato. Já cancelou 4 ferramentas.
+
+· Beatriz (Gympass) reportou que Eduardo
+  pediu redução de 40% no contrato deles.
+  Eles toparam 25% pra não perder.
+
+═══════════════════════════════════════════════
+INTERPRETAÇÃO PESSOAL DO MATEUS:
+
+"CFO novo. Mandato implícito de cortar custo.
+Está fazendo auditoria de SaaS. PulsoPeople
+provavelmente está na lista. Carla pode estar
+sob pressão pra defender o contrato — ou pior,
+pode já ter perdido a briga internamente."`
+          }
+        ]
+      },
+      {
+        id: "daniel-coo",
+        name: "Daniel Ferreira (COO)",
+        role: "COO · Foliato HR",
+        type: "person",
+        icon: "D",
+        bio: "Mencionado pela Carla como sponsor de uma expansão pra Operações. Nunca falou diretamente com a PulsoPeople.",
+        questions: [
+          { q: "Procurar interações com Daniel no histórico",
+            type: "doc",
+            evidenceTag: "Daniel nunca falou com PulsoPeople — sponsor fantasma",
+            content: `BUSCA NO CRM · DANIEL FERREIRA (COO Foliato)
+Consulta executada em 11/11/2025
+
+═══════════════════════════════════════════════
+RESULTADOS:
+
+Calls registradas:         0
+Emails (in/out):           0
+Reuniões agendadas:        0
+Tickets de suporte:        0
+Atividade no produto:      0 (nunca recebeu login)
+
+═══════════════════════════════════════════════
+MENÇÕES (em notas de calls):
+
+· Citado pela Carla 3 vezes:
+  - 18/09: "Daniel quer dashboard turnover"
+  - 18/09: "sponsor da expansão Operações"
+  - 04/09: "vou alinhar com o Daniel antes de fechar"
+
+═══════════════════════════════════════════════
+OBSERVAÇÃO:
+
+Daniel é mencionado pela Carla como sponsor da
+expansão, mas não há nenhum registro de
+interação direta. Sponsor citado mas nunca
+materializado. Padrão clássico de "deal com
+sponsor fantasma" — alto risco de não fechar.`
+          }
+        ]
+      }
+    ],
+    documents: [
+      {
+        id: "doc-crm-conta",
+        title: "Saúde da conta Foliato (CRM)",
+        type: "dash",
+        icon: "📈",
+        meta: "atualizado hoje",
+        content: {
+          title: "PulsoPeople CRM · Conta Foliato HR",
+          user: "Conta: Foliato HR · Plano: Growth · Contrato: R$ 60.000/ano",
+          metrics: [
+            { label: "Tempo de contrato", value: "18 meses", delta: "renovação em 23 dias", deltaClass: "flat" },
+            { label: "Health Score", value: "42", delta: "↓ de 78 (90d atrás)", deltaClass: "down" },
+            { label: "Usuários ativos", value: "4", delta: "↓ de 14 (90d atrás)", deltaClass: "down" },
+            { label: "NPS último survey", value: "6", delta: "↓ de 9", deltaClass: "down" },
+            { label: "Suporte (90d)", value: "1 ticket", delta: "histórico ≈ 4", deltaClass: "flat" },
+            { label: "Faturamento entregue (LTV)", value: "R$ 90k", delta: "—", deltaClass: "flat" }
+          ],
+          chartTitle: "Usuários ativos semanalmente (6 meses)",
+          bars: [
+            { label: "M-6", val: 14 }, { label: "M-5", val: 13 }, { label: "M-4", val: 12 },
+            { label: "M-3", val: 11 }, { label: "M-2", val: 8, alt: true }, { label: "M-1", val: 4, alt: true }
+          ],
+          barMax: 16,
+          note: "Queda de 71% de usuários ativos em 90 dias. Health score caiu metade. NPS caiu 3 pontos. Padrão clássico de churn iminente — não é renovação tranquila, mesmo que Carla tenha dito que é."
+        }
+      },
+      {
+        id: "doc-notas-mateus",
+        title: "Notas internas do vendedor anterior",
+        type: "doc",
+        icon: "📝",
+        meta: "Mateus (saiu) · 8 notas",
+        content: `NOTAS INTERNAS · CONTA FOLIATO
+Vendedor anterior: Mateus L. (saiu da PulsoPeople em 25/10)
+
+═══════════════════════════════════════════════
+03/03/2025 — Onboarding ok. Carla muito engajada.
+Plano Growth perfeito pra eles agora. Upsell pra
+Scale na renovação é caminho natural.
+
+═══════════════════════════════════════════════
+12/06/2025 — QBR boa. Time de RH usando bem.
+Carla quer expansão pra Operações em Q4. Já
+mencionou Daniel (COO) como sponsor.
+
+═══════════════════════════════════════════════
+04/09/2025 — Carla diz que "vai alinhar com
+Daniel antes de fechar". Daniel nunca entrou
+em call. Levantei a bandeira.
+
+═══════════════════════════════════════════════
+18/09/2025 — QBR formal. Carla confirma upsell
+em Q4. Estimei R$ 84k ARR (Growth → Scale +
+Operações). Mandei proposta de upsell + renov.
+
+═══════════════════════════════════════════════
+30/09/2025 — Silêncio de 12 dias. Carla não
+respondeu emails de follow-up.
+
+═══════════════════════════════════════════════
+21/10/2025 — Carla agendou call do nada. Disse
+"plano de Operações foi adiado, momento delicado
+aqui". Pediu só renovação Growth, sem upsell.
+ALARMANTE: pediu pra eu falar com ela antes de
+qualquer questionamento de custo. Tem algo
+acontecendo internamente.
+
+═══════════════════════════════════════════════
+23/10/2025 — Mandei proposta de renovação só
+Growth (R$ 62,4k/ano, IPCA+3%). Esperando.
+
+═══════════════════════════════════════════════
+24/10/2025 — Estou saindo da PulsoPeople (Anya
+assumiu). Anya, por favor leia toda essa thread,
+essa conta está pegando fogo apesar do
+discurso da Carla. CFO novo pode estar mexendo
+nas peças. Boa sorte.`
+      },
+      {
+        id: "doc-comparativo",
+        title: "Comparativo de pricing (mercado)",
+        type: "doc",
+        icon: "💲",
+        meta: "research interno",
+        content: `BENCHMARK PRICING · PEOPLE ANALYTICS
+Mercado BR · Empresas 1.000-2.000 funcionários
+Atualizado em 15/10/2025
+
+═══════════════════════════════════════════════
+PULSOPEOPLE (vocês)
+  Growth:  R$ 60-65k/ano (Foliato está aqui)
+  Scale:   R$ 84-95k/ano
+  Premium: R$ 140k/ano+
+
+CONCORRENTES DIRETOS:
+  Solides:    R$ 48-72k/ano (similar)
+  Pulses:     R$ 36-54k/ano (mais simples)
+  Sankhya HR: R$ 90-120k/ano (mais robusto)
+  Workday:    R$ 240k/ano+ (outro segmento)
+
+═══════════════════════════════════════════════
+ALTERNATIVAS DE CORTE DE CUSTO:
+
+1. Downgrade pra plano simples
+   PulsoPeople não tem Basic. Mínimo é Growth.
+
+2. Trocar de fornecedor
+   Solides oferece migração com 6m grátis pra
+   empresas vindo da PulsoPeople. Promoção
+   agressiva, vigente desde set/2025.
+
+3. Cancelar
+   Foliato pode reintegrar people analytics no
+   ERP interno (Senior). Time deles tem capacidade.
+
+═══════════════════════════════════════════════
+NOSSA POSIÇÃO:
+
+Foliato pagar R$ 62k/ano por Growth = pricing
+mediano. Há espaço pra desconto de até 20% sem
+comprometer margem mínima. Abaixo de 20% precisa
+aprovação do diretor comercial.`
+      }
+    ]
+  },
+
+  dilemmas: [
+    {
+      id: "tese-call",
+      trigger: { type: "afterSources", count: 3 },
+      title: "Tese da Call de Amanhã",
+      context: "O CFO pediu reunião sem Carla. Esse é o sinal mais importante do caso. Você precisa decidir <strong>com que tese</strong> vai entrar na call de amanhã. Não dá pra entrar pra 'ouvir o que o cliente tem a dizer' — quem entra sem tese, sai com -25% no contrato.",
+      options: [
+        { id: "carla-tese", title: "TESE DA CARLA: renovação tranquila", desc: "Confiar na narrativa da Carla — renovação Growth sem mudança, R$ 62,4k, CFO só quer 'entender o valor'. Conduzir call como QBR padrão. Risco: ser pego desprevenido se for negociação dura." },
+        { id: "defensiva-tese", title: "TESE DEFENSIVA: corte iminente", desc: "Assumir que o CFO entrou pra cortar. Preparar argumentos de valor, ROI, casos de uso, e cenários de desconto pré-aprovados. Risco: entrar negociando antes do cliente pedir, queimando margem desnecessariamente." },
+        { id: "expansao-tese", title: "TESE DE EXPANSÃO: virar o jogo", desc: "Tratar o CFO como oportunidade. Em vez de defender preço atual, propor expansão (Scale + Operações = R$ 84k+) com narrativa de ROI consolidado. Apostar que mostrando expansão vira o frame. Risco: parecer desconectado se o CFO já decidiu cortar." },
+        { id: "discovery-tese", title: "TESE DE DISCOVERY: perguntar antes", desc: "Não entrar com tese fechada. Estruturar call em 70% perguntas (entender prioridades do CFO novo) e 30% materiais reservados. Decidir narrativa em tempo real. Risco: parecer inseguro ou sem preparo." }
+      ]
+    },
+    {
+      id: "carla-confronto",
+      trigger: { type: "afterEvidences", count: 5 },
+      title: "Dilema: o que fazer com a Carla?",
+      context: "Carla sumiu, parou de usar o produto, e o CFO pediu pra falar contigo sem ela. É possível que a Carla esteja perdendo poder internamente — e ela é seu único contato. O que fazer com ela antes da call de amanhã?",
+      options: [
+        { id: "ignora-carla", title: "RESPEITAR o pedido do CFO", desc: "Vai à call sem avisar a Carla. CFO pediu privacidade. Risco: queimar a champion (se a Carla descobrir que você não a alertou). Mas mantém credibilidade com o CFO." },
+        { id: "avisa-carla", title: "AVISAR a Carla antes", desc: "Manda mensagem direta: 'Carla, fui chamado pelo Eduardo amanhã, quer alinhar algo antes?'. Vai contra o pedido do CFO mas honra o relacionamento construído. Risco: CFO descobre e perde confiança em você." },
+        { id: "carla-call", title: "FORÇAR uma call rápida com Carla hoje", desc: "Tenta agendar 15 min com a Carla antes da call do CFO. Coleta inteligência interna. Pode ser percebido como rebeldia contra protocolo do CFO. Risco alto, recompensa alta se a Carla aparecer." },
+        { id: "linkedin", title: "ABORDAR pelo LinkedIn", desc: "Manda mensagem informal pelo LinkedIn da Carla, fora do email corporativo, demonstrando preocupação humana ('tudo bem aí?'). Não fala de negócio. Pode reativar o canal sem violar protocolo." }
+      ]
+    },
+    {
+      id: "downside",
+      trigger: { type: "beforeProposal" },
+      title: "Plano de Contingência: até onde você cede?",
+      context: "Você sabe que pode dar até 20% de desconto sem aprovação extra. Abaixo disso, precisa do diretor comercial. O CFO já cortou 40% de outros vendors (Gympass aceitou 25%). Qual seu piso real pra essa negociação amanhã?",
+      options: [
+        { id: "zero-desconto", title: "ZERO desconto. Defender preço cheio", desc: "Entra com a posição de que reajuste IPCA+3% é mínimo e justo. Se o CFO pressionar, oferece valor (módulos extras, suporte premium) sem mexer no preço. Postura premium." },
+        { id: "10-desconto", title: "Até 10% de desconto, com contrapartida", desc: "Aceita ir a R$ 56k mas exige contrapartida: contrato de 24 meses ao invés de 12, ou compromisso de expansão futura por escrito. Defende margem com troca." },
+        { id: "20-desconto", title: "Até 20% (limite sem aprovação), incondicional", desc: "Vai a R$ 50k se for o que mantém a conta. Salva a renovação mas perde margem e quebra precedente perigoso (cliente lembra do desconto). Postura defensiva pura." },
+        { id: "downgrade", title: "OFERECER downgrade pré-emptivo", desc: "Propõe ativamente um plano abaixo do Growth (custom, com features reduzidas) por R$ 40k. Mantém logo do cliente, perde R$ 20k/ano, mas evita churn total. Risco: criar plano novo só pra esse cliente vira problema operacional." }
+      ]
+    }
+  ],
+
+  proposalFields: [
+    { id: "diagnostico", label: "Diagnóstico da situação", placeholder: "O que está realmente acontecendo na Foliato? Quem manda? Qual o cenário mais provável?", type: "textarea" },
+    { id: "objetivo", label: "Objetivo da call de amanhã", placeholder: "Qual o resultado mínimo aceitável? Qual o ideal?", type: "textarea" },
+    { id: "abertura", label: "Abertura da call (primeiros 5 min)", placeholder: "Como você abre? Tom, pergunta-âncora, framing.", type: "textarea" },
+    { id: "argumentos", label: "Argumentos-chave de valor", placeholder: "Quais 2-3 pontos você precisa cravar?", type: "textarea" },
+    { id: "concessoes", label: "Concessões pré-aprovadas (e quando usar)", placeholder: "O que você está disposto a ceder, em que ordem, mediante qual contrapartida?", type: "textarea" },
+    { id: "saida", label: "Plano de saída / próximo passo", placeholder: "Se a call der errado, qual é a saída? Como mantém o cliente em movimento?", type: "textarea" }
+  ],
+
+  evaluation: {
+    criticalEvidences: [
+      "CFO pediu call direta SEM Carla em CC — quebra de protocolo",
+      "Carla parou de usar PulsoPeople há 11 dias — login zero",
+      "Eduardo chegou há 4 meses · histórico de corte de custo em outras empresas",
+      "Daniel nunca falou com PulsoPeople — sponsor fantasma"
+    ],
+    biasTraps: [
+      { name: "Excesso de Confiança no Champion", trigger: (s) => { const d = (s.proposal.diagnostico || "").toLowerCase(); return d.length > 30 && (d.includes("tranquil") || d.includes("renovação garantida") || d.includes("ok") || d.includes("vai fechar")); },
+        detail: "Seu diagnóstico subestima a gravidade. CFO entrando direto, Carla sumida do produto, sponsor fantasma — três sinais convergentes de churn iminente. Tratar como 'renovação tranquila' é o erro mais caro do caso." },
+      { name: "Cegueira a Sinais de Uso", trigger: (s) => !s.consultedSources.has("doc-crm-conta"),
+        detail: "Você não olhou o dashboard de saúde da conta. Health score caindo de 78 pra 42, usuários ativos -71%, NPS -3 pontos. Inside sales sem leitura de dados de uso é venda no escuro." },
+      { name: "Ignorou Histórico do CFO", trigger: (s) => !s.consultedSources.has("eduardo-cfo"),
+        detail: "Não pesquisou quem é o CFO. Eduardo tem histórico documentado de cortar 22% de SaaS, está cortando 30% na Foliato e pediu 40% de outros vendors. Entrar na call sem saber disso é amador." },
+      { name: "Sponsor Fantasma Comprado", trigger: (s) => { const d = (s.proposal.diagnostico || "").toLowerCase(); const cons = s.consultedSources.has("daniel-coo"); return d.includes("daniel") && d.includes("sponsor") && !cons; },
+        detail: "Você cita Daniel como sponsor na proposta mas não verificou se ele de fato existe como sponsor real. Daniel nunca interagiu com a PulsoPeople. 'Sponsor citado' ≠ 'sponsor materializado'." },
+      { name: "Concessão Antecipada", trigger: (s) => { const c = (s.proposal.concessoes || "").toLowerCase(); return c.includes("20%") || c.includes("vinte por cento") || c.includes("vou aceitar"); },
+        detail: "Você já planejou conceder o desconto máximo sem condição. Em inside sales, sinalizar concessão antes do cliente pedir queima margem e ensina o cliente que tem mais espaço. Concessão precisa de contrapartida sempre." },
+      { name: "Discovery Como Fuga", trigger: (s) => { const o = (s.proposal.objetivo || "").toLowerCase(); const a = (s.proposal.abertura || "").toLowerCase(); return (o + a).includes("entender") && !((o + a).includes("propor") || (o + a).includes("apresentar") || (o + a).includes("defend")); },
+        detail: "Você planeja 'entender' o CFO sem ter tese própria. Em call de retenção/renovação contra CFO experiente, quem entra só pra ouvir sai com -25%. Discovery é tática, não estratégia inteira." }
+    ],
+    goodMoves: [
+      { name: "Leitura de Sinais Frios", trigger: (s) => s.consultedSources.size >= 5,
+        detail: "Você consultou múltiplas fontes frias (calls, emails, dashboards, notas). Não confiou só no que o cliente diz — confiou no que ele faz." },
+      { name: "Pesquisa de Decisor", trigger: (s) => s.consultedSources.has("eduardo-cfo"),
+        detail: "Investigou o CFO antes da call. Conhecer histórico (LinkedIn + inteligência de colegas) é diferencial enorme em inside sales." },
+      { name: "Tese Definida com Contingência", trigger: (s) => { const o = (s.proposal.objetivo || "").length > 50; const c = (s.proposal.concessoes || "").length > 30; const sai = (s.proposal.saida || "").length > 30; return o && c && sai; },
+        detail: "Você definiu objetivo claro, plano de concessões e plano de saída. Três peças de uma negociação consultiva madura." },
+      { name: "Hipótese Revisada", trigger: (s) => s.hypothesisHistory.length >= 2,
+        detail: "Hipótese evoluiu durante a investigação. Mudou de ideia ao ver dado novo — sinal de mente aberta." }
+    ]
+  }
+};
+
+/* ════════════════════════════════════════════════════════════════
+   CASE 3 · SELF-SERVICE · A FUGA DO PAYWALL
+   PLG · sem vendedor humano · decisão sobre onde mexer
+   ════════════════════════════════════════════════════════════════ */
+
+const CASE_SELF = {
+  id: "self-fuga-do-paywall",
+  type: "self",
+  typeLabel: "Self-Service / PLG",
+  typeDescription: "Produto SaaS freemium. Não há vendedor. O 'cliente' decide sozinho. A investigação é puramente analítica: cohorts, funis, eventos, churn. Você decide onde mexer pra mover métrica agregada.",
+  duration: "~25 min",
+  difficulty: "Intermediário",
+  color: "self",
+
+  meta: {
+    title: "A Fuga do Paywall",
+    subtitle: "Notari · App de notas com IA · Crise de conversão freemium",
+    position: "Você é Head of Growth da Notari, app de notas com IA. Modelo PLG puro: free com limites, plano Pro a R$ 29/mês, plano Team a R$ 79/usuário/mês. 340 mil usuários registrados, 12 mil pagantes. ARR R$ 4,8 milhões.",
+    target: "Notari mesmo. Você é o cliente do seu próprio produto. Há 90 dias o CEO veio com uma meta direta: 'destrava conversão free→pago. Quero R$ 7 milhões de ARR até dezembro de 2026.' Você tem 2 meses pra apresentar o plano. Hoje você sai da sala com a decisão tomada.",
+    mission: "Você precisa decidir <strong>onde mexer</strong> — paywall, onboarding, preço, plano, mensagem? Cada hipótese pode parecer correta isoladamente. A banca avalia o raciocínio que conecta dado a decisão."
+  },
+
+  rules: [
+    "Não há cliente pra entrevistar. Investigação é 100% analítica.",
+    "Você tem: dashboards de funil, cohorts de retenção, dados de feature usage, NPS, transcrições de calls de churn (gravadas pelo customer success), e benchmarks de mercado.",
+    "Existem várias hipóteses válidas. Não há uma resposta certa única — há decisões mais defensáveis que outras pra cada hipótese.",
+    "<strong>Dilemas</strong> aqui são tradeoffs de produto: short-term vs long-term, breadth vs depth, novo usuário vs base atual.",
+    "Sua proposta final é um plano de ação de 90 dias. A banca avalia se está conectado às evidências e se mapeia o downside da escolha."
+  ],
+
+  sources: {
+    people: [
+      {
+        id: "churn-calls",
+        name: "Calls de churn (gravadas pelo CS)",
+        role: "8 conversas com usuários Pro que cancelaram",
+        type: "person",
+        icon: "📞",
+        bio: "O CS gravou as últimas 8 calls de exit interview com usuários Pro que cancelaram o plano nos últimos 60 dias.",
+        questions: [
+          { q: "Ler resumo agregado das 8 calls",
+            type: "doc",
+            evidenceTag: "62% dos churners disseram 'não consegui justificar pra equipe' — uso solo, sem ROI compartilhado",
+            content: `SÍNTESE · 8 EXIT INTERVIEWS · NOTARI PRO
+Conduzido pela CS · out-nov/2025
+
+═══════════════════════════════════════════════
+PERFIL DOS CHURNERS:
+  · 6 freelancers / consultores
+  · 1 estudante de pós
+  · 1 dono de pequeno negócio
+  · Média de uso antes do churn: 4,2 meses
+  · Pagaram em média R$ 122 antes de cancelar
+
+═══════════════════════════════════════════════
+RAZÕES DECLARADAS (múltipla escolha permitida):
+
+  "Não consegui justificar pra equipe / time"   5/8 (62%)
+  "Comecei a usar menos com o tempo"            5/8 (62%)
+  "Achei o Notion / Obsidian melhor"            3/8 (38%)
+  "Preço alto pra uso solo"                     2/8 (25%)
+  "Bug ou limitação técnica específica"         1/8 (12%)
+
+═══════════════════════════════════════════════
+CITAÇÕES MARCANTES:
+
+· "Eu adorei a IA das notas. Mas era só eu usando.
+   Minha esposa nem topou criar conta. Aí virou só
+   uma despesa mensal sem ninguém pra ver."
+
+· "Comecei a esquecer de abrir. Quando lembrava,
+   tinha 3 semanas sem entrar. Aí cancelei."
+
+· "Pra mim valia. Mas tentei fazer minha equipe
+   usar (somos 4) e a curva de aprendizado é
+   ruim. Desisti de evangelizar."
+
+· "R$ 29 não é caro. Mas em 4 meses são R$ 116
+   por algo que eu uso pra fazer nota. Notion
+   tem free e dá conta."
+
+═══════════════════════════════════════════════
+SÍNTESE DO CS:
+
+Padrão dominante: usuário Pro é solo e fica solo.
+Não consegue trazer equipe. Sem rede social
+interna, vira ferramenta substituível. Notion
+e Obsidian vencem em network effects.`
+          }
+        ]
+      },
+      {
+        id: "power-users",
+        name: "Power users (NPS 10)",
+        role: "Os que adoram o produto e quase nunca churnam",
+        type: "person",
+        icon: "⭐",
+        bio: "300 usuários deram NPS 10 nos últimos 6 meses. CS entrevistou 12 deles.",
+        questions: [
+          { q: "Ler síntese dos power users",
+            type: "doc",
+            evidenceTag: "Power users usam Notari como 2º cérebro pessoal — caso de uso 'memória externa'",
+            content: `SÍNTESE · 12 ENTREVISTAS · POWER USERS NPS 10
+Conduzido pela CS · ago-set/2025
+
+═══════════════════════════════════════════════
+PERFIL:
+  · 8 são "knowledge workers" (PM, designer, escritor)
+  · 3 são pesquisadores acadêmicos
+  · 1 é jornalista
+  · Uso médio: 14 meses no Pro
+  · Frequência: 5+ dias/semana
+
+═══════════════════════════════════════════════
+COMO USAM:
+
+· "Notari virou meu segundo cérebro. Anoto tudo,
+   reuniões, ideias, links, e a IA me devolve
+   conexão que eu mesmo esqueci."
+
+· "Eu pago R$ 29 sem pestanejar. Pra mim é
+   barato. Pagaria R$ 80 fácil se tivesse
+   uns recursos a mais (web clipper melhor,
+   busca semântica mais agressiva)."
+
+· "Uso sozinho. Não é ferramenta de equipe pra
+   mim. É como diário — íntimo. Não tem porque
+   compartilhar."
+
+═══════════════════════════════════════════════
+DOR / PEDIDO:
+
+  · Busca semântica mais inteligente:        9/12
+  · Web clipper / save from browser:         8/12
+  · Versão mobile mais rica:                 8/12
+  · API pra automações:                      5/12
+  · Modo offline:                            4/12
+  · Compartilhamento / colaboração:          1/12 ←
+
+═══════════════════════════════════════════════
+INSIGHT CHAVE DO CS:
+
+Power users são PROFUNDOS. Uso solo, intenso,
+emocional ("meu cérebro"). Eles NÃO querem
+colaboração — querem mais features pra uso
+individual. Disposição a pagar mais.
+
+Isso é o oposto do que os churners disseram.`
+          }
+        ]
+      },
+      {
+        id: "ceo-mandato",
+        name: "CEO (mandato + restrições)",
+        role: "Diretrizes que vieram da Diretoria",
+        type: "person",
+        icon: "👤",
+        bio: "Reunião de definição de meta · 60 dias atrás · gravada",
+        questions: [
+          { q: "Ler transcrição da reunião com o CEO",
+            type: "call",
+            evidenceTag: "CEO: 'NÃO mexer no preço do Pro · NÃO criar plano abaixo de R$ 29'",
+            content: {
+              meta: "Reunião 1:1 · 15/09/2025 · 35 min · gravada",
+              lines: [
+                { who: "CEO (Rafael)", side: "them", time: "00:01:00", text: "Vou direto. O board quer ARR R$ 7M em dezembro de 2026. Estamos em R$ 4,8M. Precisamos +46% em 14 meses. Não vai vir de aumento orgânico, vamos ter que mexer em algo." },
+                { who: "Head of Growth (você)", side: "us", time: "00:01:45", text: "Entendi. Tenho carta branca pra mexer onde?" },
+                { who: "CEO", side: "them", time: "00:02:00", text: "Quase. Duas linhas vermelhas. UM: não quero baixar preço do Pro. R$ 29 é nosso âncora. Subir tudo bem. Baixar não. DOIS: nada de plano novo abaixo de R$ 29 — não vou fazer plano 'Basic' nem 'Lite'. Esse caminho é morte por mil cortes." },
+                { who: "Head of Growth", side: "us", time: "00:03:10", text: "Sacado. Posso mexer no Team?" },
+                { who: "CEO", side: "them", time: "00:03:20", text: "Pode. Adoraria que o Team destravasse, hoje é 8% do MRR só. Mas pra isso a gente teria que entrar em territory de colaboração real, e a galera não vê valor disso. Você que sabe." },
+                { who: "Head of Growth", side: "us", time: "00:04:30", text: "E paywall do free? Onboarding?" },
+                { who: "CEO", side: "them", time: "00:04:40", text: "Tudo seu. Free hoje é generoso demais. Onboarding é mediano. Mexe à vontade. Mas se você apertar muito o free, vai matar o topo do funil. Calibre." },
+                { who: "Head of Growth", side: "us", time: "00:18:00", text: "E aquisição? Tem budget pra paid?" },
+                { who: "CEO", side: "them", time: "00:18:15", text: "Tem R$ 240k disponível pra paid no ano. Mas pelo amor de Deus, só ative isso depois que o funil estiver melhor. Despejar dinheiro num funil furado é só queimar." }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    documents: [
+      {
+        id: "doc-funil",
+        title: "Funil de conversão free→pago (90d)",
+        type: "dash",
+        icon: "📊",
+        meta: "métrica principal · MIXPANEL",
+        content: {
+          title: "Notari · Funil Free → Pago · últimos 90 dias",
+          user: "Coorte: novos signups de ago-out 2025 · N = 42.300",
+          metrics: [
+            { label: "Signups (free)", value: "42.300", delta: "—", deltaClass: "flat" },
+            { label: "Ativação (1ª nota criada)", value: "29.610", delta: "70%", deltaClass: "flat" },
+            { label: "Aha-moment (5 notas + 1 IA)", value: "8.460", delta: "20% · benchmark 35%", deltaClass: "down" },
+            { label: "Hit paywall", value: "3.080", delta: "7,3%", deltaClass: "flat" },
+            { label: "Conversão Pro", value: "390", delta: "0,92% · benchmark 2,5%", deltaClass: "down" },
+            { label: "Conversão Team", value: "12", delta: "0,03% (!) · ridículo", deltaClass: "down" }
+          ],
+          chartTitle: "Funil em volume (42.300 → 12)",
+          funnel: [
+            { stage: "Signup (free)", num: "42.300", pct: 100 },
+            { stage: "Ativou (criou nota)", num: "29.610", pct: 70 },
+            { stage: "Aha (5 notas + IA)", num: "8.460", pct: 20 },
+            { stage: "Bateu no paywall", num: "3.080", pct: 7.3 },
+            { stage: "Converteu Pro", num: "390", pct: 0.92 },
+            { stage: "Converteu Team", num: "12", pct: 0.03 }
+          ],
+          note: "O gargalo mais óbvio é Aha→Paywall: só 36% de quem teve aha bate no paywall. Mas o gargalo mais GRAVE é Paywall→Pro: 12,7% converte (benchmark setor: 30-40%). Isso indica problema na proposta do paywall, não no produto."
+        }
+      },
+      {
+        id: "doc-paywall",
+        title: "Eventos no paywall (último mês)",
+        type: "dash",
+        icon: "🚪",
+        meta: "deep dive · paywall behavior",
+        content: {
+          title: "Notari · Comportamento no Paywall · out/2025",
+          user: "Análise de 3.080 usuários que bateram no paywall",
+          metrics: [
+            { label: "Hit paywall (mês)", value: "3.080", delta: "—", deltaClass: "flat" },
+            { label: "Clicaram em 'ver planos'", value: "1.840", delta: "60%", deltaClass: "flat" },
+            { label: "Abriram checkout", value: "412", delta: "13% · CAIU forte", deltaClass: "down" },
+            { label: "Completaram pagamento", value: "138", delta: "33% · checkout ok", deltaClass: "flat" },
+            { label: "Voltaram pro free", value: "1.428", delta: "46% · 'não quero'", deltaClass: "down" },
+            { label: "Churn imediato pós-paywall", value: "242", delta: "8% saíram do produto", deltaClass: "down" }
+          ],
+          chartTitle: "Razão declarada (exit poll opcional · n=620)",
+          bars: [
+            { label: "Caro", val: 36 }, { label: "Não-uso", val: 24 }, { label: "Equipe", val: 18 },
+            { label: "Recurso", val: 12 }, { label: "Outro", val: 10 }
+          ],
+          barMax: 40,
+          note: "Comparativo crítico: 1.840 clicaram em 'ver planos' (engajados), mas só 412 abriram checkout. Perda de 78% entre ver preço e tentar comprar. Hipótese forte: o salto de R$ 0 → R$ 29 é grande demais sem ponte intermediária."
+        }
+      },
+      {
+        id: "doc-retencao",
+        title: "Retenção de pagantes (cohort)",
+        type: "dash",
+        icon: "📉",
+        meta: "saúde da base",
+        content: {
+          title: "Notari · Retenção de pagantes Pro · cohort analysis",
+          user: "Coorte: usuários que viraram Pro entre jan/2024 e jul/2025",
+          metrics: [
+            { label: "Pro hoje (ativos)", value: "11.380", delta: "—", deltaClass: "flat" },
+            { label: "Pro Team hoje", value: "624 (180 contas)", delta: "8% do MRR", deltaClass: "flat" },
+            { label: "Churn mensal Pro", value: "5,8%", delta: "benchmark setor: 3-4%", deltaClass: "down" },
+            { label: "Churn mensal Team", value: "2,1%", delta: "saudável", deltaClass: "up" },
+            { label: "LTV médio Pro", value: "R$ 380", delta: "5,1 meses médios", deltaClass: "flat" },
+            { label: "LTV médio Team", value: "R$ 4.200", delta: "12 meses médios · 11x", deltaClass: "up" }
+          ],
+          chartTitle: "Retenção mês a mês · cohort Pro (jan-2025)",
+          bars: [
+            { label: "M0", val: 100 }, { label: "M1", val: 78 }, { label: "M2", val: 65 },
+            { label: "M3", val: 56 }, { label: "M4", val: 48 }, { label: "M5", val: 42 },
+            { label: "M6", val: 38 }, { label: "M7", val: 35 }, { label: "M8", val: 33 }
+          ],
+          barMax: 100,
+          note: "Quase metade do Pro churna até o mês 4. Isso confere com a fala 'comecei a usar menos com o tempo' das exit interviews. Já o Team tem LTV 11x maior — quem entra em Team fica. O problema é volume de Team (180 contas), não retenção."
+        }
+      },
+      {
+        id: "doc-features",
+        title: "Uso de features (Pro)",
+        type: "dash",
+        icon: "🧩",
+        meta: "feature engagement",
+        content: {
+          title: "Notari · Feature Adoption · base Pro ativa",
+          user: "% de usuários Pro que usam cada feature mensalmente",
+          metrics: [
+            { label: "Criar nota / IA básica", value: "100%", delta: "core", deltaClass: "flat" },
+            { label: "Busca semântica", value: "78%", delta: "muito usada", deltaClass: "up" },
+            { label: "Tags / organização", value: "61%", delta: "—", deltaClass: "flat" },
+            { label: "Web clipper", value: "23%", delta: "pouco usada · será dor?", deltaClass: "flat" },
+            { label: "Compartilhamento de nota", value: "9%", delta: "morta · não é caso de uso", deltaClass: "flat" },
+            { label: "Workspace colaborativo (Team)", value: "4%", delta: "morta total", deltaClass: "down" }
+          ],
+          chartTitle: "Engajamento por feature (% MAU)",
+          bars: [
+            { label: "Nota+IA", val: 100 }, { label: "Busca", val: 78 }, { label: "Tags", val: 61 },
+            { label: "Clipper", val: 23, alt: true }, { label: "Share", val: 9, alt: true }, { label: "Colab", val: 4, alt: true }
+          ],
+          barMax: 100,
+          note: "Features de colaboração estão MORTAS no Pro (9% e 4%). Isso confere com os power users dizendo 'uso solo, não quero compartilhar'. O caso de uso solo é o que paga. O caso de uso colab existe mas é nicho (Team)."
+        }
+      },
+      {
+        id: "doc-benchmark",
+        title: "Benchmark PLG (setor)",
+        type: "doc",
+        icon: "📚",
+        meta: "OpenView · 2025",
+        content: `BENCHMARK · PLG SaaS B2C/Prosumer
+Fonte: OpenView 2025 PLG Report
+Segmento: produtividade / notas / knowledge
+
+═══════════════════════════════════════════════
+MÉTRICAS DE FUNIL (mediana):
+
+  Signup → Ativação:         55-70%
+  Ativação → Aha moment:     30-45%   (Notari: 28%)
+  Aha → Hit paywall:         30-45%   (Notari: 36%)
+  Paywall → Conversão:       28-40%   (Notari: 12,7%) ←
+  Free → Pago (overall):     2-4%     (Notari: 0,92%) ←
+
+═══════════════════════════════════════════════
+RETENÇÃO DE PAGANTES:
+
+  Churn mensal SaaS prosumer: 3-5%
+  Notari Pro: 5,8% ← acima do benchmark
+  Notari Team: 2,1% ← ok
+
+═══════════════════════════════════════════════
+PRICING TYPICAL:
+
+  Plano solo prosumer: US$ 8-15/mês (R$ 24-45)
+  Plano time pequeno:  US$ 15-25/usuário (R$ 45-75)
+
+  Notari Pro: R$ 29/mês ← mediano
+  Notari Team: R$ 79/mês ← caro pro segmento
+
+═══════════════════════════════════════════════
+PADRÃO DE PAYWALL ATUAL DA NOTARI:
+
+· Limite atual no free:
+  - 30 notas/mês
+  - 10 consultas IA/mês
+  - 100MB de storage
+
+· Comparativo:
+  Notion free: ilimitado (com ressalvas)
+  Obsidian:    free total local
+  Bear:        $1.50/mês iCloud
+
+OPINIÃO ANALISTA: "Notari free é MAIS GENEROSO
+que Bear, MENOS que Notion. Está no meio do nada.
+Free generoso compensa só se compete com
+freemium pesado tipo Notion. Caso contrário, gera
+muito ruído sem converter."
+
+═══════════════════════════════════════════════
+ESTRATÉGIAS QUE FUNCIONARAM (cases):
+
+1. Linear (project mgmt): apertaram free,
+   conversão subiu de 1,1% pra 3,2% em 6 meses.
+2. Granola (notas reuniões IA): introduziram
+   trial 14-dias do Pro, conversão pulou pra 8%.
+3. Cron / Notion: investiram em colaboração e
+   subiram Team de 5% pra 35% do MRR em 18 meses.`
+      },
+      {
+        id: "doc-onboarding",
+        title: "Funil de onboarding (primeiro dia)",
+        type: "dash",
+        icon: "🎯",
+        meta: "primeiros 24h pós-signup",
+        content: {
+          title: "Notari · Onboarding · primeiras 24h pós-signup",
+          user: "Coorte: 42.300 signups · ago-out/2025",
+          metrics: [
+            { label: "Completou tour", value: "54%", delta: "tour de 4 telas", deltaClass: "flat" },
+            { label: "Criou 1ª nota em 24h", value: "70%", delta: "ativação saudável", deltaClass: "up" },
+            { label: "Usou IA na 1ª sessão", value: "31%", delta: "baixo · IA é o killer feature", deltaClass: "down" },
+            { label: "Voltou no dia 2", value: "38%", delta: "queda forte", deltaClass: "down" },
+            { label: "Voltou no dia 7", value: "22%", delta: "—", deltaClass: "flat" },
+            { label: "Convidou alguém (free)", value: "1,8%", delta: "viral coefficient morto", deltaClass: "down" }
+          ],
+          chartTitle: "Retorno dia a dia pós-signup",
+          bars: [
+            { label: "D0", val: 100 }, { label: "D1", val: 70 }, { label: "D2", val: 38 },
+            { label: "D3", val: 28 }, { label: "D4", val: 24 }, { label: "D5", val: 22 },
+            { label: "D6", val: 22 }, { label: "D7", val: 22 }
+          ],
+          barMax: 100,
+          note: "Só 31% usa IA na primeira sessão — e IA é o que diferencia Notari de Notion/Bear. Quem não experimenta IA no dia 1 dificilmente volta. Possível alavanca: forçar uso de IA no onboarding em vez de criar nota em branco."
+        }
+      }
+    ]
+  },
+
+  dilemmas: [
+    {
+      id: "hipotese-central",
+      trigger: { type: "afterSources", count: 4 },
+      title: "Dilema: qual é a hipótese central?",
+      context: "Os dados apontam para gargalos diferentes. Cada hipótese leva a um plano de ação diferente. Você precisa <strong>escolher UMA</strong> hipótese central — não dá pra atacar tudo em 90 dias com o time atual. A escolha aqui define todo o resto.",
+      options: [
+        { id: "h-paywall", title: "H1: O paywall é o gargalo (conversão 12,7% vs 30%+ benchmark)", desc: "Ataca o salto Paywall→Pro. Possíveis ações: trial de 14 dias do Pro, plano intermediário (mas vetado pelo CEO), simplificação do checkout, mensagem mais clara de valor. Vai onde o número é mais gritante." },
+        { id: "h-ativacao", title: "H2: O onboarding é o gargalo (só 31% usa IA no D1)", desc: "Ataca topo do funil. Possíveis ações: onboarding centrado em IA, força primeira interação com IA, gamifica retorno do D2. Sobe Aha→Paywall. Demora mais pra impactar ARR." },
+        { id: "h-team", title: "H3: O Team está dormindo (8% do MRR, LTV 11x maior)", desc: "Ataca segmento de maior valor. Possíveis ações: features de colab que funcionem, programa de referral pra time, marketing B2B. Aposta no LTV de Team. Mas dados de produto mostram features colab MORTAS." },
+        { id: "h-retencao", title: "H4: Churn é o gargalo (5,8% mensal vs 3-4%)", desc: "Ataca a base existente. Possíveis ações: re-engajamento de quem some, features pra power users (busca semântica, web clipper), upsell de Pro pra Pro+. Plug the leaky bucket." },
+        { id: "h-aperto-free", title: "H5: Free é generoso demais (caso Linear)", desc: "Ataca a base gratuita. Reduz 30 notas/mês pra 10, IA de 10 pra 3 consultas. Espera que conversão suba. Risco: matar topo do funil e gerar revolta na base." }
+      ]
+    },
+    {
+      id: "tradeoff-prazo",
+      trigger: { type: "afterEvidences", count: 5 },
+      title: "Dilema: prazo vs profundidade",
+      context: "O CEO quer ARR R$ 7M em dezembro/2026 — 14 meses. Você tem decisões a tomar sobre <strong>onde colocar a energia do time</strong>. Há tradeoff explícito entre quick wins (que mexem ARR rapidamente mas podem prejudicar long-term) e mudanças estruturais (que demoram mas constroem moat).",
+      options: [
+        { id: "p-quick", title: "PRIORIZAR quick wins (4 meses)", desc: "Focar em ações com impacto em 30-90 dias: aperto do paywall, ofertas de upsell para base existente, urgência (descontos pra conversão imediata, trials curtos). Provavelmente atinge meta. Risco: queimar goodwill da base e gerar churn no médio prazo." },
+        { id: "p-estrutural", title: "INVESTIR em mudanças estruturais (10 meses)", desc: "Refazer onboarding, refazer paywall, refazer narrativa do Team. Demora 6 meses pra ver impacto, mas constrói base sólida. Risco real de NÃO atingir meta de dezembro/2026, mas atinge ARR R$ 10M+ em 2027." },
+        { id: "p-misto", title: "MISTO: 60/40 quick wins / estrutural", desc: "Tenta as duas frentes em paralelo. Aceita que time vai ficar disperso e nenhuma frente vai ser ótima. Pode ser o caminho do meio sensato ou o pior dos dois mundos." },
+        { id: "p-paid", title: "PRIORIZAR paid acquisition", desc: "Pega os R$ 240k de paid disponíveis, despeja em ads, espera funnel converter por volume. Vai contra o aviso do CEO ('só ative depois do funil melhorar'). Aposta ousada." }
+      ]
+    },
+    {
+      id: "downside",
+      trigger: { type: "beforeProposal" },
+      title: "Dilema: como você se proteje se a sua hipótese estiver errada?",
+      context: "Toda decisão de growth é uma aposta. Você precisa decidir <strong>como saber, em 30-45 dias, se sua hipótese central está errada</strong> — e o que você faz nesse caso. Sem plano B explícito, você gasta os 14 meses defendendo uma tese mesmo quando os dados gritam o contrário.",
+      options: [
+        { id: "ab-test", title: "A/B TEST agressivo desde dia 1", desc: "Toda mudança vai pra metade da base. Mantém grupo de controle. Decisões só vão pra 100% após dado estatisticamente significativo. Demora mais, mas tem mecanismo objetivo de matar hipóteses ruins." },
+        { id: "milestones", title: "MILESTONES de 30/60/90 dias com kill-switch", desc: "Define 3-4 métricas-chave que devem se mover X% até cada checkpoint. Se não moverem, pivota pra hipótese 2. Plano B documentado antes de começar." },
+        { id: "tudo-ou-nada", title: "TUDO OU NADA na hipótese", desc: "Aposta full e vai. Sem plano B documentado. Argumento: 'A/B test e milestones diluem foco. Time pequeno precisa ir all-in.' Postura agressiva mas frágil." },
+        { id: "qualitativo", title: "MONITORAMENTO qualitativo intenso", desc: "Calls semanais com 20 usuários, NPS quinzenal, feedback survey mensal. Mata hipóteses por sinal qualitativo, não quantitativo. Mais lento mas pega problemas que os dados não mostram." }
+      ]
+    }
+  ],
+
+  proposalFields: [
+    { id: "hipotese", label: "Hipótese central escolhida", placeholder: "Qual hipótese você escolheu como prioridade e por quê esta e não as outras?", type: "textarea" },
+    { id: "evidencias", label: "Evidências que sustentam a hipótese", placeholder: "Cite 2-3 evidências específicas (dados, citações) que sustentam sua escolha.", type: "textarea" },
+    { id: "acoes", label: "Plano de ação dos próximos 90 dias", placeholder: "3-5 ações concretas, em ordem de prioridade.", type: "textarea" },
+    { id: "metricas", label: "Métricas que vai monitorar e meta numérica", placeholder: "Como você sabe que está funcionando? Quais números precisam se mover, em que prazo, em quanto?", type: "textarea" },
+    { id: "risco", label: "Maior risco e mitigação", placeholder: "O que pode dar errado? Qual seu plano se essa hipótese se mostrar errada em 45 dias?", type: "textarea" },
+    { id: "linhas-vermelhas", label: "Como você endereçou as linhas vermelhas do CEO?", placeholder: "(1) não baixar preço do Pro, (2) não criar plano abaixo de R$ 29. Como sua proposta respeita ou propõe trocas explícitas?", type: "textarea" }
+  ],
+
+  evaluation: {
+    criticalEvidences: [
+      "62% dos churners disseram 'não consegui justificar pra equipe' — uso solo, sem ROI compartilhado",
+      "Power users usam Notari como 2º cérebro pessoal — caso de uso 'memória externa'",
+      "CEO: 'NÃO mexer no preço do Pro · NÃO criar plano abaixo de R$ 29'"
+    ],
+    biasTraps: [
+      { name: "Ignorou Restrição do CEO", trigger: (s) => { const lv = (s.proposal["linhas-vermelhas"] || "").toLowerCase(); const acoes = (s.proposal.acoes || "").toLowerCase(); const violacao = acoes.includes("baixar preço") || acoes.includes("plano lite") || acoes.includes("plano basic") || acoes.includes("19") || acoes.includes("9,90"); return violacao || lv.length < 30; },
+        detail: "O CEO foi explícito sobre duas linhas vermelhas (não baixar Pro, não criar plano abaixo de R$ 29). Se sua proposta viola ou ignora esse mandato, mesmo que tecnicamente correta, está politicamente morta. Vendedor que não respeita constraints do patrocinador não chega ao deploy." },
+      { name: "Hipótese sem Evidência Forte", trigger: (s) => { const e = (s.proposal.evidencias || ""); return e.length < 60; },
+        detail: "Sua seção de evidências está rasa. Em decisão de PLG, 'eu acho' não move ARR — número move. Quem propõe sem amarrar a dado específico (com volume, taxa, benchmark) está chutando." },
+      { name: "Ataque ao Sintoma", trigger: (s) => { const h = (s.proposal.hipotese || "").toLowerCase(); const ac = (s.proposal.acoes || "").toLowerCase(); return (h.includes("paywall") || h.includes("12,7")) && !s.consultedSources.has("doc-paywall") && !s.consultedSources.has("doc-funil"); },
+        detail: "Você escolheu paywall como hipótese central mas não consultou o dashboard de comportamento de paywall. Está atacando sintoma sem entender mecanismo. Recommendation: voltar e olhar onde exatamente o paywall falha (clica plano mas não abre checkout? abre mas não paga? razão declarada?)." },
+      { name: "Romantizou o Team", trigger: (s) => { const h = (s.proposal.hipotese || "").toLowerCase(); return (h.includes("team") || h.includes("colabor")) && !s.consultedSources.has("doc-features"); },
+        detail: "Você escolheu apostar no Team mas não olhou os dados de feature usage. Features de colaboração têm 9% e 4% de adoção mesmo na base que já paga. Power users dizem explicitamente que NÃO querem colaboração. Apostar em Team é apostar contra a tração atual — pode estar certo, mas o ônus da prova é seu." },
+      { name: "Sem Plano B", trigger: (s) => { const r = (s.proposal.risco || ""); return r.length < 40; },
+        detail: "Sua seção de risco/plano B é rasa. Em growth, toda hipótese central tem ~40% de chance de estar errada. Quem não tem critério de kill-switch documentado vai gastar 14 meses defendendo uma tese estilo religião." },
+      { name: "Métrica Vaga", trigger: (s) => { const m = (s.proposal.metricas || ""); const temNumero = /\d/.test(m); return m.length < 30 || !temNumero; },
+        detail: "Suas métricas de acompanhamento não têm número específico ou prazo. 'Aumentar conversão' não é meta. 'Levar conversão Paywall→Pro de 12,7% pra 22% em 90 dias' é meta. Sem número, sem prazo, sem responsabilidade." }
+    ],
+    goodMoves: [
+      { name: "Triangulação Quanti + Quali", trigger: (s) => { const teveQuanti = s.consultedSources.has("doc-funil") || s.consultedSources.has("doc-paywall") || s.consultedSources.has("doc-retencao"); const teveQuali = s.consultedSources.has("churn-calls") || s.consultedSources.has("power-users"); return teveQuanti && teveQuali; },
+        detail: "Você olhou dados frios E ouviu vozes humanas (calls, exit interviews). Em PLG, número diz O QUÊ; entrevista diz POR QUÊ. Quem usa só um lado decide errado." },
+      { name: "Respeitou Constraints", trigger: (s) => { const lv = (s.proposal["linhas-vermelhas"] || ""); return lv.length >= 50; },
+        detail: "Você dedicou espaço pra explicar como sua proposta endereça as linhas vermelhas. Sinal de maturidade política. Decisão de growth em empresa real sempre opera dentro de constraints, não no vácuo." },
+      { name: "Métrica + Prazo Específicos", trigger: (s) => { const m = (s.proposal.metricas || ""); return /\d+\s*%/.test(m) && (m.toLowerCase().includes("dia") || m.toLowerCase().includes("mês") || m.toLowerCase().includes("90") || m.toLowerCase().includes("60") || m.toLowerCase().includes("30")); },
+        detail: "Sua proposta tem métrica numérica e prazo. Decisão mensurável vira aprendizado. Decisão vaga vira opinião." },
+      { name: "Plano B Articulado", trigger: (s) => { const r = (s.proposal.risco || "").toLowerCase(); return r.length > 80 && (r.includes("pivot") || r.includes("plano b") || r.includes("se não") || r.includes("caso") || r.includes("matar") || r.includes("abandonar")); },
+        detail: "Você articulou o que faz se a hipótese estiver errada. Esse é o sinal mais raro em growth: humildade de admitir incerteza no momento de propor com convicção." },
+      { name: "Hipótese Revisada", trigger: (s) => s.hypothesisHistory.length >= 2,
+        detail: "Sua hipótese evoluiu durante a investigação. Mudou de ideia ao ver dado novo." }
+    ]
+  }
+};
+
+const CASES = [];
+/* ===== FIM DOS CASES ===== */
+
+/* ════════════════════════════════════════════════════════════════
+   ENGINE · código genérico
+   Não edite a não ser que esteja melhorando o motor.
+   ════════════════════════════════════════════════════════════════ */
+
+let activeCase = null;
+let state = createEmptyState();
+
+function createEmptyState() {
+  return {
+    startTime: null,
+    timerInterval: null,
+    consultedSources: new Set(),
+    askedQuestions: new Set(),
+    evidences: [],
+    evidenceSet: new Set(),
+    hypothesisCurrent: { dor: "", decisor: "", criterio: "" },
+    hypothesisHistory: [],
+    dilemmaResolutions: [],
+    pendingDilemma: null,
+    seenDilemmaTriggers: new Set(),
+    proposal: {},
+    trail: []
+  };
+}
+
+function parsePrice(str) {
+  if (!str) return 0;
+  const clean = String(str).replace(/[^\d,.]/g, "").replace(/\./g, "").replace(",", ".");
+  return parseFloat(clean) || 0;
+}
+
+function fmtTime(s) {
+  const m = Math.floor(s / 60).toString().padStart(2, "0");
+  const ss = (s % 60).toString().padStart(2, "0");
+  return `${m}:${ss}`;
+}
+
+function logTrail(action, detail) {
+  const t = state.startTime ? Math.floor((Date.now() - state.startTime) / 1000) : 0;
+  state.trail.push({ time: t, action, detail });
+}
+
+function escapeHtml(s) {
+  return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+/* ─── BOOT: renderiza seletor de cases ─────────────────────── */
+
+function bootCaseSelector() {
+  const container = document.getElementById("caseCards");
+  container.innerHTML = "";
+  CASES.forEach(c => {
+    const card = document.createElement("div");
+    card.className = "case-card";
+    card.dataset.color = c.color;
+    card.innerHTML = `
+      <div class="ctype">${escapeHtml(c.typeLabel)}</div>
+      <h3>${escapeHtml(c.meta.title)}</h3>
+      <p>${escapeHtml(c.typeDescription)}</p>
+      <div class="meta">
+        <span>${escapeHtml(c.duration)}</span>
+        <span>${escapeHtml(c.difficulty)}</span>
+        <span>${c.sources.people.length + c.sources.documents.length} fontes</span>
+      </div>
+    `;
+    card.onclick = () => selectCase(c.id);
+    container.appendChild(card);
+  });
+}
+
+function selectCase(id) {
+  activeCase = CASES.find(c => c.id === id);
+  if (!activeCase) return;
+  state = createEmptyState();
+  populateBriefing();
+  document.getElementById("btnRestart").style.display = "inline-block";
+  document.getElementById("btnBackToSelector").style.display = "inline-block";
+  showScreen("briefing");
+}
+
+function backToSelector() {
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  activeCase = null;
+  state = createEmptyState();
+  document.getElementById("btnRestart").style.display = "none";
+  document.getElementById("btnBackToSelector").style.display = "none";
+  showScreen("selector");
+}
+
+function restartCase() {
+  if (!activeCase) return;
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  const caseId = activeCase.id;
+  state = createEmptyState();
+  activeCase = CASES.find(c => c.id === caseId);
+  populateBriefing();
+  showScreen("briefing");
+  logTrail("sistema", "Caso reiniciado (estado e cronômetro zerados)");
+}
+
+/* ─── BRIEFING ─────────────────────────────────────────────── */
+
+function populateBriefing() {
+  const c = activeCase;
+  document.getElementById("briefingTag").textContent = `${c.typeLabel} · Caso ${c.id}`;
+  document.getElementById("briefingTitle").textContent = c.meta.title;
+  document.getElementById("briefingSubtitle").textContent = c.meta.subtitle;
+  document.getElementById("briefingPosition").textContent = c.meta.position;
+  document.getElementById("briefingTarget").textContent = c.meta.target;
+  document.getElementById("briefingMission").textContent = c.meta.mission;
+  const rulesUl = document.getElementById("briefingRules");
+  rulesUl.innerHTML = c.rules.map(r => `<li>${r}</li>`).join("");
+
+  // accent color
+  const colorMap = { field: "var(--semente-green)", inside: "var(--semente-blue)", self: "var(--semente-orange)" };
+  document.documentElement.style.setProperty('--accent', colorMap[c.color] || "var(--semente-green)");
+}
+
+function startInvestigation() {
+  if (state.startTime) return; // já iniciada
+  startTimer();
+  logTrail("início", "Investigação iniciada");
+  renderInvestigation();
+  showScreen("investigation");
+}
+
+/* ─── INVESTIGATION SCREEN ────────────────────────────────── */
+
+function renderInvestigation() {
+  const c = activeCase;
+  document.getElementById("invTag").textContent = `${c.typeLabel} · ${c.id}`;
+  document.getElementById("invTitle").textContent = c.meta.title;
+
+  const totalSources = c.sources.people.length + c.sources.documents.length;
+  document.getElementById("sourceTotal").textContent = totalSources;
+  document.getElementById("dilemmaTotal").textContent = c.dilemmas.length;
+
+  // people panel
+  const peopleList = document.getElementById("peopleList");
+  peopleList.innerHTML = "";
+  document.getElementById("peopleCount").textContent = c.sources.people.length;
+  c.sources.people.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "card" + (state.consultedSources.has(p.id) ? " consulted" : "");
+    card.innerHTML = `
+      <div class="card-icon">${escapeHtml(p.icon)}</div>
+      <div class="card-body">
+        <div class="card-title">${escapeHtml(p.name)}</div>
+        <div class="card-meta">${escapeHtml(p.role)}</div>
+      </div>
+    `;
+    card.onclick = () => openPerson(p);
+    peopleList.appendChild(card);
+  });
+
+  // documents panel
+  const docList = document.getElementById("datasourceList");
+  docList.innerHTML = "";
+  document.getElementById("datasourceCount").textContent = c.sources.documents.length;
+  c.sources.documents.forEach(d => {
+    const card = document.createElement("div");
+    card.className = "card" + (state.consultedSources.has(d.id) ? " consulted" : "");
+    const iconClass = `card-icon ${d.type || 'doc'}`;
+    card.innerHTML = `
+      <div class="${iconClass}">${escapeHtml(d.icon || "📄")}</div>
+      <div class="card-body">
+        <div class="card-title">${escapeHtml(d.title)}</div>
+        <div class="card-meta">${escapeHtml(d.meta || "")}</div>
+      </div>
+    `;
+    card.onclick = () => openDocument(d);
+    docList.appendChild(card);
+  });
+
+  // hypothesis inputs (rebind)
+  bindHypothesisInputs();
+  // restaura valores salvos se houver
+  ["dor", "decisor", "criterio"].forEach(k => {
+    const el = document.getElementById(`hipotese-${k}`);
+    if (el) el.value = state.hypothesisCurrent[k] || "";
+  });
+
+  renderEvidencePills();
+  updateHud();
+  checkDilemmas();
+}
+
+function bindHypothesisInputs() {
+  ["dor", "decisor", "criterio"].forEach(k => {
+    const el = document.getElementById(`hipotese-${k}`);
+    if (!el) return;
+    // remove old listeners by cloning
+    const newEl = el.cloneNode(true);
+    el.parentNode.replaceChild(newEl, el);
+    newEl.value = state.hypothesisCurrent[k] || "";
+    newEl.addEventListener("blur", () => {
+      const v = newEl.value.trim();
+      const prev = state.hypothesisCurrent[k];
+      if (v && v !== prev) {
+        state.hypothesisCurrent[k] = v;
+        const t = state.startTime ? Math.floor((Date.now() - state.startTime) / 1000) : 0;
+        state.hypothesisHistory.push({ time: t, key: k, value: v });
+        logTrail("hipótese", `${k}: "${v.substring(0, 60)}${v.length > 60 ? '…' : ''}"`);
+      }
+    });
+  });
+}
+
+/* ─── PERSON MODAL ────────────────────────────────────────── */
+
+function openPerson(p) {
+  if (!state.consultedSources.has(p.id)) {
+    state.consultedSources.add(p.id);
+    logTrail("consulta", `Abriu fonte: ${p.name}`);
+  }
+  renderInvestigation();
+
+  const modal = document.getElementById("modalContent");
+  modal.innerHTML = `
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h2>${escapeHtml(p.name)}</h2>
+    <div class="modal-role">${escapeHtml(p.role)}</div>
+    <div class="modal-bio">${escapeHtml(p.bio)}</div>
+    <div class="question-list" id="questionList-${p.id}"></div>
+    <div id="answer-${p.id}"></div>
+  `;
+  renderQuestions(p);
+  document.getElementById("modal").classList.add("active");
+}
+
+function renderQuestions(p) {
+  const list = document.getElementById(`questionList-${p.id}`);
+  list.innerHTML = "";
+  p.questions.forEach((qa, idx) => {
+    const key = `${p.id}::${idx}`;
+    const btn = document.createElement("button");
+    btn.className = "question-btn" + (state.askedQuestions.has(key) ? " asked" : "");
+    btn.textContent = qa.q;
+    btn.onclick = () => askQuestion(p, idx);
+    list.appendChild(btn);
+  });
+}
+
+function askQuestion(p, idx) {
+  const key = `${p.id}::${idx}`;
+  if (state.askedQuestions.has(key)) return;
+  state.askedQuestions.add(key);
+  const qa = p.questions[idx];
+  logTrail("pergunta", `${p.name}: "${qa.q.substring(0, 60)}…"`);
+  renderQuestions(p);
+
+  const ansBox = document.getElementById(`answer-${p.id}`);
+  const block = document.createElement("div");
+  block.className = "answer-block";
+
+  let bodyHtml = "";
+  if (!qa.type || qa.type === "text") {
+    bodyHtml = `<div class="a">${escapeHtml(qa.a)}</div>`;
+  } else if (qa.type === "call") {
+    bodyHtml = renderCallContent(qa.content);
+  } else if (qa.type === "email") {
+    bodyHtml = renderEmailContent(qa.content);
+  } else if (qa.type === "dashboard") {
+    bodyHtml = renderDashContent(qa.content);
+  } else if (qa.type === "doc") {
+    bodyHtml = `<div class="doc-paper">${escapeHtml(qa.content)}</div>`;
+  }
+
+  const evTag = qa.evidenceTag;
+  const evIsMarked = evTag && state.evidenceSet.has(evTag);
+  const evBtn = evTag ? `
+    <button class="evidence-mark-btn ${evIsMarked ? 'marked' : ''}" id="evbtn-${p.id}-${idx}" onclick="markEvidenceFromBtn('${escapeAttr(evTag)}', 'evbtn-${p.id}-${idx}')">
+      ${evIsMarked ? '✓ Evidência marcada' : '+ Marcar como evidência'}
+    </button>
+  ` : "";
+
+  block.innerHTML = `
+    <div class="q">${escapeHtml(qa.q)}</div>
+    ${bodyHtml}
+    ${evBtn}
+  `;
+  ansBox.appendChild(block);
+  block.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function escapeAttr(s) { return String(s).replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+
+/* ─── DOCUMENT MODAL ──────────────────────────────────────── */
+
+function openDocument(d) {
+  if (!state.consultedSources.has(d.id)) {
+    state.consultedSources.add(d.id);
+    logTrail("consulta", `Abriu: ${d.title}`);
+  }
+  renderInvestigation();
+
+  const modal = document.getElementById("modalContent");
+  let body = "";
+  if (d.type === "dash") {
+    body = renderDashContent(d.content);
+  } else if (d.type === "call") {
+    body = renderCallContent(d.content);
+  } else if (d.type === "email") {
+    body = renderEmailContent(d.content);
+  } else {
+    body = `<div class="doc-paper">${escapeHtml(d.content)}</div>`;
+  }
+
+  modal.innerHTML = `
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h2>${escapeHtml(d.title)}</h2>
+    <div class="modal-role">${escapeHtml(d.meta || "")}</div>
+    ${body}
+    <div style="margin-top: 18px;">
+      <input type="text" id="evidenceCustom" placeholder="Trecho ou fato dessa fonte que você quer marcar como evidência…" style="width: 100%; padding: 10px 12px; border: 1px solid var(--semente-cream-dark); border-radius: 6px; background: var(--semente-cream); font-family: 'Inter', sans-serif; font-size: 13px;">
+      <button class="evidence-mark-btn" style="margin-top: 8px;" onclick="markCustomEvidence('${escapeAttr(d.id)}')">+ Marcar Evidência</button>
+    </div>
+  `;
+  document.getElementById("modal").classList.add("active");
+}
+
+/* ─── RENDERERS ───────────────────────────────────────────── */
+
+function renderCallContent(c) {
+  let html = `<div class="call-transcript">`;
+  html += `<div class="call-meta">${escapeHtml(c.meta || "")}</div>`;
+  c.lines.forEach(l => {
+    html += `
+      <div class="call-line ${l.side}">
+        <div class="call-speaker">
+          ${escapeHtml(l.who)}
+          <span class="call-time">${escapeHtml(l.time || "")}</span>
+        </div>
+        ${escapeHtml(l.text)}
+      </div>
+    `;
+  });
+  html += `</div>`;
+  return html;
+}
+
+function renderEmailContent(emails) {
+  let html = `<div class="email-thread">`;
+  emails.forEach(e => {
+    html += `
+      <div class="email">
+        <div class="email-header">
+          <div><b>De:</b> ${escapeHtml(e.from)}</div>
+          <div><b>Para:</b> ${escapeHtml(e.to)}</div>
+          <div><b>Data:</b> ${escapeHtml(e.date)}</div>
+          <div><b>Assunto:</b> ${escapeHtml(e.subject)}</div>
+        </div>
+        <div class="email-body">${escapeHtml(e.body)}</div>
+      </div>
+    `;
+  });
+  html += `</div>`;
+  return html;
+}
+
+function renderDashContent(d) {
+  let html = `<div class="dashboard">`;
+  if (d.title) html += `<div style="font-family:'Fraunces', serif; font-size:18px; font-weight:600; margin-bottom:4px; color:var(--semente-green-dark);">${escapeHtml(d.title)}</div>`;
+  if (d.user) html += `<div style="font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--semente-ink-faded); margin-bottom:16px;">${escapeHtml(d.user)}</div>`;
+
+  if (d.metrics) {
+    html += `<div class="metric-grid">`;
+    d.metrics.forEach(m => {
+      html += `
+        <div class="metric">
+          <div class="label">${escapeHtml(m.label)}</div>
+          <div class="value">${escapeHtml(m.value)}</div>
+          ${m.delta ? `<div class="delta ${m.deltaClass || 'flat'}">${escapeHtml(m.delta)}</div>` : ""}
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  if (d.bars && d.bars.length) {
+    html += `<div class="chart-section">`;
+    if (d.chartTitle) html += `<h4>${escapeHtml(d.chartTitle)}</h4>`;
+    html += `<div class="bar-chart">`;
+    const max = d.barMax || Math.max(...d.bars.map(b => b.val));
+    d.bars.forEach(b => {
+      const h = (b.val / max) * 100;
+      html += `
+        <div class="bar-group">
+          <div class="bar ${b.alt ? 'alt' : ''}" style="height: ${h}%;" data-val="${b.val}"></div>
+          <div class="bar-label">${escapeHtml(b.label)}</div>
+        </div>
+      `;
+    });
+    html += `</div></div>`;
+  }
+
+  if (d.funnel) {
+    html += `<div class="chart-section"><h4>Funil de conversão</h4><div class="funnel">`;
+    d.funnel.forEach((s, i) => {
+      const w = i === 0 ? 100 : s.pct;
+      html += `
+        <div class="funnel-stage" style="--w: ${w}%;">
+          <span>${escapeHtml(s.stage)} · ${escapeHtml(s.pct)}%</span>
+          <span class="num">${escapeHtml(s.num)}</span>
+        </div>
+      `;
+    });
+    html += `</div></div>`;
+  }
+
+  if (d.note) {
+    html += `<div style="background: var(--semente-cream); padding: 12px 14px; border-radius: 6px; border-left: 3px solid var(--semente-orange); font-size: 13px; line-height: 1.5; font-style: italic; color: var(--semente-ink-soft); margin-top: 14px;">${escapeHtml(d.note)}</div>`;
+  }
+
+  html += `</div>`;
+  return html;
+}
+
+/* ─── EVIDENCE ────────────────────────────────────────────── */
+
+function markEvidenceFromBtn(tag, btnId) {
+  markEvidence(tag);
+  const btn = document.getElementById(btnId);
+  if (btn) {
+    btn.textContent = "✓ Evidência marcada";
+    btn.classList.add("marked");
+    btn.disabled = true;
+  }
+}
+
+function markCustomEvidence(srcId) {
+  const inp = document.getElementById("evidenceCustom");
+  const v = inp.value.trim();
+  if (!v) return;
+  const tag = `[${srcId}] ${v}`;
+  markEvidence(tag);
+  inp.value = "";
+}
+
+function markEvidence(tag) {
+  if (state.evidenceSet.has(tag)) return;
+  state.evidenceSet.add(tag);
+  state.evidences.push(tag);
+  logTrail("evidência", tag.substring(0, 100));
+  renderEvidencePills();
+  updateHud();
+  checkDilemmas();
+}
+
+function renderEvidencePills() {
+  const el = document.getElementById("evidencePills");
+  if (!el) return;
+  if (state.evidences.length === 0) {
+    el.innerHTML = '<span class="evidence-empty">Nenhuma evidência marcada ainda.</span>';
+    return;
+  }
+  el.innerHTML = state.evidences.map(e => `<span class="evidence-pill">${escapeHtml(e.length > 80 ? e.substring(0, 78) + "…" : e)}</span>`).join("");
+}
+
+/* ─── HUD ─────────────────────────────────────────────────── */
+
+function updateHud() {
+  document.getElementById("sourceCount").textContent = state.consultedSources.size;
+  document.getElementById("evidenceCount").textContent = state.evidences.length;
+  document.getElementById("dilemmaCount").textContent = state.dilemmaResolutions.length;
+}
+
+/* ─── TIMER ───────────────────────────────────────────────── */
+
+function startTimer() {
+  state.startTime = Date.now();
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  state.timerInterval = setInterval(() => {
+    const e = Math.floor((Date.now() - state.startTime) / 1000);
+    const el = document.getElementById("timer");
+    if (el) el.textContent = fmtTime(e);
+  }, 1000);
+}
+
+function stopTimer() {
+  if (state.timerInterval) {
+    clearInterval(state.timerInterval);
+    state.timerInterval = null;
+  }
+}
+
+/* ─── NAVIGATION ──────────────────────────────────────────── */
+
+function showScreen(name) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(`screen-${name}`).classList.add("active");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function closeModal() {
+  document.getElementById("modal").classList.remove("active");
+}
+
+document.getElementById("modal").addEventListener("click", (e) => {
+  if (e.target.id === "modal") closeModal();
+});
+
+/* ─── DILEMMAS ────────────────────────────────────────────── */
+
+function checkDilemmas() {
+  if (!activeCase || !activeCase.dilemmas) return;
+  for (const d of activeCase.dilemmas) {
+    if (state.seenDilemmaTriggers.has(d.id)) continue;
+    if (isResolved(d.id)) continue;
+    let shouldFire = false;
+    if (d.trigger.type === "afterSources" && state.consultedSources.size >= d.trigger.count) shouldFire = true;
+    if (d.trigger.type === "afterEvidences" && state.evidences.length >= d.trigger.count) shouldFire = true;
+    // beforeProposal é disparado em goToProposal()
+    if (shouldFire) {
+      state.seenDilemmaTriggers.add(d.id);
+      offerDilemma(d);
+      return; // um dilema por vez
+    }
+  }
+}
+
+function isResolved(id) {
+  return state.dilemmaResolutions.some(r => r.dilemmaId === id);
+}
+
+function offerDilemma(d) {
+  state.pendingDilemma = d;
+  const slot = document.getElementById("dilemmaBannerSlot");
+  slot.innerHTML = `
+    <div class="dilemma-banner">
+      <div>
+        <h4>⚡ Dilema disponível: ${escapeHtml(d.title)}</h4>
+        <p>Uma decisão estratégica precisa ser tomada antes de seguir. Cada escolha tem consequência registrada.</p>
+      </div>
+      <button onclick="openDilemma('${d.id}')">Tomar Decisão →</button>
+    </div>
+  `;
+}
+
+function openDilemma(dilemmaId) {
+  const d = activeCase.dilemmas.find(x => x.id === dilemmaId);
+  if (!d) return;
+
+  const modal = document.getElementById("modalContent");
+  let optsHtml = "";
+  d.options.forEach(o => {
+    optsHtml += `
+      <div class="dilemma-option" data-option-id="${o.id}" onclick="selectDilemmaOption('${d.id}', '${o.id}', this)">
+        <h5>${escapeHtml(o.title)}</h5>
+        <p>${escapeHtml(o.desc)}</p>
+      </div>
+    `;
+  });
+
+  modal.innerHTML = `
+    <div class="dilemma-modal">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <h2>⚡ ${escapeHtml(d.title)}</h2>
+      <div class="modal-role">Dilema · justificativa obrigatória</div>
+      <div class="dilemma-context">${d.context}</div>
+      <div class="dilemma-options" id="dilemmaOptions">${optsHtml}</div>
+      <div class="dilemma-justify">
+        <label>Justifique sua escolha (a banca vai ler isto):</label>
+        <textarea id="dilemmaJustify" placeholder="Por que essa opção e não as outras? Que evidência te leva a essa escolha?"></textarea>
+      </div>
+      <div class="action-bar">
+        <button class="btn-secondary" onclick="closeModal()">Decidir Depois</button>
+        <button class="btn-primary" id="dilemmaSubmitBtn" onclick="resolveDilemma('${d.id}')" disabled>Confirmar Decisão</button>
+      </div>
+    </div>
+  `;
+
+  // ativar botão quando opção e justificativa preenchidas
+  const justifyEl = document.getElementById("dilemmaJustify");
+  justifyEl.addEventListener("input", checkDilemmaSubmitEnabled);
+
+  document.getElementById("modal").classList.add("active");
+}
+
+let _selectedDilemmaOption = null;
+
+function selectDilemmaOption(dilemmaId, optionId, el) {
+  document.querySelectorAll("#dilemmaOptions .dilemma-option").forEach(o => o.classList.remove("selected"));
+  el.classList.add("selected");
+  _selectedDilemmaOption = optionId;
+  checkDilemmaSubmitEnabled();
+}
+
+function checkDilemmaSubmitEnabled() {
+  const btn = document.getElementById("dilemmaSubmitBtn");
+  const justify = (document.getElementById("dilemmaJustify").value || "").trim();
+  btn.disabled = !(_selectedDilemmaOption && justify.length >= 10);
+}
+
+function resolveDilemma(dilemmaId) {
+  const d = activeCase.dilemmas.find(x => x.id === dilemmaId);
+  if (!d || !_selectedDilemmaOption) return;
+  const justify = document.getElementById("dilemmaJustify").value.trim();
+  if (justify.length < 10) return;
+
+  const chosenOpt = d.options.find(o => o.id === _selectedDilemmaOption);
+  const notChosen = d.options.filter(o => o.id !== _selectedDilemmaOption);
+
+  const t = state.startTime ? Math.floor((Date.now() - state.startTime) / 1000) : 0;
+  state.dilemmaResolutions.push({
+    dilemmaId: d.id,
+    dilemmaTitle: d.title,
+    chosenId: chosenOpt.id,
+    chosenTitle: chosenOpt.title,
+    chosenDesc: chosenOpt.desc,
+    notChosen: notChosen.map(o => ({ id: o.id, title: o.title })),
+    justify,
+    time: t
+  });
+  logTrail("dilema", `${d.title} → "${chosenOpt.title}"`);
+
+  _selectedDilemmaOption = null;
+  closeModal();
+  document.getElementById("dilemmaBannerSlot").innerHTML = "";
+  state.pendingDilemma = null;
+  updateHud();
+  // pode haver outro dilema pronto
+  setTimeout(checkDilemmas, 300);
+}
+
+/* ─── PROPOSAL ────────────────────────────────────────────── */
+
+function goToProposal() {
+  // verifica se há dilema beforeProposal pendente
+  const before = activeCase.dilemmas.find(d => d.trigger.type === "beforeProposal" && !isResolved(d.id) && !state.seenDilemmaTriggers.has(d.id));
+  if (before) {
+    state.seenDilemmaTriggers.add(before.id);
+    alert("Antes de fechar a proposta, você precisa resolver o último dilema estratégico.");
+    offerDilemma(before);
+    return;
+  }
+  renderProposalForm();
+  logTrail("transição", "Aluno avançou para montagem de proposta");
+  showScreen("proposal");
+}
+
+function renderProposalForm() {
+  const c = activeCase;
+  document.getElementById("proposalIntro").textContent = `Estruture sua proposta final para ${c.meta.title}. A banca avaliará coerência entre evidências coletadas, dilemas resolvidos e a proposta apresentada.`;
+  const container = document.getElementById("proposalFields");
+  container.innerHTML = "";
+  c.proposalFields.forEach(f => {
+    const grp = document.createElement("div");
+    grp.className = "form-group";
+    const inputEl = f.type === "input"
+      ? `<input type="text" id="prop-${f.id}" placeholder="${escapeAttr(f.placeholder || '')}">`
+      : `<textarea id="prop-${f.id}" placeholder="${escapeAttr(f.placeholder || '')}"></textarea>`;
+    grp.innerHTML = `<label>${escapeHtml(f.label)}</label>${inputEl}`;
+    container.appendChild(grp);
+    // restaurar valor se já houver (após restart parcial)
+    setTimeout(() => {
+      const el = document.getElementById(`prop-${f.id}`);
+      if (el && state.proposal[f.id]) el.value = state.proposal[f.id];
+    }, 0);
+  });
+}
+
+function submitProposal() {
+  activeCase.proposalFields.forEach(f => {
+    const el = document.getElementById(`prop-${f.id}`);
+    state.proposal[f.id] = el ? el.value.trim() : "";
+  });
+  stopTimer();
+  logTrail("submissão", "Proposta fechada");
+  generateReport();
+  showScreen("report");
+}
+
+/* ─── REPORT ──────────────────────────────────────────────── */
+
+function generateReport() {
+  const c = activeCase;
+  const ev = c.evaluation;
+  const elapsed = Math.floor((Date.now() - state.startTime) / 1000);
+
+  const critical = ev.criticalEvidences.map(e => ({ text: e, found: state.evidenceSet.has(e) }));
+  const biases = ev.biasTraps.filter(b => { try { return b.trigger(state); } catch { return false; } });
+  const goods = ev.goodMoves.filter(g => { try { return g.trigger(state); } catch { return false; } });
+
+  let propRecap = "";
+  c.proposalFields.forEach(f => {
+    propRecap += `
+      <div class="recap-item">
+        <div class="recap-label">${escapeHtml(f.label)}</div>
+        <div class="recap-value">${state.proposal[f.id] ? escapeHtml(state.proposal[f.id]) : `<em style="color:var(--semente-ink-faded)">— em branco —</em>`}</div>
+      </div>
+    `;
+  });
+
+  let dilemmaRecap = "";
+  if (state.dilemmaResolutions.length === 0) {
+    dilemmaRecap = `<p style="font-style:italic; color:var(--semente-ink-faded);">Nenhum dilema foi resolvido. O aluno avançou sem tomar decisões estratégicas explícitas.</p>`;
+  } else {
+    state.dilemmaResolutions.forEach(r => {
+      dilemmaRecap += `
+        <div class="dilemma-recap">
+          <h4>${escapeHtml(r.dilemmaTitle)} <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--semente-ink-faded); font-weight: normal;">@ ${fmtTime(r.time)}</span></h4>
+          <div class="chose">✓ Escolheu: ${escapeHtml(r.chosenTitle)}</div>
+          <div class="not-chose">Descartou: ${r.notChosen.map(n => escapeHtml(n.title)).join(" · ")}</div>
+          <div class="why">${escapeHtml(r.justify)}</div>
+        </div>
+      `;
+    });
+  }
+
+  const html = `
+    <div class="report-header">
+      <div class="report-stamp">RELATÓRIO DE BANCA</div>
+      <h2>${escapeHtml(c.meta.title)}</h2>
+      <div class="report-meta">${escapeHtml(c.typeLabel)} · Tempo total: ${fmtTime(elapsed)} · Fontes consultadas: ${state.consultedSources.size}/${c.sources.people.length + c.sources.documents.length}</div>
+    </div>
+
+    <div class="report-section">
+      <h3><span class="num">01</span> Decisões Bifurcadas (Dilemas)</h3>
+      <p style="font-size:13px; color:var(--semente-ink-faded); font-style:italic; margin-bottom:12px;">
+        Cada dilema mostra o que foi escolhido, o que foi descartado, e por quê. Use esta seção pra cobrar o aluno sobre o raciocínio.
+      </p>
+      ${dilemmaRecap}
+    </div>
+
+    <div class="report-section">
+      <h3><span class="num">02</span> Proposta Apresentada</h3>
+      <div class="proposal-recap">${propRecap}</div>
+    </div>
+
+    <div class="report-section">
+      <h3><span class="num">03</span> Evidências Críticas</h3>
+      <p style="font-size:13px; color:var(--semente-ink-faded); font-style:italic; margin-bottom:12px;">
+        Estas eram as evidências que distinguem proposta sólida de proposta superficial:
+      </p>
+      <ul style="list-style:none; padding:0;">
+        ${critical.map(c => `
+          <li style="padding:8px 0; border-bottom:1px dashed var(--semente-cream-dark); font-size:13px;">
+            ${c.found
+              ? `<span style="color:var(--semente-green); font-weight:700; margin-right:6px;">✓</span>`
+              : `<span style="color:var(--semente-red); font-weight:700; margin-right:6px;">✗</span>`}
+            <span style="${c.found ? '' : 'color:var(--semente-ink-faded);'}">${escapeHtml(c.text)}</span>
+          </li>
+        `).join("")}
+      </ul>
+      <p style="margin-top:12px; font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--semente-ink-soft);">
+        Encontradas: ${critical.filter(c => c.found).length} de ${critical.length}
+      </p>
+    </div>
+
+    <div class="report-section">
+      <h3><span class="num">04</span> Trilha de Raciocínio (Timeline)</h3>
+      <ul class="timeline">
+        ${state.trail.slice(0, 40).map(t => `
+          <li>
+            <div class="timeline-time">${fmtTime(t.time)} · ${escapeHtml(t.action.toUpperCase())}</div>
+            <div>${escapeHtml(t.detail)}</div>
+          </li>
+        `).join("")}
+        ${state.trail.length > 40 ? `<li><em style="color:var(--semente-ink-faded)">+ ${state.trail.length - 40} ações adicionais omitidas</em></li>` : ""}
+      </ul>
+    </div>
+
+    <div class="report-section">
+      <h3><span class="num">05</span> Evolução de Hipóteses</h3>
+      ${state.hypothesisHistory.length === 0
+        ? `<p style="font-style:italic; color:var(--semente-ink-faded);">O aluno não registrou hipóteses ao longo da investigação.</p>`
+        : `<ul class="timeline">
+            ${state.hypothesisHistory.map(h => `
+              <li>
+                <div class="timeline-time">${fmtTime(h.time)} · ${escapeHtml(h.key.toUpperCase())}</div>
+                <div>${escapeHtml(h.value)}</div>
+              </li>
+            `).join("")}
+          </ul>`
+      }
+    </div>
+
+    <div class="report-section">
+      <h3><span class="num">06</span> Vieses Detectados pelo Sistema</h3>
+      ${biases.length === 0
+        ? `<p style="font-style:italic; color:var(--semente-green);">Nenhum viés clássico detectado nesta trilha. Bom sinal.</p>`
+        : biases.map(b => `
+            <div class="bias-flag">
+              <div class="bias-flag-icon">⚠</div>
+              <div>
+                <div class="bias-name">${escapeHtml(b.name)}</div>
+                <div class="bias-detail">${escapeHtml(b.detail)}</div>
+              </div>
+            </div>
+          `).join("")
+      }
+    </div>
+
+    <div class="report-section">
+      <h3><span class="num">07</span> Boas Práticas Observadas</h3>
+      ${goods.length === 0
+        ? `<p style="font-style:italic; color:var(--semente-ink-faded);">Nenhuma das boas práticas-chave foi observada nesta trilha.</p>`
+        : goods.map(g => `
+            <div class="good-flag">
+              <div class="good-flag-icon">✓</div>
+              <div>
+                <div class="good-name">${escapeHtml(g.name)}</div>
+                <div class="good-detail">${escapeHtml(g.detail)}</div>
+              </div>
+            </div>
+          `).join("")
+      }
+    </div>
+
+    <div class="report-section">
+      <h3><span class="num">08</span> Pauta Sugerida para a Banca</h3>
+      <ol style="padding-left: 22px; font-size: 14px; line-height: 1.9; color: var(--semente-ink-soft);">
+        <li><strong>Comece pelos dilemas.</strong> Em cada decisão bifurcada, pergunte ao aluno se ele mantém a escolha hoje, sabendo o que sabe agora. A resposta é diagnóstico puro.</li>
+        <li><strong>Confronte as evidências críticas marcadas como ✗.</strong> O aluno chegou a essa informação por outro caminho? Ou simplesmente não viu?</li>
+        <li><strong>Para cada viés detectado</strong>, pergunte se ele percebeu durante o processo. Metacognição é o que se quer treinar.</li>
+        <li><strong>Cobre a coerência</strong>: a proposta apresentada está alinhada aos dilemas resolvidos? Ou são duas pessoas falando?</li>
+        <li><strong>Pergunte o que ele faria diferente</strong> com mais 15 minutos. A resposta revela maturidade autocrítica.</li>
+      </ol>
+    </div>
+  `;
+
+  document.getElementById("reportContent").innerHTML = html;
+}
+
+/* ─── BOOT ────────────────────────────────────────────────── */
+
+document.addEventListener("DOMContentLoaded", () => {
+  // populate CASES from globals (case files set these)
+  if (typeof CASE_FIELD !== "undefined") CASES.push(CASE_FIELD);
+  if (typeof CASE_INSIDE !== "undefined") CASES.push(CASE_INSIDE);
+  if (typeof CASE_SELF !== "undefined") CASES.push(CASE_SELF);
+  bootCaseSelector();
+});
+
+/* ===== FIM DO ENGINE ===== */
+</script>
+</body>
+</html>
