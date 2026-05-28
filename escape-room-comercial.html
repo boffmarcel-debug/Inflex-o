@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOSSIÊ COMERCIAL — Caso 001</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #ede4d3;
+    --paper-dark: #d9cbb0;
+    --paper-shadow: #c4b491;
+    --ink: #1a1611;
+    --ink-soft: #3d342a;
+    --ink-faded: #6b5d4a;
+    --stamp-red: #8b2820;
+    --stamp-blue: #1e3a5f;
+    --accent: #b8860b;
+    --evidence: #4a6741;
+    --bias-warning: #8b2820;
+    --shadow: rgba(26, 22, 17, 0.25);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Old Standard TT', Georgia, serif;
+    background: var(--paper);
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(184, 134, 11, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(139, 40, 32, 0.05) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.06 0 0 0 0.15 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.6;
+    padding: 0;
+  }
+
+  .grain {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    opacity: 0.4;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 30px;
+  }
+
+  /* ─── HEADER ─── */
+  header.dossie {
+    border: 2px solid var(--ink);
+    padding: 30px 35px;
+    margin-bottom: 30px;
+    background: var(--paper);
+    position: relative;
+    box-shadow: 4px 4px 0 var(--ink), 8px 8px 20px var(--shadow);
+  }
+
+  header.dossie::before {
+    content: 'CONFIDENCIAL';
+    position: absolute;
+    top: -14px;
+    right: 30px;
+    background: var(--paper);
+    color: var(--stamp-red);
+    font-family: 'Special Elite', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    padding: 2px 12px;
+    border: 1px solid var(--stamp-red);
+  }
+
+  .dossie-num {
+    font-family: 'Special Elite', monospace;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--ink-faded);
+    margin-bottom: 8px;
+  }
+
+  h1.titulo {
+    font-family: 'Old Standard TT', serif;
+    font-weight: 700;
+    font-size: clamp(28px, 5vw, 44px);
+    letter-spacing: 1px;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .subtitulo {
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 16px;
+    border-top: 1px solid var(--ink-faded);
+    padding-top: 12px;
+    margin-top: 12px;
+  }
+
+  /* ─── STAMPS ─── */
+  .stamp {
+    display: inline-block;
+    font-family: 'Special Elite', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 4px 10px;
+    border: 2px solid currentColor;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+  }
+  .stamp.red { color: var(--stamp-red); }
+  .stamp.blue { color: var(--stamp-blue); }
+  .stamp.green { color: var(--evidence); }
+
+  /* ─── HUD / STATUS BAR ─── */
+  .hud {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: var(--paper-dark);
+    border: 1px dashed var(--ink-soft);
+  }
+
+  .hud-item {
+    text-align: center;
+  }
+  .hud-label {
+    font-family: 'Special Elite', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+  }
+  .hud-value {
+    font-family: 'Old Standard TT', serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--ink);
+    margin-top: 4px;
+  }
+
+  /* ─── SCREEN STRUCTURE ─── */
+  .screen { display: none; animation: fadeIn 0.6s ease-out; }
+  .screen.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── BRIEFING SCREEN ─── */
+  .briefing {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    padding: 40px;
+    box-shadow: 4px 4px 0 var(--ink-soft), 8px 8px 20px var(--shadow);
+  }
+
+  .briefing h2 {
+    font-family: 'Old Standard TT', serif;
+    font-size: 28px;
+    margin-bottom: 20px;
+    border-bottom: 3px double var(--ink);
+    padding-bottom: 12px;
+  }
+
+  .briefing-section {
+    margin: 25px 0;
+  }
+  .briefing-section h3 {
+    font-family: 'Special Elite', monospace;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--stamp-red);
+    margin-bottom: 10px;
+  }
+  .briefing-section p { font-size: 17px; }
+  .briefing-section ul { padding-left: 25px; margin-top: 8px; }
+  .briefing-section li { margin-bottom: 6px; font-size: 16px; }
+
+  /* ─── INVESTIGATION GRID ─── */
+  .investigation {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 30px;
+  }
+
+  @media (max-width: 768px) {
+    .investigation { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    padding: 25px;
+    box-shadow: 3px 3px 0 var(--ink-soft);
+  }
+
+  .panel h3 {
+    font-family: 'Special Elite', monospace;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--ink-faded);
+  }
+
+  /* ─── CARDS (personagens, documentos) ─── */
+  .card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .card {
+    border: 1px solid var(--ink-faded);
+    padding: 14px 16px;
+    background: var(--paper);
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .card:hover {
+    background: var(--paper-dark);
+    transform: translateX(2px);
+    box-shadow: -3px 3px 0 var(--ink-soft);
+  }
+
+  .card.consulted {
+    background: var(--paper-dark);
+    opacity: 0.85;
+  }
+
+  .card.consulted::after {
+    content: '✓ CONSULTADO';
+    position: absolute;
+    top: 4px;
+    right: 8px;
+    font-family: 'Special Elite', monospace;
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: var(--evidence);
+  }
+
+  .card-icon {
+    width: 36px;
+    height: 36px;
+    border: 1.5px solid var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Special Elite', monospace;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .card-body { flex: 1; min-width: 0; }
+  .card-title {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 2px;
+  }
+  .card-meta {
+    font-family: 'Special Elite', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+  }
+
+  /* ─── MODAL (entrevistas e documentos) ─── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26, 22, 17, 0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: 20px;
+  }
+  .modal-overlay.active { display: flex; animation: fadeIn 0.3s; }
+
+  .modal {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    box-shadow: 8px 8px 0 var(--ink-soft), 0 0 50px rgba(0,0,0,0.5);
+    max-width: 700px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 35px;
+    position: relative;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: 1.5px solid var(--ink);
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+    cursor: pointer;
+    font-family: 'Special Elite', monospace;
+    color: var(--ink);
+  }
+  .modal-close:hover { background: var(--ink); color: var(--paper); }
+
+  .modal h2 {
+    font-family: 'Old Standard TT', serif;
+    font-size: 26px;
+    margin-bottom: 5px;
+    padding-right: 50px;
+  }
+
+  .modal-role {
+    font-family: 'Special Elite', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--stamp-red);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .question-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .question-btn {
+    text-align: left;
+    background: var(--paper);
+    border: 1px solid var(--ink-faded);
+    padding: 12px 16px;
+    cursor: pointer;
+    font-family: 'Old Standard TT', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--ink-soft);
+    transition: all 0.2s;
+  }
+  .question-btn:hover {
+    background: var(--paper-dark);
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .question-btn.asked {
+    opacity: 0.5;
+    background: var(--paper-dark);
+    cursor: default;
+  }
+
+  .answer-block {
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--paper-dark);
+    border-left: 4px solid var(--stamp-red);
+    font-size: 16px;
+    line-height: 1.7;
+    animation: fadeIn 0.4s;
+  }
+  .answer-block .q {
+    font-weight: 700;
+    font-style: italic;
+    margin-bottom: 10px;
+    color: var(--ink-soft);
+  }
+  .answer-block .a {
+    color: var(--ink);
+  }
+
+  /* ─── DOCUMENT VIEW ─── */
+  .doc-content {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    background: #f5ecd9;
+    padding: 25px;
+    border: 1px solid var(--ink-soft);
+    white-space: pre-wrap;
+    color: var(--ink);
+  }
+
+  /* ─── NOTEBOOK (caderno de hipóteses) ─── */
+  .notebook {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 3px 3px 0 var(--ink-soft);
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 28px,
+      rgba(30, 58, 95, 0.08) 28px,
+      rgba(30, 58, 95, 0.08) 29px
+    );
+  }
+
+  .notebook h3 {
+    font-family: 'Special Elite', monospace;
+    font-size: 13px;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+  }
+
+  .hipotese-field {
+    margin: 15px 0;
+  }
+  .hipotese-field label {
+    display: block;
+    font-family: 'Special Elite', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .hipotese-field textarea {
+    width: 100%;
+    min-height: 70px;
+    padding: 10px;
+    border: 1px solid var(--ink-faded);
+    background: rgba(255, 255, 255, 0.4);
+    font-family: 'Old Standard TT', serif;
+    font-size: 15px;
+    line-height: 1.6;
+    resize: vertical;
+    color: var(--ink);
+  }
+  .hipotese-field textarea:focus {
+    outline: none;
+    border-color: var(--ink);
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  /* ─── EVIDENCE TRAY ─── */
+  .evidence-tray {
+    background: var(--paper-dark);
+    border: 1px dashed var(--evidence);
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+  .evidence-tray h3 {
+    font-family: 'Special Elite', monospace;
+    font-size: 12px;
+    letter-spacing: 3px;
+    margin-bottom: 12px;
+    color: var(--evidence);
+  }
+  .evidence-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .evidence-pill {
+    background: var(--paper);
+    border: 1px solid var(--evidence);
+    color: var(--evidence);
+    padding: 5px 12px;
+    font-family: 'Special Elite', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+  .evidence-empty {
+    font-style: italic;
+    color: var(--ink-faded);
+    font-size: 14px;
+  }
+
+  /* ─── BUTTONS ─── */
+  button.primary {
+    background: var(--ink);
+    color: var(--paper);
+    border: 2px solid var(--ink);
+    padding: 14px 28px;
+    font-family: 'Special Elite', monospace;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 3px 3px 0 var(--accent);
+  }
+  button.primary:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 var(--accent);
+  }
+  button.primary:active {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0 var(--accent);
+  }
+  button.primary:disabled {
+    background: var(--ink-faded);
+    border-color: var(--ink-faded);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  button.secondary {
+    background: transparent;
+    color: var(--ink);
+    border: 1.5px solid var(--ink);
+    padding: 10px 20px;
+    font-family: 'Special Elite', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  button.secondary:hover { background: var(--ink); color: var(--paper); }
+
+  .action-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+  }
+
+  /* ─── PROPOSAL SCREEN ─── */
+  .proposal-form {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    padding: 40px;
+    box-shadow: 4px 4px 0 var(--ink-soft);
+  }
+
+  .proposal-form h2 {
+    font-family: 'Old Standard TT', serif;
+    font-size: 30px;
+    border-bottom: 3px double var(--ink);
+    padding-bottom: 12px;
+    margin-bottom: 25px;
+  }
+
+  .form-group { margin: 20px 0; }
+  .form-group label {
+    display: block;
+    font-family: 'Special Elite', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: var(--ink-soft);
+  }
+  .form-group textarea,
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid var(--ink-faded);
+    background: rgba(255,255,255,0.5);
+    font-family: 'Old Standard TT', serif;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .form-group textarea { min-height: 100px; resize: vertical; }
+  .form-group textarea:focus,
+  .form-group input:focus,
+  .form-group select:focus {
+    outline: none;
+    border-color: var(--ink);
+    background: white;
+  }
+
+  /* ─── REPORT (banca) ─── */
+  .report {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    padding: 40px;
+    box-shadow: 4px 4px 0 var(--ink-soft);
+  }
+
+  .report h2 {
+    font-family: 'Old Standard TT', serif;
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .report-subtitle {
+    text-align: center;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-bottom: 30px;
+    padding-bottom: 25px;
+    border-bottom: 3px double var(--ink);
+  }
+
+  .report-section {
+    margin: 30px 0;
+    padding-bottom: 25px;
+    border-bottom: 1px dashed var(--ink-faded);
+  }
+  .report-section:last-child { border-bottom: none; }
+
+  .report-section h3 {
+    font-family: 'Special Elite', monospace;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    color: var(--stamp-red);
+  }
+
+  .timeline {
+    list-style: none;
+    padding-left: 0;
+  }
+  .timeline li {
+    padding: 10px 0 10px 30px;
+    position: relative;
+    border-left: 2px solid var(--ink-faded);
+    margin-left: 8px;
+    font-size: 14px;
+  }
+  .timeline li::before {
+    content: '';
+    position: absolute;
+    left: -7px;
+    top: 16px;
+    width: 12px;
+    height: 12px;
+    background: var(--ink);
+    border: 2px solid var(--paper);
+  }
+  .timeline-time {
+    font-family: 'Special Elite', monospace;
+    font-size: 11px;
+    color: var(--ink-faded);
+    letter-spacing: 1px;
+  }
+
+  .bias-flag {
+    background: rgba(139, 40, 32, 0.08);
+    border-left: 4px solid var(--bias-warning);
+    padding: 15px 20px;
+    margin: 12px 0;
+  }
+  .bias-flag .bias-name {
+    font-family: 'Special Elite', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--bias-warning);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .bias-flag .bias-detail {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .good-flag {
+    background: rgba(74, 103, 65, 0.08);
+    border-left: 4px solid var(--evidence);
+    padding: 15px 20px;
+    margin: 12px 0;
+  }
+  .good-flag .good-name {
+    font-family: 'Special Elite', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--evidence);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .proposal-recap {
+    background: var(--paper-dark);
+    padding: 20px;
+    border: 1px solid var(--ink-faded);
+  }
+  .recap-item { margin: 12px 0; }
+  .recap-label {
+    font-family: 'Special Elite', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+  }
+  .recap-value {
+    font-size: 15px;
+    margin-top: 3px;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px solid var(--ink-faded);
+    font-family: 'Special Elite', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--ink-faded);
+    text-align: center;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="container">
+
+  <!-- ═══════════════════════════ HEADER ═══════════════════════════ -->
+  <header class="dossie">
+    <div class="dossie-num">DOSSIÊ Nº 001 — ARQUIVO COMERCIAL</div>
+    <h1 class="titulo" id="caseTitle">Operação: ⟨carregando⟩</h1>
+    <div class="subtitulo" id="caseSubtitle">⟨carregando⟩</div>
+  </header>
+
+  <!-- ═══════════════════════════ HUD ═══════════════════════════ -->
+  <div class="hud" id="hud">
+    <div class="hud-item">
+      <div class="hud-label">Tempo Decorrido</div>
+      <div class="hud-value" id="timer">00:00</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">Entrevistas</div>
+      <div class="hud-value"><span id="interviewCount">0</span>/<span id="interviewTotal">0</span></div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">Documentos</div>
+      <div class="hud-value"><span id="docCount">0</span>/<span id="docTotal">0</span></div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">Evidências</div>
+      <div class="hud-value" id="evidenceCount">0</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════ SCREEN 1: BRIEFING ═══════════════════════════ -->
+  <div class="screen active" id="screen-briefing">
+    <div class="briefing">
+      <h2>Briefing da Operação</h2>
+
+      <div class="briefing-section">
+        <h3>SUA POSIÇÃO</h3>
+        <p id="briefingPosition"></p>
+      </div>
+
+      <div class="briefing-section">
+        <h3>O ALVO</h3>
+        <p id="briefingTarget"></p>
+      </div>
+
+      <div class="briefing-section">
+        <h3>MISSÃO</h3>
+        <p id="briefingMission"></p>
+      </div>
+
+      <div class="briefing-section">
+        <h3>REGRAS DO JOGO</h3>
+        <ul>
+          <li>Você tem acesso a personagens-chave (entrevistáveis) e documentos.</li>
+          <li>A ordem das ações é livre — mas <em>cada decisão fica registrada</em>.</li>
+          <li>Cada entrevista pode revelar fatos, opiniões ou <span class="stamp red">VIESES</span>. Cruze fontes antes de concluir.</li>
+          <li>Marque evidências que considera críticas — elas devem sustentar sua proposta final.</li>
+          <li>Sua hipótese de "ponto de dor principal" deve ser registrada e pode mudar ao longo do percurso.</li>
+          <li>Ao fechar a proposta, o sistema gera um <span class="stamp blue">RELATÓRIO DE BANCA</span> com sua trilha de raciocínio.</li>
+        </ul>
+      </div>
+
+      <div class="action-bar">
+        <span class="stamp red">CONFIDENCIAL</span>
+        <button class="primary" onclick="startInvestigation()">Iniciar Investigação →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════ SCREEN 2: INVESTIGATION ═══════════════════════════ -->
+  <div class="screen" id="screen-investigation">
+
+    <div class="notebook">
+      <h3>📓 Caderno de Hipóteses</h3>
+      <p style="font-size: 13px; color: var(--ink-faded); font-style: italic; margin-bottom: 10px;">
+        Anote suas hipóteses à medida que investiga. A banca verá a evolução.
+      </p>
+      <div class="hipotese-field">
+        <label>Ponto de dor principal (hipótese atual)</label>
+        <textarea id="hipotese-dor" placeholder="O que mais incomoda o cliente neste momento?"></textarea>
+      </div>
+      <div class="hipotese-field">
+        <label>Decisor de fato</label>
+        <textarea id="hipotese-decisor" placeholder="Quem realmente decide a compra? Quem influencia?"></textarea>
+      </div>
+      <div class="hipotese-field">
+        <label>Critério de decisão dominante</label>
+        <textarea id="hipotese-criterio" placeholder="Preço? Prazo de retorno? Imagem? Conformidade?"></textarea>
+      </div>
+    </div>
+
+    <div class="evidence-tray">
+      <h3>🔍 Evidências Coletadas</h3>
+      <div id="evidencePills" class="evidence-pills">
+        <span class="evidence-empty">Nenhuma evidência marcada ainda. Marque trechos relevantes durante as entrevistas e leitura de documentos.</span>
+      </div>
+    </div>
+
+    <div class="investigation">
+      <div class="panel">
+        <h3>👥 Personagens — Entrevistas</h3>
+        <div class="card-list" id="characterList"></div>
+      </div>
+
+      <div class="panel">
+        <h3>📄 Documentos do Caso</h3>
+        <div class="card-list" id="documentList"></div>
+      </div>
+    </div>
+
+    <div class="action-bar">
+      <button class="secondary" onclick="showScreen('briefing')">← Rever Briefing</button>
+      <button class="primary" onclick="goToProposal()">Montar Proposta Final →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════ SCREEN 3: PROPOSAL ═══════════════════════════ -->
+  <div class="screen" id="screen-proposal">
+    <div class="proposal-form">
+      <h2>Proposta Comercial</h2>
+      <p style="font-style: italic; color: var(--ink-soft); margin-bottom: 25px;">
+        Estruture sua proposta com base na investigação. A banca avaliará a coerência entre evidências coletadas, hipóteses registradas e a proposta apresentada.
+      </p>
+
+      <div class="form-group">
+        <label>Resumo do Problema (na ótica do cliente)</label>
+        <textarea id="prop-problema" placeholder="Como você descreveria o problema usando as palavras do cliente?"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Solução Proposta</label>
+        <textarea id="prop-solucao" placeholder="O que você está vendendo? Seja específico."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Justificativa de Valor (por que esse cliente deveria comprar de você)</label>
+        <textarea id="prop-valor" placeholder="Ligue a solução ao ponto de dor identificado."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Investimento Proposto (R$)</label>
+        <input type="text" id="prop-preco" placeholder="Ex: R$ 480.000 / ano">
+      </div>
+
+      <div class="form-group">
+        <label>Estratégia de Aprovação (quem você precisa convencer e como)</label>
+        <textarea id="prop-aprov" placeholder="Mapeie decisores, influenciadores, ordem de abordagem."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Principais Objeções Antecipadas</label>
+        <textarea id="prop-objecoes" placeholder="O que você espera ouvir como 'não'?"></textarea>
+      </div>
+
+      <div class="action-bar">
+        <button class="secondary" onclick="showScreen('investigation')">← Voltar à Investigação</button>
+        <button class="primary" onclick="submitProposal()">Fechar Proposta e Gerar Relatório →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════ SCREEN 4: REPORT ═══════════════════════════ -->
+  <div class="screen" id="screen-report">
+    <div class="report" id="reportContent">
+      <!-- preenchido dinamicamente -->
+    </div>
+    <div class="action-bar">
+      <button class="secondary" onclick="restart()">↻ Reiniciar Caso</button>
+      <button class="primary" onclick="window.print()">🖨 Imprimir Relatório</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════ MODAL ═══════════════════════════ -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal" id="modalContent"></div>
+  </div>
+
+  <footer>
+    Dossiê Comercial · Sistema de Avaliação por Trilha de Raciocínio · v0.1
+  </footer>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   ╔═══════════════════════════════════════════════════════════════════════╗
+   ║  CASE CONFIGURATION  ─  edite somente este bloco pra trocar de caso   ║
+   ║  Tudo abaixo do encerramento deste bloco é o ENGINE genérico.         ║
+   ╚═══════════════════════════════════════════════════════════════════════╝
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+const CASE = {
+  meta: {
+    title: "Operação Campus Verde",
+    subtitle: "Universidade São Marcos — Proposta de Gestão de Resíduos",
+    position: "Você é Consultor(a) Comercial Sênior da EcoFlux Soluções Ambientais — empresa especializada em logística reversa, compostagem e gestão integrada de resíduos para grandes geradores. Seu time pediu que você feche o maior contrato do trimestre.",
+    target: "Universidade São Marcos (USM), instituição privada de Porto Alegre/RS. 18.500 alunos, 3 campi (Central, Sul e Tecnológico), faturamento anual estimado em R$ 340 milhões. Tem orçamento de R$ 1,2 milhão alocado para 'iniciativas de sustentabilidade' em 2026.",
+    mission: "Coletar evidências suficientes para apresentar uma proposta comercial vencedora à USM. Você não tem o briefing pronto — precisa investigar."
+  },
+
+  characters: [
+    {
+      id: "diretor-op",
+      name: "Augusto Ramires",
+      role: "Diretor de Operações da USM",
+      icon: "A",
+      bio: "Toca a operação do dia a dia. Comprou contratos com terceirizadas a vida inteira. Cético com 'modismo verde'.",
+      questions: [
+        {
+          q: "Qual é o principal problema da USM hoje em gestão de resíduos?",
+          a: "Olha, sinceramente, o problema é custo. A gente paga uma fortuna pra empresa atual coletar lixo e meio que joga em algum aterro. Geramos algo em torno de 4 toneladas por mês entre os três campi. Mas isso é uma estimativa minha, viu? Não tenho número exato.",
+          evidenceTag: "Estimativa do diretor: 4t/mês (sem dado oficial)",
+          flagsBias: null
+        },
+        {
+          q: "Sustentabilidade é prioridade pra USM?",
+          a: "Eu vou ser honesto contigo: na operação, não. É papo bonito pra evento, pra folder. Mas se você me trouxer uma proposta que CORTE custo E ainda dê uma fachada verde, aí sim. Custo primeiro, marketing depois.",
+          evidenceTag: "Diretor de Operações prioriza CUSTO sobre ESG",
+          flagsBias: null
+        },
+        {
+          q: "Quem decide a compra de um serviço como esse?",
+          a: "Tecnicamente eu assino o contrato. Mas pra um valor desse, passa pelo conselho gestor. E a Beatriz, da sustentabilidade, virou figura forte ali — ela tem ouvido da reitoria. Antigamente era só decisão minha. Hoje não é mais.",
+          evidenceTag: "Decisão envolve conselho + influência da coord. sustentabilidade",
+          flagsBias: null
+        },
+        {
+          q: "Já trabalharam com fornecedores como nós antes?",
+          a: "Tem a empresa atual, a LogeAmbiental. Contrato venceu mês passado, estamos no aditivo emergencial. Eles fazem o básico. Não inovam. Mas é barato.",
+          evidenceTag: "Concorrente atual: LogeAmbiental — contrato vencido, em aditivo",
+          flagsBias: null
+        }
+      ]
+    },
+    {
+      id: "coord-sust",
+      name: "Beatriz Vilanova",
+      role: "Coordenadora de Sustentabilidade",
+      icon: "B",
+      bio: "Contratada há 2 anos. Vinda de uma multinacional. Tem mandato direto da reitoria pra 'tornar a USM referência em ESG no sul do país'.",
+      questions: [
+        {
+          q: "Qual é a prioridade número um da sua área?",
+          a: "Em 2026 nossa prioridade é o Relatório GRI. A USM nunca publicou um e a reitoria quer publicar até dezembro. Pra isso, eu PRECISO de fornecedores que me entreguem dados rastreáveis: quanto foi coletado, quanto foi reciclado, quanto virou compostagem, emissão de CO2 evitada. A LogeAmbiental atual NÃO ME DÁ ISSO. É uma planilha do Excel com 'kg total' e acabou.",
+          evidenceTag: "Beatriz: dor real = dados rastreáveis pro Relatório GRI 2026",
+          flagsBias: null
+        },
+        {
+          q: "Como você descreveria o engajamento dos alunos com sustentabilidade?",
+          a: "Os alunos cobram. A gente recebe e-mail toda semana sobre lixeira de reciclagem nos blocos. O DCE pegou pesado ano passado com uma campanha. A reitoria sentiu — virou pauta de conselho.",
+          evidenceTag: "Pressão estudantil via DCE — pauta no conselho",
+          flagsBias: null
+        },
+        {
+          q: "Vocês têm orçamento dedicado pra isso?",
+          a: "Sim. R$ 1,2 milhão pra 2026, no bloco 'iniciativas de sustentabilidade'. Mas atenção: isso NÃO é só pra resíduo. Eu preciso dividir entre resíduo, energia solar e um programa de mobilidade. Pra resíduo, na prática, tenho uns R$ 600 mil pra investir.",
+          evidenceTag: "Budget real pra resíduo: R$ 600k (não R$ 1,2M)",
+          flagsBias: "ancoragem"
+        },
+        {
+          q: "Você decide ou recomenda?",
+          a: "Eu recomendo pro conselho gestor. Mas a reitora me pediu, em reunião fechada, pra liderar essa frente. O Augusto vai querer enfiar o dedo, mas se eu chegar com proposta sólida ligada ao GRI, a reitora me apoia. Já vi acontecer.",
+          evidenceTag: "Beatriz tem apoio direto da reitora — é influenciadora-chave",
+          flagsBias: null
+        }
+      ]
+    },
+    {
+      id: "gerente-fin",
+      name: "Heitor Caldeira",
+      role: "Gerente Financeiro",
+      icon: "H",
+      bio: "Engenheiro de formação, financeiro de carreira. Olha tudo por TIR e payback. Não decide, mas pode vetar.",
+      questions: [
+        {
+          q: "Como o financeiro avalia propostas como a nossa?",
+          a: "Payback. Eu não aprovo nada com payback acima de 24 meses pra contrato operacional. Se for projeto de capex, posso esticar pra 36. Mas serviço recorrente, 24 meses é teto.",
+          evidenceTag: "Critério financeiro: payback ≤ 24 meses (serviço)",
+          flagsBias: null
+        },
+        {
+          q: "Vocês têm histórico do que gastam hoje com a LogeAmbiental?",
+          a: "Tenho. Em 2025 fechou em R$ 38 mil/mês, ou seja, R$ 456 mil no ano. E olha, esse número não bate com o que o Augusto te falou se ele te falou 4 toneladas. Pelo nosso último laudo ambiental, a USM gera mais de 6 toneladas/mês. Ou a LogeAmbiental está cobrando mal, ou o Augusto chuta por baixo. Te aviso.",
+          evidenceTag: "DADO OFICIAL: 6t/mês de resíduo (laudo) — Augusto subestima",
+          flagsBias: "contradição-fontes"
+        },
+        {
+          q: "Tem alguma restrição contratual que devemos saber?",
+          a: "Sim. Por estatuto, contratos acima de R$ 500 mil/ano precisam ir a três cotações. E o reitor exige que duas sejam de fornecedores com sede no RS — política regional. Vocês são de onde?",
+          evidenceTag: "Regra: >R$500k/ano = 3 cotações + 2 fornecedores do RS",
+          flagsBias: null
+        },
+        {
+          q: "Quanto o conselho realmente tem disposição pra investir?",
+          a: "A Beatriz fala em R$ 600 mil, mas isso é o que ela ALMEJA. O conselho aprovou um teto de R$ 720 mil/ano pra resíduo se justificar bem. Eu sei porque participei da reunião. Mas isso não circula. Use com cuidado.",
+          evidenceTag: "Teto real do conselho: R$ 720k/ano (insider, não público)",
+          flagsBias: null
+        }
+      ]
+    },
+    {
+      id: "rep-dce",
+      name: "Letícia Pinheiro",
+      role: "Representante do DCE / Conselho Estudantil",
+      icon: "L",
+      bio: "Aluna do último ano de Engenharia Ambiental. Lidera a campanha 'USM Verde' há 18 meses. Convidada pra reuniões de conselho como ouvinte.",
+      questions: [
+        {
+          q: "O que os alunos cobram da USM em sustentabilidade?",
+          a: "A galera quer ver AÇÃO, não papel. A LogeAmbiental atual é piada — vi caminhão deles misturar reciclável com orgânico na saída do campus mês passado. Tem foto, tá no Instagram do DCE. A reitora viu. Foi vexame.",
+          evidenceTag: "Incidente público: LogeAmbiental misturou resíduos — vexame público",
+          flagsBias: null
+        },
+        {
+          q: "Vocês influenciam decisão da reitoria?",
+          a: "Não temos voto, mas temos voz. E temos Instagram com 14 mil seguidores. Quando a gente posta crítica, vira ruído. A reitora aprende rápido.",
+          evidenceTag: "DCE = pressão de mídia social ativa",
+          flagsBias: null
+        },
+        {
+          q: "Que tipo de proposta vocês apoiariam publicamente?",
+          a: "Uma que ENVOLVA o aluno. Lixeiras inteligentes com gamificação, programa de compostagem aberto pra comunidade do entorno, certificação visível tipo selo nos blocos. Não adianta vir só com caminhão melhor.",
+          evidenceTag: "Alunos querem: engajamento ativo + visibilidade + comunidade",
+          flagsBias: null
+        }
+      ]
+    }
+  ],
+
+  documents: [
+    {
+      id: "doc-laudo",
+      title: "Laudo Ambiental USM — 2024",
+      icon: "📊",
+      meta: "12 páginas · oficial",
+      content: `LAUDO AMBIENTAL ANUAL — UNIVERSIDADE SÃO MARCOS
+Exercício 2024 · Emitido em 12/01/2025
+Responsável Técnico: Eng. Amb. R. Stein, CREA 187432
+
+═══════════════════════════════════════════════
+RESUMO EXECUTIVO
+
+Geração média mensal de resíduos sólidos (três campi):
+  · Orgânicos       :  2.450 kg/mês
+  · Recicláveis     :  2.180 kg/mês
+  · Não-recicláveis :  1.530 kg/mês
+  · Resíduo eletrônico (e-lixo): 95 kg/mês
+  · TOTAL           :  6.255 kg/mês  ≈ 6,2 toneladas
+
+Geração anual estimada: 75 toneladas
+
+Taxa de reciclagem efetiva: 12%
+(Benchmark setor educacional Sul: 38%)
+
+═══════════════════════════════════════════════
+DESTINAÇÃO ATUAL
+
+Operadora: LogeAmbiental Ltda.
+Modelo: coleta indiferenciada + triagem em CT própria
+Reciclagem efetiva relatada (não auditada): 31%
+Reciclagem auditada por amostragem: 12%
+
+DIVERGÊNCIA: relatado vs. auditado = 19 p.p.
+Recomendação: contratar fornecedor com
+rastreabilidade ponta-a-ponta para auditoria GRI.
+
+═══════════════════════════════════════════════
+CUSTO ATUAL
+
+Contrato LogeAmbiental: R$ 456.000/ano
+Custo por tonelada: ≈ R$ 6.080
+Benchmark setor (com rastreabilidade): R$ 4.800–7.200/t`
+    },
+    {
+      id: "doc-orcamento",
+      title: "Planilha Orçamentária Sustentabilidade 2026",
+      icon: "💰",
+      meta: "extraída do ERP · 1 página",
+      content: `ORÇAMENTO 2026 — BLOCO SUSTENTABILIDADE
+Universidade São Marcos · Aprovação 18/11/2025
+
+═══════════════════════════════════════════════
+ALOCAÇÃO TOTAL APROVADA: R$ 1.200.000
+
+  Linha 1 — Gestão de Resíduos            R$ 600.000
+  Linha 2 — Energia Solar (Campus Sul)    R$ 380.000
+  Linha 3 — Programa Mobilidade           R$ 150.000
+  Linha 4 — Reserva Contingência          R$  70.000
+
+═══════════════════════════════════════════════
+OBSERVAÇÃO EM RODAPÉ (assinado pelo CFO):
+
+"A Linha 1 (Resíduos) pode ser ampliada até
+R$ 720.000 mediante apresentação de proposta com
+TIR > 18% ao ano e garantia de conformidade GRI.
+Aprovação a critério do Conselho Gestor."
+
+═══════════════════════════════════════════════
+HISTÓRICO LINHA RESÍDUOS:
+  2024: R$ 456.000 (LogeAmbiental, sem expansão)
+  2025: R$ 456.000 (mesmo contrato, em aditivo)
+  2026: R$ 600.000 base | R$ 720.000 com gatilhos`
+    },
+    {
+      id: "doc-edital",
+      title: "Edital Anterior (2022) — USM",
+      icon: "📜",
+      meta: "perdido pela EcoFlux · 8 páginas",
+      content: `EDITAL DE COTAÇÃO Nº 14/2022
+Objeto: Contratação de empresa especializada em
+gestão de resíduos sólidos universitários.
+
+═══════════════════════════════════════════════
+CRITÉRIOS DE JULGAMENTO (em ordem de peso):
+
+  1. Preço global anual         40%
+  2. Capacidade operacional     25%
+  3. Sede ou filial no RS       20%  ←
+  4. Certificações ambientais   10%
+  5. Plano de inovação           5%
+
+═══════════════════════════════════════════════
+RESULTADO:
+  1º LogeAmbiental Ltda. (POA)    8,9 / 10
+  2º EcoFlux Soluções Amb. (SP)   7,2 / 10
+  3º GreenWaste (Curitiba)        6,8 / 10
+
+═══════════════════════════════════════════════
+JUSTIFICATIVA DE DESCLASSIFICAÇÃO ECOFLUX:
+
+"Apesar de proposta técnica superior, a EcoFlux
+foi desclassificada parcialmente no critério
+'sede ou filial no RS' (pontuação zero), o que
+impactou de forma decisiva o resultado final."`
+    },
+    {
+      id: "doc-ata",
+      title: "Ata Conselho Gestor — Out/2025",
+      icon: "📋",
+      meta: "4 páginas · circulação restrita",
+      content: `ATA REUNIÃO ORDINÁRIA — CONSELHO GESTOR USM
+14 de outubro de 2025 · Sala da Reitoria
+
+═══════════════════════════════════════════════
+PRESENTES:
+ · Reitora: Profa. Dra. Marina Saldanha
+ · Diretor Operações: Augusto Ramires
+ · Gerente Financeiro: Heitor Caldeira
+ · Coord. Sustentabilidade: Beatriz Vilanova
+ · Conselheiros (3)
+ · Ouvinte: Letícia Pinheiro (DCE)
+
+═══════════════════════════════════════════════
+ITEM 4 — GESTÃO DE RESÍDUOS / RELATÓRIO GRI
+
+Beatriz Vilanova relatou impossibilidade técnica de
+publicação do Relatório GRI 2026 sem fornecedor com
+rastreabilidade ponta-a-ponta. Apresentou caso do
+incidente público de mistura de resíduos (jul/2025)
+divulgado pelo DCE.
+
+Reitora: "Não vamos mais ser pauta de Instagram do
+DCE por algo evitável. Quero proposta nova até
+março de 2026. E quero que essa proposta venha
+amarrada ao GRI, não apenas ao custo."
+
+Augusto Ramires registrou divergência: "Custo
+operacional não pode subir mais de 20% sobre o
+contrato atual sem comprometer outras frentes."
+
+ENCAMINHAMENTO:
+ · Beatriz lidera processo de seleção
+ · Augusto valida termos operacionais
+ · Heitor valida TIR e payback (≤24m)
+ · Cotações: mínimo 3, sendo 2 com base no RS
+ · Prazo de decisão: 31/03/2026
+
+═══════════════════════════════════════════════
+OBSERVAÇÃO FINAL:
+
+"A Reitora encerrou a discussão indicando que o
+critério 'sede no RS' do edital de 2022 será
+flexibilizado para 'capacidade comprovada de
+operação no RS', desde que o fornecedor demonstre
+estrutura local equivalente."
+
+— assinado: M. Saldanha, Reitora`
+    }
+  ],
+
+  /* ─── AVALIAÇÃO ──────────────────────────────────────────────
+     Aqui o caso define COMO a banca / o motor avalia a trilha.
+     Cada chave abaixo é checada após a submissão da proposta.
+  */
+  evaluation: {
+    criticalEvidences: [
+      "DADO OFICIAL: 6t/mês de resíduo (laudo) — Augusto subestima",
+      "Beatriz: dor real = dados rastreáveis pro Relatório GRI 2026",
+      "Critério financeiro: payback ≤ 24 meses (serviço)",
+      "Regra: >R$500k/ano = 3 cotações + 2 fornecedores do RS"
+    ],
+    biasTraps: [
+      {
+        name: "Viés de Autoridade",
+        trigger: (s) => s.consultedCharacters.has("diretor-op") && !s.consultedCharacters.has("gerente-fin"),
+        detail: "Você ouviu o Diretor de Operações (Augusto) mas não confrontou os dados dele com o Gerente Financeiro. Augusto chuta 4 toneladas; o laudo oficial mostra 6,2. Quem fecha proposta confiando no chute superdimensiona ou subdimensiona — em qualquer cenário, perde competitividade ou margem."
+      },
+      {
+        name: "Viés de Ancoragem",
+        trigger: (s) => {
+          const preco = parsePrice(s.proposal["prop-preco"]);
+          return preco > 0 && preco <= 600000 && !s.consultedCharacters.has("gerente-fin");
+        },
+        detail: "Você ancorou no número que a Beatriz mencionou (R$ 600 mil) sem investigar o teto real do conselho (R$ 720 mil). Em venda consultiva premium, deixar R$ 120k na mesa por não ter feito uma pergunta é caro."
+      },
+      {
+        name: "Viés de Confirmação",
+        trigger: (s) => s.consultedCharacters.size <= 2 && Object.values(s.proposal).some(v => v && v.length > 50),
+        detail: "Você fechou proposta substantiva tendo consultado 2 personagens ou menos. Trilha curta = hipótese formada cedo e não confrontada. A banca vai cobrar: que evidência sustenta cada afirmação da sua proposta?"
+      },
+      {
+        name: "Cegueira para Critério Eliminatório",
+        trigger: (s) => !s.consultedDocuments.has("doc-edital") && !s.consultedDocuments.has("doc-ata"),
+        detail: "Você não consultou nem o edital anterior nem a ata do conselho. Existe uma regra clássica de eliminatória nesse caso (cotação tripla com 2 fornecedores do RS) que você só descobre lendo esses documentos. Propostas que ignoram esse tipo de eliminatória são descartadas no primeiro filtro, antes mesmo de a banca ler o mérito."
+      },
+      {
+        name: "Foco Excessivo no Operacional",
+        trigger: (s) => {
+          const valor = (s.proposal["prop-valor"] || "").toLowerCase();
+          return valor.length > 30 && !valor.includes("gri") && !valor.includes("rastrea") && !valor.includes("relat") && !valor.includes("conform") && !valor.includes("audit");
+        },
+        detail: "Sua justificativa de valor não menciona rastreabilidade, GRI, conformidade ou auditoria. A dor pública e priorizada pela reitora é exatamente essa — Relatório GRI 2026. Vender por custo operacional contra a LogeAmbiental significa entrar numa briga de preço que você não tem como ganhar. O premium aqui é o dado."
+      }
+    ],
+    goodMoves: [
+      {
+        name: "Triangulação de Fontes",
+        trigger: (s) => s.consultedCharacters.size >= 3,
+        detail: "Você ouviu múltiplos personagens com agendas diferentes antes de concluir. Sinal positivo de venda consultiva madura."
+      },
+      {
+        name: "Leitura Documental",
+        trigger: (s) => s.consultedDocuments.size >= 3,
+        detail: "Você consultou a maioria dos documentos disponíveis. Decisões ancoradas em evidência objetiva e não só em fala de personagem."
+      },
+      {
+        name: "Hipótese Revisada",
+        trigger: (s) => s.hypothesisHistory.length >= 2,
+        detail: "Sua hipótese de ponto de dor evoluiu durante a investigação — sinal de flexibilidade cognitiva. Vendedor que não muda de ideia frente a evidência nova é vendedor perigoso."
+      },
+      {
+        name: "Conformidade Mapeada",
+        trigger: (s) => {
+          const aprov = (s.proposal["prop-aprov"] || "").toLowerCase();
+          return aprov.includes("rs") || aprov.includes("rio grande") || aprov.includes("cotaç") || aprov.includes("cotac");
+        },
+        detail: "Você endereçou a regra de cotação tripla / sede no RS na estratégia de aprovação. Vendedor que se antecipa a critério eliminatório tem 80% mais chance de fechar."
+      }
+    ]
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ╔═══════════════════════════════════════════════════════════════════════╗
+   ║  ENGINE  ─  daqui pra baixo é código genérico do motor                ║
+   ║  Não edite a não ser que esteja melhorando o motor.                   ║
+   ╚═══════════════════════════════════════════════════════════════════════╝
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+const state = {
+  startTime: null,
+  timerInterval: null,
+  consultedCharacters: new Set(),
+  consultedDocuments: new Set(),
+  askedQuestions: new Set(), // "characterId::questionIndex"
+  evidences: [],
+  evidenceSet: new Set(),
+  hypothesisHistory: [],
+  hypothesisCurrent: { dor: "", decisor: "", criterio: "" },
+  proposal: {},
+  trail: [] // timeline de ações
+};
+
+function parsePrice(str) {
+  if (!str) return 0;
+  const clean = String(str).replace(/[^\d,.]/g, "").replace(/\./g, "").replace(",", ".");
+  return parseFloat(clean) || 0;
+}
+
+function fmtTime(seconds) {
+  const m = Math.floor(seconds / 60).toString().padStart(2, "0");
+  const s = (seconds % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
+}
+
+function logTrail(action, detail) {
+  const elapsed = state.startTime ? Math.floor((Date.now() - state.startTime) / 1000) : 0;
+  state.trail.push({ time: elapsed, action, detail });
+}
+
+/* ─── INIT ─────────────────────────────────────────────────── */
+
+function initCase() {
+  document.getElementById("caseTitle").textContent = CASE.meta.title;
+  document.getElementById("caseSubtitle").textContent = CASE.meta.subtitle;
+  document.getElementById("briefingPosition").textContent = CASE.meta.position;
+  document.getElementById("briefingTarget").textContent = CASE.meta.target;
+  document.getElementById("briefingMission").textContent = CASE.meta.mission;
+  document.getElementById("interviewTotal").textContent = CASE.characters.length;
+  document.getElementById("docTotal").textContent = CASE.documents.length;
+  renderCharacterList();
+  renderDocumentList();
+  bindHypothesisInputs();
+}
+
+function renderCharacterList() {
+  const container = document.getElementById("characterList");
+  container.innerHTML = "";
+  CASE.characters.forEach(ch => {
+    const card = document.createElement("div");
+    card.className = "card" + (state.consultedCharacters.has(ch.id) ? " consulted" : "");
+    card.innerHTML = `
+      <div class="card-icon">${ch.icon}</div>
+      <div class="card-body">
+        <div class="card-title">${ch.name}</div>
+        <div class="card-meta">${ch.role}</div>
+      </div>
+    `;
+    card.onclick = () => openCharacter(ch);
+    container.appendChild(card);
+  });
+}
+
+function renderDocumentList() {
+  const container = document.getElementById("documentList");
+  container.innerHTML = "";
+  CASE.documents.forEach(doc => {
+    const card = document.createElement("div");
+    card.className = "card" + (state.consultedDocuments.has(doc.id) ? " consulted" : "");
+    card.innerHTML = `
+      <div class="card-icon">${doc.icon}</div>
+      <div class="card-body">
+        <div class="card-title">${doc.title}</div>
+        <div class="card-meta">${doc.meta}</div>
+      </div>
+    `;
+    card.onclick = () => openDocument(doc);
+    container.appendChild(card);
+  });
+}
+
+/* ─── HYPOTHESIS TRACKING ─────────────────────────────────── */
+
+function bindHypothesisInputs() {
+  ["dor", "decisor", "criterio"].forEach(key => {
+    const el = document.getElementById(`hipotese-${key}`);
+    el.addEventListener("blur", () => {
+      const current = state.hypothesisCurrent[key];
+      const val = el.value.trim();
+      if (val && val !== current) {
+        state.hypothesisCurrent[key] = val;
+        const elapsed = state.startTime ? Math.floor((Date.now() - state.startTime) / 1000) : 0;
+        state.hypothesisHistory.push({ time: elapsed, key, value: val });
+        logTrail("hipótese", `${key}: "${val.substring(0, 60)}${val.length > 60 ? '…' : ''}"`);
+      }
+    });
+  });
+}
+
+/* ─── CHARACTER MODAL ─────────────────────────────────────── */
+
+function openCharacter(ch) {
+  state.consultedCharacters.add(ch.id);
+  logTrail("entrevista", `Abriu sala: ${ch.name}`);
+  renderCharacterList();
+  updateHud();
+
+  const modal = document.getElementById("modalContent");
+  modal.innerHTML = `
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h2>${ch.name}</h2>
+    <div class="modal-role">${ch.role}</div>
+    <p style="font-style:italic; color: var(--ink-soft); margin-bottom: 20px;">${ch.bio}</p>
+    <div class="question-list" id="questionList-${ch.id}"></div>
+    <div id="answer-${ch.id}"></div>
+  `;
+  renderQuestions(ch);
+  document.getElementById("modal").classList.add("active");
+}
+
+function renderQuestions(ch) {
+  const list = document.getElementById(`questionList-${ch.id}`);
+  list.innerHTML = "";
+  ch.questions.forEach((qa, idx) => {
+    const key = `${ch.id}::${idx}`;
+    const btn = document.createElement("button");
+    btn.className = "question-btn" + (state.askedQuestions.has(key) ? " asked" : "");
+    btn.textContent = qa.q;
+    btn.onclick = () => askQuestion(ch, idx);
+    list.appendChild(btn);
+  });
+}
+
+function askQuestion(ch, idx) {
+  const key = `${ch.id}::${idx}`;
+  if (state.askedQuestions.has(key)) return;
+  state.askedQuestions.add(key);
+  const qa = ch.questions[idx];
+  logTrail("pergunta", `${ch.name}: "${qa.q.substring(0, 50)}…"`);
+  renderQuestions(ch);
+
+  const answerBox = document.getElementById(`answer-${ch.id}`);
+  const block = document.createElement("div");
+  block.className = "answer-block";
+  block.innerHTML = `
+    <div class="q">"${qa.q}"</div>
+    <div class="a">${qa.a}</div>
+    ${qa.evidenceTag ? `
+      <button class="secondary" style="margin-top:12px;" onclick="markEvidence('${escapeAttr(qa.evidenceTag)}')">
+        + Marcar como Evidência
+      </button>
+    ` : ""}
+  `;
+  answerBox.appendChild(block);
+  block.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function escapeAttr(s) { return s.replace(/'/g, "\\'").replace(/"/g, "&quot;"); }
+
+/* ─── DOCUMENT MODAL ──────────────────────────────────────── */
+
+function openDocument(doc) {
+  state.consultedDocuments.add(doc.id);
+  logTrail("documento", `Abriu: ${doc.title}`);
+  renderDocumentList();
+  updateHud();
+
+  const modal = document.getElementById("modalContent");
+  modal.innerHTML = `
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h2>${doc.title}</h2>
+    <div class="modal-role">${doc.meta}</div>
+    <div class="doc-content">${doc.content}</div>
+    <div style="margin-top: 20px;">
+      <input type="text" id="evidenceCustom" placeholder="Trecho ou fato que você quer marcar como evidência…"
+             style="width: 100%; padding: 10px; border: 1px solid var(--ink-faded); background: rgba(255,255,255,0.5); font-family: 'Old Standard TT', serif; font-size: 14px;">
+      <button class="secondary" style="margin-top:10px;" onclick="markCustomEvidence('${doc.id}')">+ Marcar Evidência</button>
+    </div>
+  `;
+  document.getElementById("modal").classList.add("active");
+}
+
+function markCustomEvidence(docId) {
+  const input = document.getElementById("evidenceCustom");
+  const val = input.value.trim();
+  if (!val) return;
+  const tagged = `[${docId}] ${val}`;
+  markEvidence(tagged);
+  input.value = "";
+}
+
+/* ─── EVIDENCE ────────────────────────────────────────────── */
+
+function markEvidence(tag) {
+  if (state.evidenceSet.has(tag)) return;
+  state.evidenceSet.add(tag);
+  state.evidences.push(tag);
+  logTrail("evidência", tag.substring(0, 80));
+  renderEvidencePills();
+  updateHud();
+}
+
+function renderEvidencePills() {
+  const container = document.getElementById("evidencePills");
+  if (state.evidences.length === 0) {
+    container.innerHTML = '<span class="evidence-empty">Nenhuma evidência marcada ainda.</span>';
+    return;
+  }
+  container.innerHTML = state.evidences.map(e =>
+    `<span class="evidence-pill">${e}</span>`
+  ).join("");
+}
+
+/* ─── HUD / TIMER ─────────────────────────────────────────── */
+
+function updateHud() {
+  document.getElementById("interviewCount").textContent = state.consultedCharacters.size;
+  document.getElementById("docCount").textContent = state.consultedDocuments.size;
+  document.getElementById("evidenceCount").textContent = state.evidences.length;
+}
+
+function startTimer() {
+  state.startTime = Date.now();
+  state.timerInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - state.startTime) / 1000);
+    document.getElementById("timer").textContent = fmtTime(elapsed);
+  }, 1000);
+}
+
+function stopTimer() {
+  if (state.timerInterval) clearInterval(state.timerInterval);
+}
+
+/* ─── NAVIGATION ──────────────────────────────────────────── */
+
+function showScreen(name) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(`screen-${name}`).classList.add("active");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function startInvestigation() {
+  startTimer();
+  logTrail("início", "Investigação iniciada");
+  showScreen("investigation");
+}
+
+function goToProposal() {
+  logTrail("transição", "Aluno avançou para montagem de proposta");
+  showScreen("proposal");
+}
+
+function closeModal() {
+  document.getElementById("modal").classList.remove("active");
+}
+
+document.getElementById("modal").addEventListener("click", (e) => {
+  if (e.target.id === "modal") closeModal();
+});
+
+/* ─── PROPOSAL SUBMISSION ─────────────────────────────────── */
+
+function submitProposal() {
+  state.proposal = {
+    "prop-problema": document.getElementById("prop-problema").value.trim(),
+    "prop-solucao": document.getElementById("prop-solucao").value.trim(),
+    "prop-valor": document.getElementById("prop-valor").value.trim(),
+    "prop-preco": document.getElementById("prop-preco").value.trim(),
+    "prop-aprov": document.getElementById("prop-aprov").value.trim(),
+    "prop-objecoes": document.getElementById("prop-objecoes").value.trim()
+  };
+  stopTimer();
+  logTrail("submissão", "Proposta final fechada");
+  generateReport();
+  showScreen("report");
+}
+
+/* ─── REPORT GENERATION ───────────────────────────────────── */
+
+function generateReport() {
+  const elapsed = Math.floor((Date.now() - state.startTime) / 1000);
+  const ev = CASE.evaluation;
+
+  // Evidências críticas
+  const critical = ev.criticalEvidences.map(e => ({
+    text: e,
+    found: state.evidenceSet.has(e)
+  }));
+
+  // Vieses detectados
+  const biasesFound = ev.biasTraps.filter(b => {
+    try { return b.trigger(state); } catch { return false; }
+  });
+
+  // Boas práticas detectadas
+  const goodsFound = ev.goodMoves.filter(g => {
+    try { return g.trigger(state); } catch { return false; }
+  });
+
+  const propLabels = {
+    "prop-problema": "Problema (ótica do cliente)",
+    "prop-solucao": "Solução Proposta",
+    "prop-valor": "Justificativa de Valor",
+    "prop-preco": "Investimento Proposto",
+    "prop-aprov": "Estratégia de Aprovação",
+    "prop-objecoes": "Objeções Antecipadas"
+  };
+
+  let html = `
+    <h2>RELATÓRIO DE BANCA</h2>
+    <div class="report-subtitle">
+      ${CASE.meta.title} · Tempo total: ${fmtTime(elapsed)} ·
+      <span class="stamp blue" style="display:inline-block;">PARA AVALIAÇÃO</span>
+    </div>
+
+    <div class="report-section">
+      <h3>1 · Proposta Apresentada</h3>
+      <div class="proposal-recap">
+        ${Object.entries(propLabels).map(([k, label]) => `
+          <div class="recap-item">
+            <div class="recap-label">${label}</div>
+            <div class="recap-value">${state.proposal[k] || "<em style='color:var(--ink-faded)'>— em branco —</em>"}</div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+
+    <div class="report-section">
+      <h3>2 · Evidências Críticas do Caso</h3>
+      <p style="font-size:13px; color:var(--ink-faded); font-style:italic; margin-bottom:12px;">
+        Estas eram as evidências que distinguem proposta sólida de proposta superficial:
+      </p>
+      <ul style="list-style:none; padding:0;">
+        ${critical.map(c => `
+          <li style="padding:8px 0; border-bottom:1px dashed var(--ink-faded);">
+            ${c.found
+              ? `<span style="color:var(--evidence); font-weight:700;">✓</span> `
+              : `<span style="color:var(--stamp-red); font-weight:700;">✗</span> `}
+            <span style="${c.found ? '' : 'color:var(--ink-faded);'}">${c.text}</span>
+          </li>
+        `).join("")}
+      </ul>
+      <p style="margin-top:12px; font-family:'Special Elite', monospace; font-size:13px;">
+        Encontradas: ${critical.filter(c => c.found).length} de ${critical.length}
+      </p>
+    </div>
+
+    <div class="report-section">
+      <h3>3 · Trilha de Raciocínio (Timeline)</h3>
+      <ul class="timeline">
+        ${state.trail.slice(0, 30).map(t => `
+          <li>
+            <div class="timeline-time">${fmtTime(t.time)} · ${t.action.toUpperCase()}</div>
+            <div>${t.detail}</div>
+          </li>
+        `).join("")}
+        ${state.trail.length > 30 ? `<li><em>+ ${state.trail.length - 30} ações adicionais omitidas</em></li>` : ""}
+      </ul>
+    </div>
+
+    <div class="report-section">
+      <h3>4 · Evolução de Hipóteses</h3>
+      ${state.hypothesisHistory.length === 0
+        ? `<p style="font-style:italic; color:var(--ink-faded);">O aluno não registrou hipóteses ao longo da investigação.</p>`
+        : `<ul class="timeline">
+            ${state.hypothesisHistory.map(h => `
+              <li>
+                <div class="timeline-time">${fmtTime(h.time)} · ${h.key.toUpperCase()}</div>
+                <div>${h.value}</div>
+              </li>
+            `).join("")}
+          </ul>`
+      }
+    </div>
+
+    <div class="report-section">
+      <h3>5 · Vieses Detectados pelo Sistema</h3>
+      ${biasesFound.length === 0
+        ? `<p style="font-style:italic; color:var(--evidence);">Nenhum viés clássico de venda consultiva detectado nesta trilha.</p>`
+        : biasesFound.map(b => `
+            <div class="bias-flag">
+              <div class="bias-name">⚠ ${b.name}</div>
+              <div class="bias-detail">${b.detail}</div>
+            </div>
+          `).join("")
+      }
+    </div>
+
+    <div class="report-section">
+      <h3>6 · Boas Práticas Observadas</h3>
+      ${goodsFound.length === 0
+        ? `<p style="font-style:italic; color:var(--ink-faded);">Nenhuma das boas práticas-chave foi observada nesta trilha.</p>`
+        : goodsFound.map(g => `
+            <div class="good-flag">
+              <div class="good-name">✓ ${g.name}</div>
+              <div class="bias-detail">${g.detail}</div>
+            </div>
+          `).join("")
+      }
+    </div>
+
+    <div class="report-section">
+      <h3>7 · Pauta Sugerida para a Banca</h3>
+      <ol style="padding-left: 25px; font-size: 15px; line-height: 1.9;">
+        <li>Peça ao aluno que explique <strong>por que escolheu cada personagem</strong> entrevistar — e, principalmente, por que <em>não</em> entrevistou os outros, se houver.</li>
+        <li>Confronte com as evidências críticas marcadas como <span style="color:var(--stamp-red)">✗</span> acima: o aluno chegou a essa informação por outro caminho? Ou simplesmente não viu?</li>
+        <li>Para cada viés detectado, peça que o aluno reaja: ele percebeu o viés durante o processo? Como evitaria numa próxima rodada?</li>
+        <li>Cobre a coerência: a justificativa de valor da proposta está alinhada às evidências que o aluno coletou, ou ele construiu narrativa fora dos dados?</li>
+        <li>Pergunte qual decisão ele tomaria diferente se tivesse mais 15 minutos. A resposta revela maturidade autocrítica.</li>
+      </ol>
+    </div>
+  `;
+
+  document.getElementById("reportContent").innerHTML = html;
+}
+
+/* ─── RESTART ─────────────────────────────────────────────── */
+
+function restart() {
+  if (!confirm("Reiniciar o caso? Toda a trilha de investigação será apagada.")) return;
+  location.reload();
+}
+
+/* ─── BOOT ────────────────────────────────────────────────── */
+
+initCase();
+updateHud();
+</script>
+</body>
+</html>
