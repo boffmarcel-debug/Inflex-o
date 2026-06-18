@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ÁGON — Mastermind para o pensamento jurídico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&family=Space+Mono:wght@400;700&family=Inter+Tight:wght@300;400;500;600&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============ THEME SYSTEM ============ */
+  .t-editorial{
+    --bg:#FAF6EF; --surface:#FFFFFF; --surface-2:#F4EFE8; --fg:#0B0B0F; --muted:#6B6B73;
+    --line:#E4DCCD; --accent:#CE3B2E; --accent-2:#B5224F; --brass:#A9781C; --slate:#7A8590;
+    --ff-display:'Archivo',sans-serif; --ff-serif:'Newsreader',Georgia,serif;
+    --ff-body:'Inter Tight',system-ui,sans-serif; --ff-mono:'Space Mono',monospace;
+    --radius:3px; --disp-weight:800; --disp-spacing:-.02em;
+  }
+  .t-clean{
+    --bg:#FBFBFD; --surface:#FFFFFF; --surface-2:#F5F5F7; --fg:#1D1D1F; --muted:#6E6E73;
+    --line:#D9D9DE; --accent:#B11226; --accent-2:#1D1D1F; --brass:#8A6D3B; --slate:#86868B;
+    --ff-display:'Inter Tight',system-ui,sans-serif; --ff-serif:'Inter Tight',system-ui,sans-serif;
+    --ff-body:'Inter Tight',system-ui,sans-serif; --ff-mono:'Inter Tight',system-ui,sans-serif;
+    --radius:16px; --disp-weight:600; --disp-spacing:-.035em;
+  }
+  .t-night{
+    --bg:#15090c; --surface:#1d0e12; --surface-2:#260f15; --fg:#ece4d6; --muted:#bdb09a;
+    --line:rgba(236,228,214,.14); --accent:#c2364a; --accent-2:#9a2533; --brass:#b8893a; --slate:#7e8b95;
+    --ff-display:'Libre Caslon Display',Georgia,serif; --ff-serif:'Libre Caslon Text',Georgia,serif;
+    --ff-body:'Inter Tight',system-ui,sans-serif; --ff-mono:'JetBrains Mono',monospace;
+    --radius:3px; --disp-weight:400; --disp-spacing:-.01em;
+  }
+  .wash  { background:color-mix(in srgb, var(--accent) 7%, transparent); }
+  .wash2 { background:color-mix(in srgb, var(--accent) 14%, transparent); }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--fg);font-family:var(--ff-body);font-weight:300;
+    line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background .4s,color .4s}
+  ::selection{background:var(--accent);color:#fff}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+  em{font-style:italic}
+
+  /* ---- switcher ---- */
+  .switch{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:200;
+    display:flex;gap:4px;padding:6px;border-radius:100px;background:var(--surface);
+    border:1px solid var(--line);box-shadow:0 8px 30px rgba(0,0,0,.18)}
+  .switch button{appearance:none;border:0;background:transparent;color:var(--muted);
+    font-family:var(--ff-body);font-size:12.5px;font-weight:500;letter-spacing:.02em;
+    padding:9px 16px;border-radius:100px;cursor:pointer;transition:background .2s,color .2s;white-space:nowrap}
+  .switch button.on{background:var(--accent);color:#fff}
+  .switch .lab{font-size:10px;color:var(--muted);align-self:center;padding:0 8px 0 4px;
+    letter-spacing:.14em;text-transform:uppercase;font-family:var(--ff-mono)}
+
+  /* ---- masthead ---- */
+  header.mast{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 86%,transparent);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .mast-in{display:flex;align-items:center;justify-content:space-between;max-width:1080px;margin:0 auto;padding:16px 28px;gap:20px}
+  .mark{font-family:var(--ff-display);font-weight:var(--disp-weight);font-size:24px;letter-spacing:.16em;color:var(--fg)}
+  .mark b{color:var(--accent);font-weight:inherit}
+  .mast-meta{font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:right;line-height:1.5}
+
+  /* ---- hero ---- */
+  .hero{position:relative;padding:96px 0 72px;border-bottom:1px solid var(--line);
+    background:radial-gradient(120% 80% at 78% -10%, color-mix(in srgb,var(--accent) 16%,transparent), transparent 55%),
+      radial-gradient(90% 70% at 8% 110%, color-mix(in srgb,var(--brass) 12%,transparent), transparent 50%)}
+  .eyebrow{font-family:var(--ff-mono);font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--accent);margin-bottom:26px}
+  h1{font-family:var(--ff-display);font-weight:var(--disp-weight);line-height:1.02;
+    font-size:clamp(46px,8.4vw,96px);letter-spacing:var(--disp-spacing);max-width:13ch}
+  h1 .em{color:var(--accent);font-style:normal}
+  .hero p.lede{font-family:var(--ff-serif);font-style:italic;font-size:clamp(19px,2.5vw,26px);
+    line-height:1.45;color:var(--fg);max-width:34ch;margin-top:30px}
+
+  .contra{display:grid;grid-template-columns:1fr auto 1fr;margin-top:48px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .contra .side{padding:24px 26px}
+  .contra .thesis{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+  .contra .anti{background:color-mix(in srgb,var(--slate) 9%,transparent)}
+  .contra .tag{font-family:var(--ff-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px}
+  .contra .thesis .tag{color:var(--accent)} .contra .anti .tag{color:var(--slate)}
+  .contra .thesis p{font-family:var(--ff-serif);font-style:italic;font-size:17px;line-height:1.4}
+  .contra .anti p{font-family:var(--ff-mono);font-size:13.5px;line-height:1.6;color:var(--muted)}
+  .contra .pivot{display:flex;align-items:center;justify-content:center;padding:0 14px;
+    background:var(--surface-2);color:var(--brass);font-family:var(--ff-serif);font-size:22px;
+    border-left:1px solid var(--line);border-right:1px solid var(--line)}
+
+  /* ---- tabs ---- */
+  .tabwrap{padding:56px 0 120px}
+  nav.tabs{position:sticky;top:60px;z-index:40;display:flex;flex-wrap:wrap;gap:4px;
+    padding:14px 0 18px;background:linear-gradient(var(--bg),var(--bg) 70%,transparent);margin-bottom:8px}
+  .tab{appearance:none;background:transparent;border:1px solid transparent;color:var(--muted);
+    font-family:var(--ff-mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+    padding:9px 14px;border-radius:var(--radius);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
+  .tab .n{color:var(--brass);font-size:10px}
+  .tab:hover{color:var(--fg)}
+  .tab[aria-selected="true"]{color:var(--fg);border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent)}
+  .tab:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+
+  .panel{display:none;animation:fade .5s ease} .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .sec-eyebrow{font-family:var(--ff-mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--accent);margin-bottom:18px}
+  h2{font-family:var(--ff-display);font-weight:var(--disp-weight);line-height:1.06;font-size:clamp(32px,5vw,54px);
+    letter-spacing:var(--disp-spacing);margin-bottom:24px;max-width:18ch}
+  h2 .em{color:var(--accent)}
+  .body-col{max-width:62ch}
+  .body-col p{margin-bottom:20px;font-size:17px}
+  .body-col p .hi{color:var(--fg);font-weight:500}
+  .pull{font-family:var(--ff-serif);font-style:italic;font-size:clamp(21px,3vw,29px);line-height:1.4;
+    color:var(--fg);border-left:2px solid var(--accent);padding:6px 0 6px 26px;margin:38px 0;max-width:32ch}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+
+  .prem-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:34px}
+  .prem{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px 26px 28px}
+  .prem .pn{font-family:var(--ff-mono);font-size:11px;color:var(--brass);letter-spacing:.16em}
+  .prem h3{font-family:var(--ff-serif);font-weight:500;font-size:20px;margin:10px 0 8px;line-height:1.2}
+  .prem p{font-size:14.5px;color:var(--muted);line-height:1.55}
+
+  .table-fig{margin:44px 0;display:flex;flex-direction:column;align-items:center;gap:22px}
+  .ring{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;width:100%;max-width:560px}
+  .seat{aspect-ratio:1;border:1px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-family:var(--ff-mono);font-size:12px;color:var(--muted);background:var(--surface)}
+  .seat.you{border-color:var(--brass);color:var(--brass)}
+  .thirteenth{border:1px dashed var(--accent);border-radius:var(--radius);padding:18px 22px;text-align:center;
+    max-width:560px;background:color-mix(in srgb,var(--accent) 8%,transparent)}
+  .thirteenth .lbl{font-family:var(--ff-mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+  .thirteenth .nm{font-family:var(--ff-display);font-weight:var(--disp-weight);font-size:24px;color:var(--fg)}
+  .thirteenth .desc{font-size:14px;color:var(--muted);margin-top:6px}
+
+  .phases{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-top:18px}
+  .phase{display:grid;grid-template-columns:48px 1fr auto;gap:18px;align-items:start;padding:20px 24px;border-bottom:1px solid var(--line)}
+  .phase:last-child{border-bottom:0}
+  .phase:nth-child(odd){background:color-mix(in srgb,var(--fg) 3%,transparent)}
+  .phase .pn{font-family:var(--ff-display);font-weight:var(--disp-weight);font-size:26px;color:var(--accent);line-height:1}
+  .phase .pmain h3{font-family:var(--ff-serif);font-weight:500;font-size:18px;margin-bottom:5px}
+  .phase .pmain p{font-size:14px;color:var(--muted);line-height:1.5}
+  .phase .pmeta{text-align:right;flex-shrink:0;min-width:120px}
+  .phase .pmeta .tech{font-family:var(--ff-mono);font-size:10px;letter-spacing:.06em;color:var(--brass);display:block;margin-bottom:4px}
+  .phase .pmeta .dur{font-family:var(--ff-mono);font-size:11px;color:var(--muted)}
+
+  .meth-legend{display:flex;flex-wrap:wrap;gap:18px;margin:6px 0 22px;font-family:var(--ff-mono);font-size:11px;letter-spacing:.06em;color:var(--muted)}
+  .meth-legend span{display:inline-flex;align-items:center;gap:7px}
+  .meth-legend i{width:9px;height:9px;border-radius:2px;display:inline-block}
+  .meth-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:14px;margin-top:8px}
+  .meth{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;transition:border-color .25s,transform .25s,box-shadow .25s}
+  .meth:hover{border-color:var(--accent);transform:translateY(-3px)}
+  .meth .mn{font-family:var(--ff-mono);font-size:11px;color:var(--brass);letter-spacing:.12em}
+  .meth .cat{font-family:var(--ff-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:2px 7px;border-radius:2px;border:1px solid var(--line);color:var(--muted);float:right}
+  .meth .cat.dia{color:var(--slate);border-color:color-mix(in srgb,var(--slate) 45%,transparent)}
+  .meth .cat.fri{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+  .meth .cat.exp{color:var(--brass);border-color:color-mix(in srgb,var(--brass) 45%,transparent)}
+  .meth h3{font-family:var(--ff-serif);font-weight:500;font-size:19px;margin:10px 0 4px;line-height:1.15}
+  .meth .trad{font-family:var(--ff-mono);font-size:10.5px;color:var(--muted);letter-spacing:.02em;margin-bottom:10px}
+  .meth p{font-size:14px;color:var(--muted);line-height:1.55}
+  .meth.feature{grid-column:span 2;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 14%,var(--surface)),var(--surface));border-color:var(--accent)}
+  .meth.feature h3{font-family:var(--ff-display);font-weight:var(--disp-weight);font-size:30px}
+  .meth.feature p{font-size:15px;color:var(--fg)}
+  .meth .reel{font-family:var(--ff-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+
+  .arc{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px}
+  .act{border-top:2px solid var(--accent);padding-top:18px}
+  .act .an{font-family:var(--ff-mono);font-size:11px;letter-spacing:.18em;color:var(--brass);text-transform:uppercase}
+  .act h3{font-family:var(--ff-display);font-weight:var(--disp-weight);font-size:26px;margin:8px 0 10px}
+  .act p{font-size:14.5px;color:var(--muted)}
+  .cadence{margin-top:40px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+  .cadence-row{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+  .cadence-row:last-child{border-bottom:0}
+  .cadence-row .k{font-family:var(--ff-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass);flex-shrink:0;width:42%}
+
+  .trilhas .tlead{font-family:var(--ff-serif);font-style:italic;font-size:21px;line-height:1.45;color:var(--fg);max-width:42ch;margin-bottom:26px}
+  .trilha-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:48px}
+  .trilha{background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--brass);border-radius:var(--radius);padding:24px}
+  .trilha .tn{font-family:var(--ff-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
+  .trilha h3{font-family:var(--ff-display);font-weight:var(--disp-weight);font-size:25px;margin-bottom:4px;line-height:1.1}
+  .trilha .ttag{font-family:var(--ff-serif);font-style:italic;font-size:15px;color:var(--fg);margin-bottom:10px}
+  .trilha p{font-size:14px;color:var(--muted);line-height:1.5;margin-bottom:12px}
+  .trilha .anchor{font-family:var(--ff-serif);font-size:14.5px;color:var(--fg);border-top:1px solid var(--line);padding-top:12px}
+  .trilha .anchor span{font-family:var(--ff-mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:5px}
+
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .fitcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+  .fitcard.yes{border-top:2px solid var(--brass)} .fitcard.no{border-top:2px solid var(--slate)}
+  .fitcard .h{font-family:var(--ff-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:18px}
+  .fitcard.yes .h{color:var(--brass)} .fitcard.no .h{color:var(--slate)}
+  .fitcard ul{list-style:none}
+  .fitcard li{font-size:15px;padding:11px 0;border-bottom:1px solid var(--line);line-height:1.45;color:var(--fg)}
+  .fitcard.no li{color:var(--muted)} .fitcard li:last-child{border-bottom:0}
+
+  .adm-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:34px;margin-top:8px}
+  .adm-step{display:flex;gap:18px;padding:18px 0;border-bottom:1px solid var(--line)}
+  .adm-step:last-child{border-bottom:0}
+  .adm-step .sn{font-family:var(--ff-display);font-weight:var(--disp-weight);font-size:30px;color:var(--accent);line-height:1;width:40px;flex-shrink:0}
+  .adm-step .st h3{font-family:var(--ff-serif);font-weight:500;font-size:18px;margin-bottom:5px}
+  .adm-step .st p{font-size:14.5px;color:var(--muted)}
+  .faq{margin-top:40px;border-top:1px solid var(--line)}
+  .faq details{border-bottom:1px solid var(--line)}
+  .faq summary{cursor:pointer;list-style:none;padding:18px 0;font-family:var(--ff-serif);font-weight:500;font-size:18px;display:flex;justify-content:space-between;align-items:center;gap:14px}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";font-family:var(--ff-mono);color:var(--accent);font-size:20px}
+  .faq details[open] summary::after{content:"–"}
+  .faq .a{padding:0 0 20px;font-size:15px;color:var(--muted);line-height:1.6;max-width:64ch}
+  .invest{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px}
+  .invest .box{flex:1;min-width:200px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+  .invest .box .lbl{font-family:var(--ff-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
+  .invest .box .val{font-family:var(--ff-display);font-weight:var(--disp-weight);font-size:30px;color:var(--fg)}
+  .invest .box .sub{font-size:13px;color:var(--muted);margin-top:6px}
+  .cta{display:inline-block;margin-top:30px;font-family:var(--ff-mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    color:#fff;border:1px solid var(--accent);background:var(--accent);padding:15px 26px;border-radius:var(--radius);text-decoration:none;transition:opacity .2s}
+  .cta:hover{opacity:.85}
+
+  footer{border-top:1px solid var(--line);padding:44px 0 80px;margin-top:40px}
+  .foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:18px;font-family:var(--ff-mono);font-size:11px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;align-items:flex-end}
+  .placeholder{font-family:var(--ff-mono);font-size:10.5px;color:var(--slate);border:1px dashed var(--slate);border-radius:2px;padding:3px 8px;letter-spacing:.08em;text-transform:none}
+
+  /* ===== EDITORIAL signature: serif-italic highlight words ===== */
+  .t-editorial h1 .em,.t-editorial h2 .em{font-family:var(--ff-serif);font-style:italic;font-weight:400}
+
+  /* ===== CLEAN / Apple structural treatment ===== */
+  .t-clean .hero{text-align:center;padding:120px 0 96px;
+    background:radial-gradient(80% 60% at 50% -5%, color-mix(in srgb,var(--accent) 7%,transparent), transparent 60%)}
+  .t-clean .hero .eyebrow{color:var(--muted)}
+  .t-clean h1{margin:0 auto;max-width:16ch;font-size:clamp(50px,9vw,104px)}
+  .t-clean .hero .lede{margin:30px auto 0;max-width:40ch;font-style:normal;font-weight:300;color:var(--muted)}
+  .t-clean .contra{max-width:780px;margin-left:auto;margin-right:auto}
+  .t-clean .contra .thesis p{font-style:normal}
+  .t-clean .sec-eyebrow{text-align:center;color:var(--muted)}
+  .t-clean h2{text-align:center;margin-left:auto;margin-right:auto}
+  .t-clean .panel>.body-col{margin-left:auto;margin-right:auto;text-align:center}
+  .t-clean .pull{margin-left:auto;margin-right:auto;text-align:center;border-left:0;border-top:2px solid var(--accent);padding:22px 0 0}
+  .t-clean .prem,.t-clean .meth,.t-clean .fitcard,.t-clean .trilha,.t-clean .cadence,.t-clean .adm-card,
+  .t-clean .phases,.t-clean .invest .box,.t-clean .seat,.t-clean .thirteenth{
+    border-color:transparent;box-shadow:0 1px 2px rgba(0,0,0,.05),0 10px 34px rgba(0,0,0,.05)}
+  .t-clean .meth:hover{box-shadow:0 6px 16px rgba(0,0,0,.08),0 18px 50px rgba(0,0,0,.08);border-color:transparent}
+  .t-clean .meth .cat,.t-clean .fitcard li,.t-clean .cadence-row,.t-clean .faq details,.t-clean .faq{border-color:var(--line)}
+  .t-clean .phase{border-color:var(--line)}
+  .t-clean .tab[aria-selected="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+  .t-clean .mast-meta{color:var(--muted)}
+
+  @media(max-width:740px){
+    .contra{grid-template-columns:1fr}
+    .contra .pivot{border:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px}
+    .prem-grid{grid-template-columns:1fr} .meth.feature{grid-column:span 1}
+    .arc{grid-template-columns:1fr} .twocol{grid-template-columns:1fr} .trilha-grid{grid-template-columns:1fr}
+    .ring{grid-template-columns:repeat(4,1fr)} .mast-meta{display:none} nav.tabs{top:56px}
+    .phase{grid-template-columns:36px 1fr} .phase .pmeta{grid-column:1/-1;text-align:left;padding-left:54px}
+    .switch{flex-wrap:wrap;justify-content:center;max-width:92vw} .switch .lab{display:none}
+  }
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body class="t-editorial">
+
+<div class="switch" role="group" aria-label="Trocar tema visual">
+  <span class="lab">Tema</span>
+  <button data-t="t-editorial" class="on">A · Editorial</button>
+  <button data-t="t-clean">B · Clean</button>
+  <button data-t="t-night">Noturno</button>
+</div>
+
+<header class="mast">
+  <div class="mast-in">
+    <div class="mark">ÁG<b>O</b>N</div>
+    <div class="mast-meta">Mastermind · Comunidade de Prática<br>Para o pensamento jurídico</div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">12 na mesa · 1 desconhecido · 1 temporada</div>
+    <h1>O que a faculdade não te ensinou: <span class="em">sustentar uma ideia sob pressão.</span></h1>
+    <p class="lede">Não é curso. Não é palestra. É a cancha que só a vivência dá — pensar em voz alta, ser testado por quem resiste de verdade, e descobrir onde a sua convicção cede.</p>
+    <div class="contra">
+      <div class="side thesis"><div class="tag">A tese — o que você defende</div><p>“Tenho certeza da minha posição.”</p></div>
+      <div class="pivot">⇄</div>
+      <div class="side anti"><div class="tag">O 13º — o desconhecido</div><p>// hoje, quem cruza a porta?<br>// e se a pergunta certa não for essa?</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="tabwrap">
+  <div class="wrap">
+    <nav class="tabs" role="tablist" aria-label="Seções">
+      <button class="tab" role="tab" aria-selected="true"  aria-controls="p1" id="t1"><span class="n">01</span> A Tese</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p2" id="t2"><span class="n">02</span> O Mecanismo</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p3" id="t3"><span class="n">03</span> O Encontro</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p4" id="t4"><span class="n">04</span> Metodologias</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p5" id="t5"><span class="n">05</span> A Temporada</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p6" id="t6"><span class="n">06</span> As Trilhas</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p7" id="t7"><span class="n">07</span> A Admissão</button>
+    </nav>
+
+    <section class="panel active" id="p1" role="tabpanel" aria-labelledby="t1">
+      <div class="sec-eyebrow">01 — O que é</div>
+      <h2>Um <span class="em">dojo</span> para o pensamento, não um clube de debate.</h2>
+      <div class="body-col">
+        <p>O Direito te treinou para <span class="hi">vencer a discussão</span>. ÁGON existe para a outra coisa — a que ninguém te ensinou: descobrir <span class="hi">onde a sua posição cede</span> antes que a vida descubra por você.</p>
+        <p>Debate é ego: ganhar, reforçar a toga, sair mais convencido. Dojo é crescimento: a rola não serve para você vencer o outro — serve para revelar a fissura na sua própria guarda. No tatame você não aprende a passar a guarda lendo sobre passagem de guarda. Aprende apanhando de quem resiste de verdade.</p>
+        <p class="pull">Aqui ninguém te diz o que fazer. A mesa não dá conselho — ela testa. Discutir é atritar, e o atrito é a única coisa que afia.</p>
+        <p>ÁGON — do grego <span class="hi">ἀγών</span>, a contenda produtiva, raiz de <em>agonia</em> e de <em>protagonista</em>. Doze profissionais do Direito, uma temporada, um convidado desconhecido a cada encontro. E nenhum encontro se repete: a mesa é a mesma, mas a metodologia muda, o desconhecido muda, o dilema muda. <span class="hi">A experiência é irreprodutível</span> — e é exatamente isso que faz você querer a próxima.</p>
+      </div>
+      <div class="sec-eyebrow" style="margin-top:54px">As seis premissas</div>
+      <div class="prem-grid">
+        <div class="prem"><div class="pn">01</div><h3>Sustentar, não vencer.</h3><p>O objetivo não é ganhar a discussão. É testar se você sustenta a tese quando ela é atacada — ou se só performava convicção.</p></div>
+        <div class="prem"><div class="pn">02</div><h3>Escuta antes de conselho.</h3><p>Conselho não pedido é violência. A regra é fazer perguntas — não corrigir, salvar ou consertar. Inclusive entre advogados.</p></div>
+        <div class="prem"><div class="pn">03</div><h3>Ataca-se a ideia, nunca a pessoa.</h3><p>A fricção é dirigida ao argumento. Quem está na mesa fica protegido — é o que permite trazer o dilema de verdade.</p></div>
+        <div class="prem"><div class="pn">04</div><h3>Confidencialidade é fundação, não cláusula.</h3><p>O que é dito no círculo fica no círculo. Nem em conversa paralela, nem como anedota. Quebra implica saída — sem rodeios.</p></div>
+        <div class="prem"><div class="pn">05</div><h3>Você é responsável pela sua exposição.</h3><p>Ninguém te puxa para fora. Você decide o quanto trazer — e ninguém te julga pelo que escolher guardar.</p></div>
+        <div class="prem"><div class="pn">06</div><h3>Ritual antes de agenda.</h3><p>Começamos com presença, não com pauta. Baixar a toga na porta é a primeira condição. Sem isso, vira mais uma reunião.</p></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p2" role="tabpanel" aria-labelledby="t2">
+      <div class="sec-eyebrow">02 — Como funciona a mesa</div>
+      <h2>Doze fixos. <span class="em">Um desconhecido.</span></h2>
+      <div class="body-col"><p>A mesa é fixa: <span class="hi">doze</span> ao longo da temporada. Grupo pequeno o bastante para ninguém se esconder, grande o bastante para haver desacordo real. Você é um deles.</p></div>
+      <div class="table-fig">
+        <div class="ring" aria-hidden="true">
+          <div class="seat">01</div><div class="seat">02</div><div class="seat">03</div>
+          <div class="seat">04</div><div class="seat">05</div><div class="seat">06</div>
+          <div class="seat">07</div><div class="seat">08</div><div class="seat you">VOCÊ</div>
+          <div class="seat">10</div><div class="seat">11</div><div class="seat">12</div>
+        </div>
+        <div class="thirteenth">
+          <div class="lbl">O 13º · sempre presente, nunca o mesmo</div>
+          <div class="nm">O Desconhecido</div>
+          <div class="desc">Um convidado externo que você só descobre quando ele cruza a porta. Some no fim do encontro — e nunca é o mesmo de novo.</div>
+        </div>
+      </div>
+      <div class="body-col">
+        <p>O décimo terceiro vem de <span class="hi">fora</span> — e os doze não sabem quem é até ele cruzar a porta. Pode ser um juiz, um procurador, um advogado que largou a profissão, um filósofo, um cineasta, alguém do “outro lado” da mesa que você nunca enfrentou. Às vezes vem para confrontar; às vezes, só para deslocar o olhar de todo mundo um grau.</p>
+        <p>O desconhecido não é truque de palco. É o que mantém a mesa <span class="hi">honesta</span>: não dá para ensaiar a defesa quando você não sabe o que vem. O ângulo é sempre surpresa — como na vida, e como em nenhuma sala de aula. É também por isso que <span class="hi">nenhum encontro se repete</span>.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="p3" role="tabpanel" aria-labelledby="t3">
+      <div class="sec-eyebrow">03 — O ritual de cada encontro</div>
+      <h2>O esqueleto é fixo. <span class="em">O recheio nunca.</span></h2>
+      <div class="body-col"><p>Todo encontro corre sobre o mesmo arco ritual — oito fases, do centramento ao fechamento. O que muda é a metodologia que ocupa o centro e o desconhecido que entra. A estrutura dá segurança; a variação dá vida.</p></div>
+      <div class="phases">
+        <div class="phase"><div class="pn">1</div><div class="pmain"><h3>Centramento</h3><p>Três respirações em silêncio. Baixar a toga. Cada um diz uma palavra para chegar — a pedra da palavra passa pelo círculo.</p></div><div class="pmeta"><span class="tech">Council Practice</span><span class="dur">10 min</span></div></div>
+        <div class="phase"><div class="pn">2</div><div class="pmain"><h3>Acordos</h3><p>Confidencialidade, escuta sem interrupção, atacar a ideia e não a pessoa. Lidos em voz alta, todo encontro.</p></div><div class="pmeta"><span class="tech">Containerização · Bion</span><span class="dur">5 min</span></div></div>
+        <div class="phase"><div class="pn">3</div><div class="pmain"><h3>O caso</h3><p>A cena de cinema, ou a pergunta central. Ninguém defende posição ainda. O grupo suspende pressupostos e observa o que se forma.</p></div><div class="pmeta"><span class="tech">Bohm · Cinema-Caso</span><span class="dur">15 min</span></div></div>
+        <div class="phase"><div class="pn">4</div><div class="pmain"><h3>Rodada de percepções</h3><p>1 min sozinho, 2 a dois, 4 em quarteto, depois plenária. Ninguém fica fora — e os padrões emergem rápido.</p></div><div class="pmeta"><span class="tech">1-2-4-Tudo</span><span class="dur">30 min</span></div></div>
+        <div class="phase"><div class="pn">5</div><div class="pmain"><h3>Hot seat · Sparring</h3><p>Um traz o dilema real e senta no centro. A mesa não dá conselho — só testa, sob pressão. É aqui que o desconhecido entra. Quem está no centro reformula o próximo passo.</p></div><div class="pmeta"><span class="tech">Action Learning + o 13º</span><span class="dur">60 min</span></div></div>
+        <div class="phase"><div class="pn">6</div><div class="pmain"><h3>Cristalização</h3><p>O que estava por baixo do que foi dito? Cada um nomeia o insight que leva — e o grupo cristaliza o que aprendeu junto.</p></div><div class="pmeta"><span class="tech">Theory U</span><span class="dur">25 min</span></div></div>
+        <div class="phase"><div class="pn">7</div><div class="pmain"><h3>Compromissos</h3><p>Trios curtos: cada um declara um compromisso até o próximo encontro. Os outros dois desafiam, refinam, sustentam.</p></div><div class="pmeta"><span class="tech">Troika Consulting</span><span class="dur">30 min</span></div></div>
+        <div class="phase"><div class="pn">8</div><div class="pmain"><h3>Encerramento</h3><p>Uma frase de cada um sobre o que está levando. Não se discute. Apenas se reconhece. O círculo se fecha.</p></div><div class="pmeta"><span class="tech">Pedra da palavra</span><span class="dur">10 min</span></div></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p4" role="tabpanel" aria-labelledby="t4">
+      <div class="sec-eyebrow">04 — O repertório de lentes</div>
+      <h2>A mesma mesa, <span class="em">muitas lentes.</span></h2>
+      <div class="body-col"><p>Cada encontro opera sob uma metodologia — e nunca a mesma duas vezes seguidas. Algumas são <span class="hi">dialógicas</span> (herdadas do FUTURES); outras são de <span class="hi">fricção</span> (próprias do ÁGON); e há as <span class="hi">experienciais</span>, que entram pela emoção antes da razão.</p></div>
+      <div class="meth-legend" aria-hidden="true">
+        <span><i style="background:var(--slate)"></i> Dialógica · herança FUTURES</span>
+        <span><i style="background:var(--accent)"></i> Fricção · próprio do ÁGON</span>
+        <span><i style="background:var(--brass)"></i> Experiencial</span>
+      </div>
+      <div class="meth-grid">
+        <div class="meth feature"><div class="reel">◉ Metodologia em destaque</div><h3>Cinema-Caso</h3><p>Um filme é assistido antes; uma cena-âncora é reassistida junto, já pela lente. O personagem vira o “cliente” — e dá para ser brutalmente honesto sobre ele porque ninguém na sala se sente exposto. Depois vem a virada: agora olhe para o seu próprio dilema do mesmo jeito que olhamos para ele. <em>12 Homens e uma Sentença</em>, <em>Michael Clayton</em>, <em>O Veredito</em>, <em>Anatomia de um Crime</em>.</p></div>
+        <div class="meth"><span class="cat dia">dialógica</span><div class="mn">M·01</div><h3>Bohm Dialogue</h3><div class="trad">David Bohm</div><p>Suspender pressupostos. Ninguém defende posição; observa-se o pensamento se formando entre todos. O silêncio é método, não pausa.</p></div>
+        <div class="meth"><span class="cat dia">dialógica</span><div class="mn">M·02</div><h3>Action Learning Set</h3><div class="trad">Reg Revans</div><p>Hot seat: alguém traz um problema sem solução óbvia. Os pares só fazem perguntas abertas — nada de conselho. O cliente formula o próximo passo.</p></div>
+        <div class="meth"><span class="cat dia">dialógica</span><div class="mn">M·03</div><h3>Council Practice</h3><div class="trad">Tradição indígena · Ojai</div><p>A pedra da palavra circula. Quem segura fala; o resto escuta sem interromper. Falar do coração, escutar do coração, ser conciso.</p></div>
+        <div class="meth"><span class="cat dia">dialógica</span><div class="mn">M·04</div><h3>Theory U</h3><div class="trad">Otto Scharmer · MIT</div><p>Descer ao fundo do problema antes de subir com a ação. Não se ataca a superfície; mergulha-se na fonte do que quer emergir.</p></div>
+        <div class="meth"><span class="cat dia">dialógica</span><div class="mn">M·05</div><h3>Análise de Grupo</h3><div class="trad">Bion · Tavistock</div><p>Quando o grupo encena dinâmicas inconscientes e perde a tarefa, nomeia-se o que acontece no aqui-agora e devolve-se o foco.</p></div>
+        <div class="meth"><span class="cat dia">dialógica</span><div class="mn">M·06</div><h3>Liberating Structures</h3><div class="trad">Lipmanowicz &amp; McCandless</div><p>1-2-4-Tudo e Troika. Estruturas que garantem que ninguém fica de fora — sobretudo onde as vozes são desiguais.</p></div>
+        <div class="meth"><span class="cat dia">dialógica</span><div class="mn">M·07</div><h3>Círculo Restaurativo</h3><div class="trad">Práticas restaurativas · Wenger</div><p>Quando há ruptura de confiança na mesa, cada um fala sua verdade sem acusação. Reparação, não punição.</p></div>
+        <div class="meth"><span class="cat fri">fricção</span><div class="mn">M·08</div><h3>Advogado do Diabo</h3><div class="trad">O 13º, em forma combativa</div><p>O papel da contradição, assumido de propósito. Não para ganhar — para revelar se você acredita ou só performa convicção.</p></div>
+        <div class="meth"><span class="cat fri">fricção</span><div class="mn">M·09</div><h3>Steelman</h3><div class="trad">O anti-espantalho</div><p>Construir a versão mais forte do argumento adversário antes de respondê-lo. O vício do litigante é o oposto.</p></div>
+        <div class="meth"><span class="cat fri">fricção</span><div class="mn">M·10</div><h3>Tribunal Reverso</h3><div class="trad">Inversão de papéis</div><p>Sustentar oralmente o lado que você jamais escolheria. Defender quem você condenaria. Vivência, não teoria.</p></div>
+        <div class="meth"><span class="cat fri">fricção</span><div class="mn">M·11</div><h3>Pré-mortem &amp; Inversão</h3><div class="trad">Gary Klein</div><p>Assuma que a decisão já fracassou. O que a matou? Pensar do fim para o começo desarma o otimismo defensivo.</p></div>
+        <div class="meth"><span class="cat exp">experiencial</span><div class="mn">M·12</div><h3>Psicodrama</h3><div class="trad">Jacob Moreno</div><p>Quando é preciso sentir uma situação, não só pensá-la. Ensaia-se em segurança o que ainda não se fez na vida real.</p></div>
+        <div class="meth"><span class="cat exp">experiencial</span><div class="mn">M·13</div><h3>Constelações Sistêmicas</h3><div class="trad">Hellinger · uso ético</div><p>Quando o dilema tem dinâmica sistêmica — banca, família, sociedade. Exige facilitador treinado e consentimento explícito.</p></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p5" role="tabpanel" aria-labelledby="t5">
+      <div class="sec-eyebrow">05 — O arco</div>
+      <h2>Uma temporada, <span class="em">três atos.</span></h2>
+      <div class="body-col"><p>ÁGON não é uma série de encontros avulsos. É uma travessia com começo, meio e fim — o mesmo grupo, repertório que se acumula. O atrito do encontro 8 só é possível por causa da confiança do encontro 1.</p></div>
+      <div class="arc">
+        <div class="act"><div class="an">Ato I · Abertura</div><h3>Baixar a toga</h3><p>Estabelecer a mesa, os acordos e a segurança para trazer o dilema real. Abre com Cinema-Caso — todos veem na tela o que farão na sala.</p></div>
+        <div class="act"><div class="an">Ato II · Travessia</div><h3>A fricção plena</h3><p>O coração da temporada. Hot seats, desconhecidos combativos, tribunal reverso. Aqui a guarda é testada de verdade.</p></div>
+        <div class="act"><div class="an">Ato III · Retorno</div><h3>O que ficou</h3><p>Integrar. O que mudou na forma de pensar, escutar e sustentar? Um encontro de retorno, semanas depois, fecha o arco.</p></div>
+      </div>
+      <div class="cadence">
+        <div class="cadence-row"><span class="k">Formato</span><span>Encontros presenciais · mesa fixa de 12 + 1 convidado-desconhecido</span></div>
+        <div class="cadence-row"><span class="k">Cadência</span><span>Quinzenal ao longo da temporada · a definir com a turma</span></div>
+        <div class="cadence-row"><span class="k">Duração do encontro</span><span>Bloco longo (~3h) · o atrito precisa de tempo</span></div>
+        <div class="cadence-row"><span class="k">Entre encontros</span><span>Filme ou material-âncora + uma pergunta de atenção</span></div>
+        <div class="cadence-row"><span class="k">Presença</span><span>Teto de duas faltas · encontros não são gravados</span></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p6" role="tabpanel" aria-labelledby="t6">
+      <div class="sec-eyebrow">06 — Para quem se senta aqui</div>
+      <h2>A mesa junta pelo <span class="em">momento</span>, não pelo cargo.</h2>
+      <div class="trilhas">
+        <p class="tlead">A mesa clássica junta gente pelo que ela faz. ÁGON junta pelo <em>momento existencial que ela atravessa</em> — e é isso que ninguém consegue copiar sem ter o método.</p>
+        <div class="trilha-grid">
+          <div class="trilha"><div class="tn">Trilha 01</div><h3>A Banca Solitária</h3><div class="ttag">Sócios e donos de escritório carregando a cadeira sozinhos</div><p>Decisão grande na mesa. Conflito societário. A solidão de quem responde por tudo. Para quem precisa de pares no mesmo terreno — não consultor, não terapeuta. Par.</p><div class="anchor"><span>Pergunta-âncora</span>Qual decisão você tem adiado — e o que está por trás do adiamento?</div></div>
+          <div class="trilha"><div class="tn">Trilha 02</div><h3>A Travessia</h3><div class="ttag">Em transição de cargo, vida ou identidade jurídica</div><p>Sair do escritório. Ir para a magistratura, para o in-house, para fora do Direito. Para quem está no meio do rio — sem a margem antiga e ainda sem a próxima.</p><div class="anchor"><span>Pergunta-âncora</span>Quem você precisa ser nos próximos 90 dias — ainda advogado?</div></div>
+          <div class="trilha"><div class="tn">Trilha 03</div><h3>O Peso</h3><div class="ttag">Ética, exaustão e a fronteira de se perder no cliente</div><p>Carregar a decisão dos outros cobra um preço. A causa que feriu algo em você. O burnout que ninguém na banca admite. Para quem precisa pensar a relação com o ofício sem a pressa de resolver.</p><div class="anchor"><span>Pergunta-âncora</span>Que causa você aceitou que feriu algo em você?</div></div>
+          <div class="trilha"><div class="tn">Trilha 04</div><h3>A Voz &amp; o Depois</h3><div class="ttag">O próximo capítulo, com a IA reescrevendo o ofício</div><p>Você chegou onde dizia que queria — e agora? A tecnologia come o trabalho jurídico por baixo. Para quem precisa achar a própria voz e decidir a próxima década enquanto o chão se move.</p><div class="anchor"><span>Pergunta-âncora</span>Qual verdade sobre a sua carreira você ainda não disse em voz alta?</div></div>
+        </div>
+      </div>
+      <div class="twocol">
+        <div class="fitcard yes"><div class="h">↳ Senta-se aqui quem</div><ul>
+          <li>Já venceu discussões o bastante para desconfiar de quando estava só performando convicção.</li>
+          <li>Topa ser visto — e visto de verdade — sem precisar performar a toga.</li>
+          <li>Quer pensar com outras inteligências, não monologar consigo mesmo.</li>
+          <li>Chega disposto a praticar algo entre um encontro e outro.</li>
+          <li>Entende que escuta também é uma forma de inteligência.</li>
+        </ul></div>
+        <div class="fitcard no"><div class="h">↳ Não se senta aqui quem</div><ul>
+          <li>Busca framework pronto ou “o passo a passo” para aplicar segunda de manhã.</li>
+          <li>Precisa estar certo para se sentir seguro — e trata discordância como afronta.</li>
+          <li>Quer networking transacional disfarçado de propósito.</li>
+          <li>Só quer ouvir, sem trazer dilema próprio.</li>
+          <li>Confunde conselho com cuidado — e ataque à ideia com ataque à pessoa.</li>
+        </ul></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p7" role="tabpanel" aria-labelledby="t7">
+      <div class="sec-eyebrow">07 — Como entrar</div>
+      <h2>Não se compra entrada. <span class="em">Candidata-se a uma cadeira.</span></h2>
+      <div class="body-col"><p>A fricção da entrada protege a leveza da mesa. A candidatura é curta, mas exige que você já comece a pensar como ÁGON pensa.</p></div>
+      <div class="adm-card">
+        <div class="adm-step"><div class="sn">1</div><div class="st"><h3>A pergunta de entrada</h3><p>Em poucas linhas: qual a convicção profissional que você mais defende — e o que aconteceria se ela estivesse errada? Não há resposta certa. Há resposta honesta.</p></div></div>
+        <div class="adm-step"><div class="sn">2</div><div class="st"><h3>A conversa de curadoria</h3><p>Uma conversa breve, sem custo e sem compromisso, para calibrar a mesa. Não é entrevista de emprego; é a montagem de um elenco que vai atritar bem junto — afinidade de momento, não de currículo.</p></div></div>
+        <div class="adm-step"><div class="sn">3</div><div class="st"><h3>A cadeira</h3><p>Doze cadeiras, uma temporada. Confirmada a sua, você recebe o calendário e o primeiro filme.</p></div></div>
+      </div>
+      <div class="sec-eyebrow" style="margin-top:50px">Perguntas frequentes</div>
+      <div class="faq">
+        <details><summary>Qual o investimento?</summary><div class="a">O valor é por temporada e definido conforme o formato e a cidade. Antes de qualquer adesão há a conversa de curadoria — sem custo e sem compromisso. <span class="placeholder">valores a definir</span></div></details>
+        <details><summary>Os encontros são presenciais?</summary><div class="a">Sim. A mesa de ÁGON é presencial — a presença é parte do método e os encontros não são gravados. A primeira turma se reúne em Porto Alegre.</div></details>
+        <details><summary>Posso entrar a qualquer momento?</summary><div class="a">Cada temporada começa com uma turma fechada de até 12 pessoas, montada por curadoria — para que os momentos de vida e os dilemas tenham afinidade real entre os participantes.</div></details>
+        <details><summary>Como funciona a confidencialidade?</summary><div class="a">Há um acordo formal assinado por todos no primeiro encontro. Nada do que é compartilhado sai do círculo — nem em conversa paralela, nem como anedota. Quebra implica saída imediata.</div></details>
+        <details><summary>E se eu não puder ir a um encontro?</summary><div class="a">Há um teto de duas faltas por temporada. Como não há gravação, em casos excepcionais o anfitrião compartilha por escrito apenas os compromissos coletivos.</div></details>
+        <details><summary>Quem facilita — e quem é o 13º?</summary><div class="a">Cada temporada tem um facilitador treinado nas abordagens da mesa. O 13º é um convidado externo diferente a cada encontro, cuja identidade os participantes só descobrem na hora. Em metodologias específicas (constelações, psicodrama), traz-se um especialista, com consentimento prévio do grupo.</div></details>
+      </div>
+      <div class="invest">
+        <div class="box"><div class="lbl">Investimento · temporada</div><div class="val">a definir</div><div class="sub">Valor único pela travessia completa <span class="placeholder">placeholder</span></div></div>
+        <div class="box"><div class="lbl">Turma inaugural</div><div class="val">12 cadeiras</div><div class="sub">Condição de fundador · Porto Alegre</div></div>
+      </div>
+      <a class="cta" href="#">Candidatar-me a uma cadeira →</a>
+    </section>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap foot-in">
+    <div>ÁGON <span class="placeholder">nome de trabalho — trocável</span><br>Mastermind para o pensamento jurídico</div>
+    <div style="text-align:center;color:var(--muted)">da mesma casa que <span style="color:var(--brass)">FUTURES</span><br>um produto irmão · método próprio</div>
+    <div style="text-align:right">Inflexão · Living Lab Education<br>Porto Alegre · RS</div>
+  </div>
+</footer>
+
+<script>
+  // theme switcher
+  const body = document.body;
+  const sw = document.querySelectorAll('.switch button');
+  sw.forEach(b=>b.addEventListener('click',()=>{
+    body.classList.remove('t-editorial','t-clean','t-night');
+    body.classList.add(b.dataset.t);
+    sw.forEach(x=>x.classList.toggle('on', x===b));
+  }));
+  // tabs
+  const tabs = Array.from(document.querySelectorAll('.tab'));
+  const panels = Array.from(document.querySelectorAll('.panel'));
+  function select(i){
+    tabs.forEach((t,j)=>{const on=i===j;t.setAttribute('aria-selected',on);panels[j].classList.toggle('active',on);});
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  tabs.forEach((t,i)=>{
+    t.addEventListener('click',()=>select(i));
+    t.addEventListener('keydown',e=>{
+      if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();
+        const next=(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;tabs[next].focus();select(next);}
+    });
+  });
+</script>
+</body>
+</html>
