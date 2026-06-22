@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dois Livros, Quatro Perguntas — Tolstói, Dostoiévski, Frankl & Yalom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --charcoal:#1C1A17;
+    --charcoal-2:#262320;
+    --ink:#0F0E0C;
+    --paper:#F5F1E8;
+    --paper-2:#EBE5D8;
+    --terra:#C4623F;
+    --terra-deep:#9E4A2C;
+    --muted:#8A8175;
+    --line:#3A3631;
+    --line-light:#D6CFBF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--charcoal);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    font-size:16px;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+
+  /* ---------- typographic system ---------- */
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.72rem;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--terra);
+    font-weight:500;
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    font-size:clamp(2.4rem,6vw,4.4rem);
+    line-height:1.02;
+    letter-spacing:-.015em;
+  }
+  h2{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    font-size:clamp(1.7rem,3.6vw,2.5rem);
+    line-height:1.08;
+    letter-spacing:-.01em;
+  }
+  h3{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:1.18rem;
+    letter-spacing:-.005em;
+  }
+  p{font-size:1.02rem;color:#E6E0D4}
+  .lead{font-size:1.12rem}
+  em{font-style:italic;color:#F0EADC}
+  .mono{font-family:'JetBrains Mono',monospace}
+
+  /* ---------- hero ---------- */
+  header{
+    padding:96px 0 72px;
+    border-bottom:1px solid var(--line);
+    position:relative;
+    overflow:hidden;
+  }
+  header::after{
+    content:"";
+    position:absolute;
+    right:-120px;top:-60px;
+    width:360px;height:360px;
+    background:radial-gradient(circle,rgba(196,98,63,.18),transparent 68%);
+    pointer-events:none;
+  }
+  .hero-meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
+  .chip{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.7rem;letter-spacing:.05em;
+    border:1px solid var(--line);
+    padding:6px 12px;border-radius:2px;
+    color:var(--muted);
+  }
+  header h1{margin-top:18px;max-width:18ch}
+  header .sub{margin-top:24px;max-width:60ch;color:#CFC7B8;font-size:1.1rem}
+
+  /* ---------- sections ---------- */
+  section{padding:72px 0;border-bottom:1px solid var(--line)}
+  .sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:8px}
+  .sec-num{font-family:'JetBrains Mono',monospace;color:var(--terra);font-size:.85rem;font-weight:500}
+
+  /* ---------- book card ---------- */
+  .book{
+    background:var(--charcoal-2);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:36px 38px;
+    margin-top:34px;
+  }
+  .book-head{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}
+  .book-title{font-family:'Fraunces',serif;font-size:1.6rem;font-weight:500;line-height:1.1}
+  .book-by{color:var(--muted);font-size:.95rem;margin-top:4px}
+  .book-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--terra);text-align:right;letter-spacing:.05em;white-space:nowrap}
+  .book p{margin-bottom:14px}
+  .book p:last-child{margin-bottom:0}
+
+  /* pull / key idea */
+  .pull{
+    border-left:3px solid var(--terra);
+    padding:4px 0 4px 20px;
+    margin:22px 0;
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-size:1.15rem;
+    color:#F0EADC;
+    line-height:1.4;
+  }
+
+  /* ---------- night arc (Noites Brancas scheme) ---------- */
+  .scheme-label{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:30px 0 16px}
+  .arc{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:8px}
+  .arc-step{
+    background:var(--ink);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:16px 14px;
+    position:relative;
+  }
+  .arc-step .n{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--terra);display:block;margin-bottom:8px}
+  .arc-step .t{display:block;font-family:'Fraunces',serif;font-size:1rem;font-weight:600;line-height:1.15;margin-bottom:6px}
+  .arc-step .d{display:block;font-size:.82rem;color:#BCB4A6;line-height:1.4}
+  .arc-step.peak{border-color:var(--terra);background:linear-gradient(180deg,rgba(196,98,63,.12),var(--ink))}
+  .arc-line{height:2px;background:linear-gradient(90deg,var(--line),var(--terra) 65%,var(--line));margin:0 6px 6px;border-radius:2px}
+
+  /* ---------- Ivan descent scheme ---------- */
+  .descent{margin-top:6px;display:flex;flex-direction:column;gap:0}
+  .d-row{display:grid;grid-template-columns:1fr 96px;gap:18px;align-items:stretch}
+  .d-rail{position:relative;display:flex;justify-content:flex-end;padding-right:6px}
+  .d-rail::before{content:"";position:absolute;right:0;top:0;bottom:0;width:2px;background:var(--line)}
+  .d-stage{background:var(--ink);border:1px solid var(--line);border-radius:4px;padding:14px 18px;margin:5px 0;flex:1}
+  .d-stage .s-lab{display:block;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.1em;color:var(--terra);text-transform:uppercase}
+  .d-stage .s-txt{display:block;font-size:.92rem;color:#DDD6C8;margin-top:4px}
+  .d-time{align-self:center;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);text-align:right;line-height:1.3}
+  .d-stage.guer{border-color:var(--terra);background:linear-gradient(180deg,rgba(196,98,63,.12),var(--ink))}
+  .d-stage.light{border-color:#D9A066;background:linear-gradient(180deg,rgba(217,160,102,.14),var(--ink))}
+  .d-stage.light .s-lab{color:#E0AA6E}
+  .invert-note{font-size:.85rem;color:var(--muted);font-style:italic;margin-top:14px;border-left:2px solid var(--terra);padding-left:14px}
+
+  /* ---------- legend cards (frameworks) ---------- */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:34px}
+  .fw{background:var(--charcoal-2);border:1px solid var(--line);border-radius:6px;padding:28px 30px}
+  .fw h3{margin-bottom:4px}
+  .fw .who{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.06em;margin-bottom:18px}
+  .fw-item{display:flex;gap:14px;padding:11px 0;border-top:1px solid var(--line)}
+  .fw-item:first-of-type{border-top:none}
+  .fw-key{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--terra);min-width:30px;padding-top:3px;font-weight:600}
+  .fw-name{font-weight:600;color:#F0EADC;font-size:.95rem}
+  .fw-desc{font-size:.84rem;color:#B6AE9F;line-height:1.45}
+
+  /* ---------- big matrix ---------- */
+  .matrix-wrap{margin-top:36px;overflow-x:auto}
+  table.matrix{width:100%;border-collapse:collapse;min-width:680px}
+  table.matrix th,table.matrix td{border:1px solid var(--line);padding:16px 18px;vertical-align:top;text-align:left}
+  table.matrix thead th{background:var(--ink);font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--terra);font-weight:600}
+  table.matrix thead th:first-child{color:var(--muted)}
+  .row-key{background:var(--charcoal-2);font-family:'Fraunces',serif;font-size:1rem;font-weight:600;width:160px}
+  .row-key small{display:block;font-family:'JetBrains Mono',monospace;font-weight:400;font-size:.66rem;color:var(--muted);letter-spacing:.04em;margin-top:4px;text-transform:none}
+  table.matrix td p{font-size:.88rem;color:#D8D1C3;line-height:1.5;margin:0}
+  table.matrix td .scene{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--terra);display:block;margin-bottom:6px;letter-spacing:.04em}
+
+  /* ---------- inversion diagram ---------- */
+  .inversion{display:grid;grid-template-columns:1fr 64px 1fr;gap:0;margin-top:36px;align-items:stretch}
+  .inv-col{border:1px solid var(--line);border-radius:6px;padding:30px 28px;background:var(--charcoal-2)}
+  .inv-col h3{margin-bottom:4px}
+  .inv-col .ic-by{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);margin-bottom:20px}
+  .inv-bar{height:14px;border-radius:3px;margin:18px 0 8px;position:relative;overflow:hidden;background:var(--ink);border:1px solid var(--line)}
+  .inv-bar span{position:absolute;top:0;bottom:0;left:0}
+  .full span{width:88%;background:repeating-linear-gradient(45deg,var(--line),var(--line) 6px,var(--charcoal-2) 6px,var(--charcoal-2) 12px)}
+  .empty span{width:12%;background:var(--terra)}
+  .inv-cap{font-size:.82rem;color:var(--muted);font-family:'JetBrains Mono',monospace}
+  .inv-col p{font-size:.92rem;color:#D8D1C3;margin-top:14px}
+  .inv-mid{display:flex;align-items:center;justify-content:center}
+  .inv-mid span{font-family:'JetBrains Mono',monospace;color:var(--terra);font-size:.7rem;writing-mode:vertical-rl;letter-spacing:.2em;text-transform:uppercase}
+
+  /* ---------- fork (honest friction) ---------- */
+  .fork{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:30px;border:1px solid var(--terra);border-radius:6px;overflow:hidden}
+  .fork-half{padding:26px 28px;background:var(--charcoal-2)}
+  .fork-half:first-child{border-right:1px solid var(--line)}
+  .fork-half .fh-lab{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--terra);margin-bottom:10px}
+  .fork-half h3{font-size:1.05rem;margin-bottom:10px}
+  .fork-half p{font-size:.9rem;color:#CFC8BA}
+
+  /* ---------- synthesis ---------- */
+  .synth p{font-size:1.08rem;max-width:68ch;color:#E6E0D4;margin-bottom:16px}
+
+  footer{padding:54px 0 80px;text-align:center}
+  footer .mono{color:var(--muted);font-size:.72rem;letter-spacing:.12em}
+  footer .brand{font-family:'Fraunces',serif;font-style:italic;color:var(--terra);font-size:1.1rem;margin-bottom:8px}
+
+  @media(max-width:780px){
+    .grid2{grid-template-columns:1fr}
+    .arc{grid-template-columns:1fr 1fr}
+    .inversion{grid-template-columns:1fr}
+    .inv-mid{padding:14px 0}
+    .inv-mid span{writing-mode:horizontal-tb}
+    .fork{grid-template-columns:1fr}
+    .fork-half:first-child{border-right:none;border-bottom:1px solid var(--line)}
+    .d-row{grid-template-columns:1fr 72px;gap:10px}
+    .book{padding:26px 22px}
+    section{padding:54px 0}
+  }
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="eyebrow">Mapa de estudo · Acompanhamento existencial</span>
+    <h1>Dois livros, quatro perguntas</h1>
+    <p class="sub">Como <em>Noites Brancas</em> e <em>A Morte de Ivan Ilitch</em> encenam o mesmo problema invertido — a distância entre viver e apenas existir — lidos pela logoterapia de Frankl e pela psicologia existencial de Yalom.</p>
+    <div class="hero-meta">
+      <span class="chip">DOSTOIÉVSKI · 1848</span>
+      <span class="chip">TOLSTÓI · 1886</span>
+      <span class="chip">FRANKL · 3 valores</span>
+      <span class="chip">YALOM · 4 questões últimas</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============ NOITES BRANCAS ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">01</span><span class="eyebrow">Resumo</span></div>
+    <div class="book">
+      <div class="book-head">
+        <div>
+          <div class="book-title">Noites Brancas</div>
+          <div class="book-by">Fiódor Dostoiévski · novela · subtítulo: <em>"romance sentimental — das memórias de um sonhador"</em></div>
+        </div>
+        <div class="book-tag">OBRA DA JUVENTUDE<br>ANTES DA SIBÉRIA</div>
+      </div>
+
+      <p>São Petersburgo, verão, durante as <em>noites brancas</em> — quando o sol mal se põe e a cidade fica numa luz que apaga a fronteira entre o real e o sonho. O narrador é um jovem anônimo, o <strong>Sonhador</strong>: solitário, sem amigos, que vive mais na imaginação do que na vida.</p>
+
+      <p>Numa dessas noites ele encontra <strong>Nástienka</strong>, chorando junto a um canal. Ao longo de quatro noites os dois se aproximam. Ela espera o retorno de um homem que prometeu voltar em um ano. O Sonhador se apaixona; quando o amante parece não voltar, ela começa a corresponder — mas o homem reaparece, e ela parte com ele.</p>
+
+      <div class="pull">"Meu Deus! Um minuto inteiro de felicidade! Será que isso é pouco, mesmo para uma vida inteira de homem?"</div>
+
+      <p>O coração do livro é a figura do <em>sonhador</em>: o homem que substitui o viver pelo fantasiar, constrói relações inteiras na cabeça e por isso fica incapacitado para a vida real quando ela bate à porta. Há aí uma intuição quase psicanalítica antes da letra — a fantasia como defesa e como prisão.</p>
+
+      <div class="scheme-label">Esquema · o arco do Sonhador (e por que ele não escapa do quarto)</div>
+      <div class="arc">
+        <div class="arc-step">
+          <span class="n">ESTADO 0</span>
+          <span class="t">Solidão</span>
+          <span class="d">Vive de fantasia. A imaginação substitui o encontro real.</span>
+        </div>
+        <div class="arc-step">
+          <span class="n">NOITES 1–2</span>
+          <span class="t">Encontro</span>
+          <span class="d">Nástienka. A muralha racha: um vínculo real começa.</span>
+        </div>
+        <div class="arc-step peak">
+          <span class="n">NOITES 3–4</span>
+          <span class="t">Esperança</span>
+          <span class="d">Ela passa a corresponder. Pico de presença e de risco.</span>
+        </div>
+        <div class="arc-step">
+          <span class="n">MANHÃ</span>
+          <span class="t">Perda</span>
+          <span class="d">O amante retorna. O real reaparece e ela parte.</span>
+        </div>
+        <div class="arc-step">
+          <span class="n">DESFECHO</span>
+          <span class="t">Bênção</span>
+          <span class="d">Ele a abençoa — e volta ao quarto solitário.</span>
+        </div>
+      </div>
+      <div class="arc-line"></div>
+      <p style="font-size:.85rem;color:#9b9384;font-style:italic;margin:0">O movimento é um arco que sobe e desce de volta ao ponto de partida. A pergunta clínica não é "ele sofreu?", mas: <strong style="color:#E6E0D4">ele acordou — ou voltou a dormir?</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ IVAN ILITCH ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">02</span><span class="eyebrow">Resumo</span></div>
+    <div class="book">
+      <div class="book-head">
+        <div>
+          <div class="book-title">A Morte de Ivan Ilitch</div>
+          <div class="book-by">Liev Tolstói · novela · fase tardia, após a crise espiritual</div>
+        </div>
+        <div class="book-tag">COMEÇA PELO FIM<br>RETRATO DO MORRER</div>
+      </div>
+
+      <p>O retrato mais implacável já escrito sobre o morrer. A estrutura é audaciosa: o livro <strong>começa pelo fim</strong>. Na primeira cena, os colegas de trabalho leem no jornal que Ivan Ilitch morreu — e pensam, no fundo, em quem será promovido e no incômodo de ir ao velório. Só então Tolstói volta atrás e conta a vida do morto.</p>
+
+      <p>E que vida? "Mais simples, mais comum e por isso mais terrível." Ivan é um magistrado que fez tudo <em>como se devia fazer</em>: carreira correta, casamento conveniente, móveis de bom gosto, decoro impecável. Uma existência inteiramente organizada em torno das aparências.</p>
+
+      <div class="pull">"Caio é homem, os homens são mortais, logo Caio é mortal." — válido para Caio, para os outros. Nunca para si.</div>
+
+      <p>A virada vem de modo quase ridículo: ao pendurar uma cortina, ele cai e machuca o flanco. Uma bobagem que vira doença sem nome, progressiva e fatal. O drama central é o <strong>isolamento</strong>: ninguém admite que ele está morrendo. Médicos evasivos, a esposa encenando normalidade, todos sustentando <em>a mentira</em>. Ivan sufoca de dor — e de solidão por ser o único a saber a verdade.</p>
+
+      <p>O único alívio vem de <strong>Guerássim</strong>, o jovem camponês: simples, sem medo da morte, sem mentira, capaz de segurar suas pernas a noite inteira. Em Tolstói, é o servo iletrado quem detém a verdade que escapa ao magistrado culto.</p>
+
+      <div class="scheme-label">Esquema · a descida (e a inversão do tempo narrativo)</div>
+      <div class="descent">
+        <div class="d-row">
+          <div class="d-rail"><div class="d-stage"><span class="s-lab">Abertura</span><span class="s-txt">A morte é anunciada. Colegas calculam promoções.</span></div></div>
+          <div class="d-time">o fim<br>vem 1º</div>
+        </div>
+        <div class="d-row">
+          <div class="d-rail"><div class="d-stage"><span class="s-lab">A vida "correta"</span><span class="s-txt">Carreira, decoro, móveis de bom gosto. Cheia por fora.</span></div></div>
+          <div class="d-time">flashback</div>
+        </div>
+        <div class="d-row">
+          <div class="d-rail"><div class="d-stage"><span class="s-lab">A queda</span><span class="s-txt">A cortina. Um acidente banal abre a fissura.</span></div></div>
+          <div class="d-time"></div>
+        </div>
+        <div class="d-row">
+          <div class="d-rail"><div class="d-stage"><span class="s-lab">A mentira / isolamento</span><span class="s-txt">Ninguém admite a morte. Ele adoece também de solidão.</span></div></div>
+          <div class="d-time"></div>
+        </div>
+        <div class="d-row">
+          <div class="d-rail"><div class="d-stage guer"><span class="s-lab">Guerássim</span><span class="s-txt">O camponês: presença real, sem mentira nem fuga.</span></div></div>
+          <div class="d-time">único<br>vínculo</div>
+        </div>
+        <div class="d-row">
+          <div class="d-rail"><div class="d-stage light"><span class="s-lab">A luz final</span><span class="s-txt">Compaixão pelos que deixa. "Acabou-se a morte."</span></div></div>
+          <div class="d-time">o instante</div>
+        </div>
+      </div>
+      <p class="invert-note">Tolstói inverte o tempo de propósito: ao saber o fim na primeira página, o leitor não acompanha "o que vai acontecer", mas <strong style="color:#E6E0D4">como se vive uma vida que termina assim</strong>. A pergunta deixa de ser sobre Ivan e passa a ser sobre quem lê.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FRAMEWORKS ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">03</span><span class="eyebrow">As lentes</span></div>
+    <h2>Duas chaves para ler as duas obras</h2>
+    <div class="grid2">
+      <div class="fw">
+        <h3>As 4 questões últimas</h3>
+        <div class="who">IRVIN YALOM · psicoterapia existencial · ateu</div>
+        <div class="fw-item"><span class="fw-key">M</span><div><span class="fw-name">Morte</span><div class="fw-desc">A finitude que negamos pela ilusão de sermos "especiais". A ideia da morte é o que pode nos salvar.</div></div></div>
+        <div class="fw-item"><span class="fw-key">L</span><div><span class="fw-name">Liberdade</span><div class="fw-desc">Somos responsáveis por construir a própria vida — não há chão dado de antemão.</div></div></div>
+        <div class="fw-item"><span class="fw-key">I</span><div><span class="fw-name">Isolamento</span><div class="fw-desc">O abismo intransponível entre eu e o outro. A presença genuína não o resolve, mas o torna suportável.</div></div></div>
+        <div class="fw-item"><span class="fw-key">S</span><div><span class="fw-name">Sem-sentido</span><div class="fw-desc">Num universo sem sentido dado, o sentido precisa ser engajado, não encontrado.</div></div></div>
+      </div>
+      <div class="fw">
+        <h3>Os 3 caminhos de sentido</h3>
+        <div class="who">VIKTOR FRANKL · logoterapia · "vontade de sentido"</div>
+        <div class="fw-item"><span class="fw-key">CR</span><div><span class="fw-name">Valor criativo</span><div class="fw-desc">O sentido que vem de <em>dar</em> algo ao mundo — uma obra, um trabalho, um ato.</div></div></div>
+        <div class="fw-item"><span class="fw-key">VI</span><div><span class="fw-name">Valor vivencial</span><div class="fw-desc">O sentido de <em>receber</em> o mundo — amar alguém, a beleza, um encontro na carne.</div></div></div>
+        <div class="fw-item"><span class="fw-key">AT</span><div><span class="fw-name">Valor de atitude</span><div class="fw-desc">Quando nada pode mudar na situação, resta mudar a <em>postura</em> diante do inevitável.</div></div></div>
+        <div class="fw-item"><span class="fw-key">+</span><div><span class="fw-name">Autotranscendência</span><div class="fw-desc">O sentido não nasce de olhar para dentro, mas de <em>sair de si</em> rumo ao outro.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MATRIX ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">04</span><span class="eyebrow">O cruzamento</span></div>
+    <h2>Onde cada conceito aparece — cena por cena</h2>
+    <p class="lead" style="max-width:64ch;margin-top:14px;color:#CFC7B8">As mesmas perguntas, encenadas de modos opostos: em Tolstói o confronto é a <em>morte</em>; em Dostoiévski é o <em>amor e a perda</em>.</p>
+    <div class="matrix-wrap">
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th>Conceito</th>
+            <th>Ivan Ilitch — Tolstói</th>
+            <th>O Sonhador — Dostoiévski</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-key">Morte <small>YALOM · M</small></td>
+            <td><span class="scene">o silogismo de Caio</span><p>A defesa da "especialidade" em estado puro: mortalidade vale para os outros, nunca para si. A doença derruba a defesa.</p></td>
+            <td><span class="scene">ausente — adiada</span><p>Não há morte; há o tempo que passa sem ser vivido. A finitude aparece só como desperdício silencioso da vida.</p></td>
+          </tr>
+          <tr>
+            <td class="row-key">Isolamento <small>YALOM · I</small></td>
+            <td><span class="scene">a mentira de todos</span><p>Ninguém o acompanha na verdade do morrer. Guerássim é a exceção: presença que não dissolve o abismo, mas o torna suportável.</p></td>
+            <td><span class="scene">o quarto / a fantasia</span><p>Isolamento <em>por escolha</em>. A fantasia evita o encontro real — a única coisa capaz de furar a solidão.</p></td>
+          </tr>
+          <tr>
+            <td class="row-key">Sem-sentido <small>YALOM · S</small></td>
+            <td><span class="scene">"vivi tudo errado?"</span><p>A vida respeitável se revela oca. O vazio estava lá o tempo todo, coberto pelas convenções.</p></td>
+            <td><span class="scene">vida não vivida</span><p>O sem-sentido é o estado de base do Sonhador. As quatro noites são a única fresta de sentido real.</p></td>
+          </tr>
+          <tr>
+            <td class="row-key">Valor vivencial <small>FRANKL · VI</small></td>
+            <td><span class="scene">tarde demais, mas real</span><p>A compaixão final pelos que deixa é um encontro autêntico com o outro — recebido só no limiar.</p></td>
+            <td><span class="scene">amor idealizado</span><p>Só ama idealizando, nunca na carne. O valor vivencial fica bloqueado pela defesa da fantasia.</p></td>
+          </tr>
+          <tr>
+            <td class="row-key">Valor de atitude <small>FRANKL · AT</small></td>
+            <td><span class="scene">"acabou-se a morte"</span><p>Não cura a doença; muda a <em>postura</em> diante dela. O sofrimento inevitável vira ato de sentido.</p></td>
+            <td><span class="scene">a bênção final</span><p>Tenta consagrar o instante perdido — "um minuto basta para uma vida". Valor de atitude… ou requinte da evitação?</p></td>
+          </tr>
+          <tr>
+            <td class="row-key">Autotranscendência <small>FRANKL · +</small></td>
+            <td><span class="scene">sair de si → o outro</span><p>A redenção vem de olhar para fora, não para dentro. Sentir o sofrimento dos que ficam dissolve o terror.</p></td>
+            <td><span class="scene">incompleta</span><p>A bênção parece sair de si, mas pode ser um modo de voltar para dentro — para a segurança da fantasia.</p></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INVERSION ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">05</span><span class="eyebrow">A figura central</span></div>
+    <h2>O mesmo problema, invertido</h2>
+    <div class="inversion">
+      <div class="inv-col">
+        <h3>Ivan Ilitch</h3>
+        <div class="ic-by">A fartura que era ausência</div>
+        <div class="inv-bar full"><span></span></div>
+        <div class="inv-cap">vida socialmente CHEIA · existencialmente OCA</div>
+        <p>Precisa da <strong>morte</strong> para acordar — e acorda no último segundo. O confronto é forçado de fora; o sentido chega no limiar.</p>
+      </div>
+      <div class="inv-mid"><span>invertem-se</span></div>
+      <div class="inv-col">
+        <h3>O Sonhador</h3>
+        <div class="ic-by">O vazio que tocou um instante</div>
+        <div class="inv-bar empty"><span></span></div>
+        <div class="inv-cap">vida VAZIA · um instante de PRESENÇA</div>
+        <p>O <strong>amor</strong> oferece um momento de plenitude. A pergunta fica em aberto: ele acorda — ou volta a dormir no conforto da fantasia?</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FRICTION / FORK ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">06</span><span class="eyebrow">Fricção honesta</span></div>
+    <h2>A bênção do Sonhador: duas leituras</h2>
+    <p class="lead" style="max-width:62ch;margin-top:14px;color:#CFC7B8">Os textos resistem aos frameworks tanto quanto os confirmam. O mesmo gesto final lê-se de dois modos opostos — e é aí que mora o material clínico mais rico.</p>
+    <div class="fork">
+      <div class="fork-half">
+        <div class="fh-lab">Leitura à la Frankl</div>
+        <h3>Sentido genuíno</h3>
+        <p>É valor de atitude verdadeiro: ele extrai sentido de um instante e o consagra. Para Frankl, o passado vivido fica "guardado" — nada o apaga. A bênção é um <em>sim</em> à vida apesar da perda.</p>
+      </div>
+      <div class="fork-half">
+        <div class="fh-lab">Leitura à la Yalom</div>
+        <h3>Evitação sofisticada</h3>
+        <p>É o requinte máximo da defesa: ao estetizar a perda, o Sonhador garante que nunca mais precisará arriscar a vida real. O "sentido" vira anestesia. Yalom seria o primeiro a desconfiar.</p>
+      </div>
+    </div>
+    <p style="margin-top:24px;font-style:italic;color:#CFC7B8;max-width:64ch">A mesma tensão existe em Ivan: a redenção de Tolstói é <em>cristã e passiva</em> — uma graça que desce. Frankl quer sentido como <em>ato</em>; Yalom, ateu, recusaria toda leitura transcendente. Os três concordam no fenômeno e divergem na metafísica.</p>
+  </div>
+</section>
+
+<!-- ============ SYNTHESIS ============ -->
+<section class="synth">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">07</span><span class="eyebrow">Síntese para a sessão</span></div>
+    <h2>O que une as duas obras contra a vida "correta"</h2>
+    <p style="margin-top:22px">O sentido não está na quantidade nem na respeitabilidade de uma vida, mas em <strong>momentos de autotranscendência</strong> — e é o confronto com uma das questões últimas (a morte em Tolstói; o isolamento e o sem-sentido em Dostoiévski) que abre a fresta por onde esse sentido pode entrar.</p>
+    <p>A diferença clínica — a que importa no trabalho com transições de meia-vida — é esta: <strong>ninguém precisa esperar o leito de morte de Ivan.</strong> A experiência de despertar de Yalom pode ser provocada bem antes. Esse é exatamente o convite.</p>
+    <div class="pull" style="font-size:1.3rem;margin-top:30px">"Estou apenas executando uma vida correta e adiando a única que importa?"</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand">Inflexão · Living Lab Educacional</div>
+    <div class="mono">MAPA DE ESTUDO — TOLSTÓI · DOSTOIÉVSKI · FRANKL · YALOM</div>
+  </div>
+</footer>
+
+</body>
+</html>
