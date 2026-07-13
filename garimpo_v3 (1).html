@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GARIMPO · Originação com método</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --papel: #FAF6EF;
+  --carvao: #211D19;
+  --terracota: #B84A26;
+  --ouro: #C99633;
+  --texto: #2E2921;        /* corpo sobre fundo claro */
+  --texto-suave: #4C4536;  /* secundário sobre fundo claro */
+  --claro-1: #F5F0E4;      /* principal sobre carvão */
+  --claro-2: #DDD4C2;      /* secundário sobre carvão */
+  --linha: #E4DCCF;
+  --linha-escura: #4A4238;
+  --areia: #F4EEE3;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--papel);
+  color: var(--texto);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ============ NAV ============ */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(250, 246, 239, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--linha);
+}
+.nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; gap: 18px; }
+.logo {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 700; font-size: 20px; letter-spacing: 0.04em;
+  color: var(--carvao); text-decoration: none;
+  display: flex; align-items: center; gap: 9px; flex-shrink: 0;
+}
+.logo-gem { width: 14px; height: 14px; background: var(--ouro); clip-path: polygon(50% 0%, 100% 38%, 50% 100%, 0% 38%); }
+.nav-links { display: flex; gap: 24px; align-items: center; }
+.nav-links a { color: var(--texto-suave); text-decoration: none; font-size: 14px; font-weight: 500; }
+.nav-links a:hover { color: var(--terracota); }
+.nav-cta { background: var(--carvao); color: var(--papel) !important; padding: 9px 18px; border-radius: 2px; font-size: 13px !important; }
+.nav-cta:hover { background: var(--terracota); }
+.lang-switch { display: flex; gap: 2px; border: 1px solid var(--linha); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
+.lang-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.08em;
+  padding: 7px 11px; background: transparent; border: none;
+  color: var(--texto-suave); cursor: pointer;
+}
+.lang-btn:hover { color: var(--terracota); }
+.lang-btn.active { background: var(--carvao); color: var(--papel); }
+@media (max-width: 900px) { .nav-links a:not(.nav-cta) { display: none; } }
+
+/* ============ HERO ============ */
+.hero { position: relative; padding: 96px 0 72px; overflow: hidden; }
+.hero-contours { position: absolute; inset: 0; pointer-events: none; opacity: 0.45; }
+.hero-content { position: relative; max-width: 800px; }
+.eyebrow { color: var(--terracota); margin-bottom: 24px; font-weight: 500; }
+.hero h1 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(38px, 6vw, 62px);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  margin-bottom: 28px;
+  color: var(--carvao);
+}
+.hero h1 em { font-style: italic; color: var(--terracota); }
+.hero-sub { font-size: 19px; color: var(--texto); max-width: 620px; margin-bottom: 40px; }
+.cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+.btn {
+  display: inline-block;
+  padding: 14px 26px;
+  border-radius: 2px;
+  font-size: 15px; font-weight: 600;
+  text-decoration: none;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+.btn-primary { background: var(--carvao); color: var(--papel); }
+.btn-primary:hover { background: var(--terracota); }
+.btn-ghost { border-color: var(--carvao); color: var(--carvao); background: transparent; }
+.btn-ghost:hover { border-color: var(--terracota); color: var(--terracota); }
+.btn-gold { background: var(--ouro); color: var(--carvao); }
+.btn-gold:hover { background: #D9A845; }
+
+/* ============ LEDGER ============ */
+.ledger { border-top: 1px solid var(--linha); border-bottom: 1px solid var(--linha); padding: 20px 0; background: var(--areia); }
+.ledger-inner { display: flex; gap: 36px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+.ledger-item { color: var(--texto-suave); }
+.ledger-item strong { color: var(--carvao); font-weight: 600; }
+.ledger-stamp { color: var(--terracota); border: 1px solid var(--terracota); padding: 5px 12px; border-radius: 2px; }
+
+/* ============ SECTIONS ============ */
+section { padding: 88px 0; }
+.section-head { max-width: 680px; margin-bottom: 56px; }
+.section-head .mono { color: var(--terracota); margin-bottom: 16px; display: block; }
+.section-head h2 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--carvao);
+}
+.section-head p { color: var(--texto); margin-top: 16px; font-size: 17px; }
+
+/* ============ DOIS LADOS ============ */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 820px) { .grid-2 { grid-template-columns: 1fr; } }
+.side-card { border: 1px solid var(--linha); border-radius: 3px; padding: 40px 36px; background: #FFFDF9; }
+.side-card .mono { color: var(--terracota); display: block; margin-bottom: 20px; }
+.side-card h3 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600; font-size: 24px; line-height: 1.25;
+  margin-bottom: 14px; color: var(--carvao);
+}
+.side-card p { color: var(--texto); font-size: 15px; }
+
+/* ============ COMO FUNCIONA ============ */
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+@media (max-width: 960px) { .steps { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .steps { grid-template-columns: 1fr; } }
+.step { position: relative; padding-top: 26px; }
+.step::before { content: ''; position: absolute; top: 0; left: 0; width: 48px; height: 3px; background: var(--terracota); }
+.step .mono { color: var(--texto-suave); display: block; margin-bottom: 12px; }
+.step h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 20px; margin-bottom: 10px; color: var(--carvao); }
+.step p { color: var(--texto); font-size: 14.5px; }
+.step-destaque { background: #FBF3E2; border-radius: 3px; padding: 26px 22px 22px; }
+.step-destaque::before { top: 0; left: 22px; }
+.step-destaque .mono { color: var(--terracota); }
+
+/* ============ MÉTODO ============ */
+.metodo { background: var(--areia); border-top: 1px solid var(--linha); border-bottom: 1px solid var(--linha); }
+.gema-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+@media (max-width: 920px) { .gema-cards { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .gema-cards { grid-template-columns: 1fr; } }
+.gema-card { background: var(--papel); border: 1px solid var(--linha); border-radius: 3px; padding: 32px 26px; }
+.gema-letter { font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 44px; color: var(--terracota); line-height: 1; margin-bottom: 18px; }
+.gema-card h4 { font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; color: var(--carvao); }
+.gema-card p { color: var(--texto); font-size: 14px; line-height: 1.55; }
+
+/* ============ AUTODIAGNÓSTICO ============ */
+.score-section { background: var(--carvao); }
+.score-section .section-head .mono { color: var(--ouro); }
+.score-section .section-head h2 { color: #FFFFFF; }
+.score-section .section-head p { color: var(--claro-1); }
+.score-bench { display: grid; grid-template-columns: 1fr 380px; gap: 64px; align-items: center; }
+@media (max-width: 920px) { .score-bench { grid-template-columns: 1fr; } }
+.slider-row { margin-bottom: 30px; }
+.slider-label { display: flex; justify-content: space-between; margin-bottom: 10px; }
+.slider-label span:first-child { font-size: 15px; font-weight: 600; color: #FFFFFF; }
+.slider-label span:last-child { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--ouro); font-weight: 500; }
+input[type="range"] { -webkit-appearance: none; width: 100%; height: 4px; background: var(--linha-escura); border-radius: 2px; outline: none; }
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--ouro); cursor: pointer;
+  border: 3px solid var(--carvao); box-shadow: 0 0 0 1.5px var(--ouro);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 15px; height: 15px; border-radius: 50%;
+  background: var(--ouro); cursor: pointer;
+  border: 2px solid var(--carvao); box-shadow: 0 0 0 1.5px var(--ouro);
+}
+input[type="range"]:focus-visible { outline: 2px solid var(--ouro); outline-offset: 4px; }
+.slider-note { font-size: 13px; color: var(--claro-1); margin-top: 7px; }
+
+/* Cartão de tese */
+.tese-card {
+  background: #2C2721;
+  border: 1px solid var(--linha-escura);
+  border-left: 3px solid var(--ouro);
+  border-radius: 3px;
+  padding: 26px 28px;
+  margin-bottom: 44px;
+}
+.tese-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+.tese-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ouro); }
+.tese-title { font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 20px; color: #FFFFFF; }
+.tese-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 28px; }
+@media (max-width: 720px) { .tese-grid { grid-template-columns: 1fr; } }
+.tese-item .mono { color: var(--ouro); display: block; margin-bottom: 5px; font-size: 10px; }
+.tese-item p { color: var(--claro-1); font-size: 14px; line-height: 1.5; }
+.tese-nota { margin-top: 16px; font-size: 12px; color: var(--claro-2); font-style: italic; }
+
+/* Checklist de fit */
+.fit-block { margin-bottom: 30px; }
+.fit-checks { display: grid; gap: 9px; margin-top: 10px; }
+.fit-check {
+  display: flex; align-items: flex-start; gap: 11px;
+  background: #2C2721;
+  border: 1px solid var(--linha-escura);
+  border-radius: 3px;
+  padding: 12px 14px;
+  cursor: pointer;
+}
+.fit-check:hover { border-color: var(--ouro); }
+.fit-check input {
+  appearance: none; -webkit-appearance: none;
+  width: 17px; height: 17px; flex-shrink: 0;
+  border: 1.5px solid var(--ouro);
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  margin-top: 2px;
+  display: grid; place-content: center;
+}
+.fit-check input:checked { background: var(--ouro); }
+.fit-check input:checked::after {
+  content: '✓';
+  color: var(--carvao);
+  font-size: 12px; font-weight: 700;
+  line-height: 1;
+}
+.fit-check input:focus-visible { outline: 2px solid var(--ouro); outline-offset: 3px; }
+.fit-check span { font-size: 13.5px; color: var(--claro-1); line-height: 1.4; }
+.gem-display { text-align: center; }
+.gem-svg { width: 210px; height: 210px; margin: 0 auto 18px; display: block; filter: drop-shadow(0 6px 24px rgba(201,150,51,0.3)); }
+.score-number { font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 64px; line-height: 1; color: var(--ouro); }
+.score-verdict {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: #FFFFFF; margin-top: 10px; min-height: 20px; font-weight: 500;
+}
+.score-desc { font-size: 14.5px; color: var(--claro-1); margin-top: 10px; max-width: 320px; margin-left: auto; margin-right: auto; min-height: 66px; }
+.score-cta-row { margin-top: 18px; }
+
+/* ============ RESULTADOS ============ */
+.resultados { border-bottom: 1px solid var(--linha); }
+.res-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+@media (max-width: 920px) { .res-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .res-grid { grid-template-columns: 1fr; } }
+.res-card { border-top: 3px solid var(--ouro); padding-top: 22px; }
+.res-num { font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: clamp(40px, 5vw, 56px); line-height: 1; color: var(--carvao); }
+.res-label { color: var(--texto); font-size: 15px; margin-top: 10px; font-weight: 500; }
+.res-note { margin-top: 36px; color: var(--texto-suave); font-size: 13.5px; font-style: italic; }
+
+/* ============ SERVIÇOS ============ */
+.serv-section { background: var(--areia); border-top: 1px solid var(--linha); border-bottom: 1px solid var(--linha); }
+.serv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+@media (max-width: 820px) { .serv-grid { grid-template-columns: 1fr; } }
+.serv-card { border: 1px solid var(--linha); border-radius: 3px; padding: 36px 32px; background: var(--papel); display: flex; flex-direction: column; }
+.serv-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: var(--terracota); margin-bottom: 18px; }
+.serv-card h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 23px; margin-bottom: 12px; color: var(--carvao); }
+.serv-card p { color: var(--texto); font-size: 15px; flex-grow: 1; }
+.serv-para {
+  margin-top: 20px; padding-top: 16px;
+  border-top: 1px solid var(--linha);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--texto-suave);
+}
+
+/* ============ INFRA ============ */
+.infra-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+@media (max-width: 820px) { .infra-grid { grid-template-columns: 1fr; } }
+.infra-card { border: 1px solid var(--linha); border-left: 3px solid var(--terracota); border-radius: 3px; padding: 30px 30px; background: #FFFDF9; }
+.infra-card .mono { color: var(--terracota); display: block; margin-bottom: 12px; }
+.infra-card p { color: var(--texto); font-size: 15px; }
+.infra-card p strong { color: var(--carvao); font-weight: 600; }
+
+/* ============ ACADEMY ============ */
+.academy-section { background: var(--areia); border-top: 1px solid var(--linha); border-bottom: 1px solid var(--linha); }
+.academy-band { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+@media (max-width: 820px) { .academy-band { grid-template-columns: 1fr; } }
+.academy-band h2 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600; font-size: clamp(28px, 4vw, 40px); line-height: 1.15;
+  margin-bottom: 18px; color: var(--carvao);
+}
+.academy-band h2 em { font-style: italic; color: var(--terracota); }
+.academy-band .band-text > p { color: var(--texto); font-size: 16px; margin-bottom: 26px; }
+.academy-list { list-style: none; }
+.academy-list li {
+  padding: 14px 0 14px 30px; position: relative;
+  border-bottom: 1px solid var(--linha);
+  font-size: 15px; color: var(--texto);
+}
+.academy-list li::before {
+  content: ''; position: absolute; left: 4px; top: 22px;
+  width: 10px; height: 10px; background: var(--ouro);
+  clip-path: polygon(50% 0%, 100% 38%, 50% 100%, 0% 38%);
+}
+
+/* ============ ROADMAP ============ */
+.fases { display: flex; flex-direction: column; }
+.fase {
+  display: grid; grid-template-columns: 220px 230px 1fr; gap: 28px;
+  padding: 28px 0; border-bottom: 1px solid var(--linha);
+  align-items: baseline;
+}
+.fase:first-child { border-top: 1px solid var(--linha); }
+@media (max-width: 820px) { .fase { grid-template-columns: 1fr; gap: 8px; } }
+.fase-tag { color: var(--terracota); }
+.fase h4 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 20px; color: var(--carvao); }
+.fase p { color: var(--texto); font-size: 15px; }
+
+/* ============ FOOTER ============ */
+footer { background: var(--carvao); color: var(--claro-1); padding: 56px 0; }
+.footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+.footer-logo { font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 18px; color: #FFFFFF; display: flex; align-items: center; gap: 8px; }
+footer .mono { color: var(--claro-1); }
+
+/* ============ REVEAL ============ */
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav>
+  <div class="wrap nav-inner">
+    <a href="#" class="logo"><span class="logo-gem"></span>GARIMPO</a>
+    <div class="nav-links">
+      <a href="#como" data-i18n="nav_como">Como funciona</a>
+      <a href="#diagnostico" data-i18n="nav_diag">Autodiagnóstico</a>
+      <a href="#resultados" data-i18n="nav_res">Resultados</a>
+      <a href="#servicos" data-i18n="nav_servicos">Serviços</a>
+      <a href="#academy" data-i18n="nav_academy">Academy</a>
+      <a href="#" class="nav-cta" data-i18n="nav_cta">Cadastrar tese</a>
+    </div>
+    <div class="lang-switch" role="group" aria-label="Idioma">
+      <button class="lang-btn active" data-lang="pt">PT</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="es">ES</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <svg class="hero-contours" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke="#C9BBA4" stroke-width="1">
+      <path d="M-50,480 C150,420 280,510 460,450 C640,390 760,470 950,410 C1080,370 1180,420 1260,390"/>
+      <path d="M-50,420 C160,360 300,440 480,385 C660,330 790,405 970,350 C1100,310 1190,355 1260,330"/>
+      <path d="M-50,360 C180,305 330,375 510,325 C690,275 820,345 990,295 C1115,258 1195,295 1260,275"/>
+      <path d="M780,120 C830,90 900,95 950,125 C1000,155 1005,215 960,250 C915,285 840,280 795,245 C750,210 745,155 780,120 Z" stroke="#C99633" stroke-opacity="0.55"/>
+      <path d="M810,145 C845,125 895,128 928,148 C962,170 966,210 935,235 C904,259 852,256 822,232 C792,208 788,168 810,145 Z" stroke="#C99633" stroke-opacity="0.4"/>
+      <path d="M845,172 C868,160 898,162 918,175 C938,189 940,212 921,227 C902,241 870,240 852,226 C834,211 832,186 845,172 Z" stroke="#C99633" stroke-opacity="0.3"/>
+    </g>
+  </svg>
+  <div class="wrap hero-content">
+    <span class="mono eyebrow" data-i18n="hero_eyebrow">Plataforma de originação · Brasil & Latam</span>
+    <h1 data-i18n="hero_title">Boas oportunidades nascem de quem conhece <em>o território.</em></h1>
+    <p class="hero-sub" data-i18n="hero_sub">O GARIMPO conecta teses de investimento corporativo a olheiros certificados. Deal flow qualificado, com camada de inteligência para construção de fit, análise estruturada e atribuição registrada.</p>
+    <div class="cta-row">
+      <a href="#servicos" class="btn btn-primary" data-i18n="hero_cta1">Tenho uma tese de investimento</a>
+      <a href="#diagnostico" class="btn btn-ghost" data-i18n="hero_cta2">Tenho uma startup</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ LEDGER ============ -->
+<div class="ledger">
+  <div class="wrap ledger-inner mono">
+    <span class="ledger-item" data-i18n="ledger_1"><strong>1</strong> tese ativa em garimpo</span>
+    <span class="ledger-item" data-i18n="ledger_2"><strong>GEMA</strong> · método proprietário</span>
+    <span class="ledger-stamp" data-i18n="ledger_stamp">REG · OPERAÇÃO EM CAMPO · 2026</span>
+  </div>
+</div>
+
+<!-- ============ DOIS LADOS ============ -->
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="mono" data-i18n="lados_eyebrow">O problema, visto dos dois lados</span>
+      <h2 data-i18n="lados_title">Tese sem território rende pouco. Território sem canal rende nada.</h2>
+    </div>
+    <div class="grid-2">
+      <div class="side-card reveal">
+        <span class="mono" data-i18n="lado1_tag">Para quem investe</span>
+        <h3 data-i18n="lado1_title">A tese existe. O funil ainda depende de quem está no território.</h3>
+        <p data-i18n="lado1_body">Montar um time local de originação custa caro e demora. O GARIMPO coloca olheiros certificados em campo, com a sua tese como bússola e remuneração por entrega.</p>
+      </div>
+      <div class="side-card reveal">
+        <span class="mono" data-i18n="lado2_tag">Para quem conhece o território</span>
+        <h3 data-i18n="lado2_title">O network existe. Falta um canal que transforme repertório em receita.</h3>
+        <p data-i18n="lado2_body">Anos de ecossistema geram relacionamentos e leitura fina de negócios. A plataforma entrega tese clara, método, atribuição protegida e pagamento por gema aprovada.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMO FUNCIONA ============ -->
+<section id="como" style="padding-top: 0;">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="mono" data-i18n="como_eyebrow">Como funciona</span>
+      <h2 data-i18n="como_title">Da tese à gema, com inteligência em cada passo.</h2>
+      <p data-i18n="como_sub">Todo lead chega estruturado: a análise conecta cada oportunidade à tese da corporação antes da introdução acontecer.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <span class="mono" data-i18n="step1_tag">Passo 01</span>
+        <h3 data-i18n="step1_title">Tese estruturada</h3>
+        <p data-i18n="step1_body">A empresa cadastra setores, estágio, ticket, alavancas e critérios vedados. A tese vira um documento vivo e verificável.</p>
+      </div>
+      <div class="step reveal">
+        <span class="mono" data-i18n="step2_tag">Passo 02</span>
+        <h3 data-i18n="step2_title">Garimpo em campo</h3>
+        <p data-i18n="step2_body">Olheiros certificados mapeiam o território, ativam relacionamentos reais e filtram cada sinal contra a tese.</p>
+      </div>
+      <div class="step step-destaque reveal">
+        <span class="mono" data-i18n="step3_tag">Passo 03 · o diferencial</span>
+        <h3 data-i18n="step3_title">Análise conectada à tese</h3>
+        <p data-i18n="step3_body">Cada lead chega com dossiê estruturado: fit, time, estágio e riscos lidos contra a tese da corporação. IA enriquece os dados, o julgamento permanece humano.</p>
+      </div>
+      <div class="step reveal">
+        <span class="mono" data-i18n="step4_tag">Passo 04</span>
+        <h3 data-i18n="step4_title">Introdução registrada</h3>
+        <p data-i18n="step4_body">Gema aprovada recebe introdução formal com carimbo de tempo. Recusas voltam com devolutiva documentada.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÉTODO GEMA ============ -->
+<section class="metodo" id="metodo">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="mono" data-i18n="metodo_eyebrow">O método</span>
+      <h2 data-i18n="metodo_title">GEMA: o ofício do olheiro em quatro movimentos.</h2>
+      <p data-i18n="metodo_sub">O método nasceu em campo e organiza o trabalho que separa uma introdução qualificada de um contato solto.</p>
+    </div>
+    <div class="gema-cards">
+      <div class="gema-card reveal">
+        <div class="gema-letter">G</div>
+        <h4 data-i18n="g_title">Garimpar</h4>
+        <p data-i18n="g_body">Mapear o território contra a tese. Fontes vivas, comunidades, eventos e sinais de captação.</p>
+      </div>
+      <div class="gema-card reveal">
+        <div class="gema-letter">E</div>
+        <h4 data-i18n="e_title">Examinar</h4>
+        <p data-i18n="e_body">Analisar fit, time, estágio e riscos. O dossiê nasce aqui, com julgamento humano.</p>
+      </div>
+      <div class="gema-card reveal">
+        <div class="gema-letter">M</div>
+        <h4 data-i18n="m_title">Maturar</h4>
+        <p data-i18n="m_body">Aquecer o relacionamento antes da captação. Introdução com contexto e consentimento.</p>
+      </div>
+      <div class="gema-card reveal">
+        <div class="gema-letter">A</div>
+        <h4 data-i18n="a_title">Apresentar</h4>
+        <p data-i18n="a_body">Dossiê, score e introdução formal com carimbo de tempo. A atribuição de 12 meses começa aqui.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AUTODIAGNÓSTICO ============ -->
+<section class="score-section" id="diagnostico">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="mono" data-i18n="score_eyebrow">Autodiagnóstico · para startups</span>
+      <h2 data-i18n="score_title">Sua startup é uma gema?</h2>
+      <p data-i18n="score_sub">As mesmas quatro dimensões que os olheiros usam na bancada. Leia a tese ativa abaixo e avalie sua startup contra ela.</p>
+    </div>
+
+    <div class="tese-card reveal">
+      <div class="tese-head">
+        <span class="tese-tag" data-i18n="tese_tag">Tese ativa · T·001</span>
+        <span class="tese-title" data-i18n="tese_title">Grupo industrial alemão · corporate venturing</span>
+      </div>
+      <div class="tese-grid">
+        <div class="tese-item">
+          <span class="mono" data-i18n="tese_set_label">Setores buscados</span>
+          <p data-i18n="tese_set_body">Instrumentação e sensores industriais, energia e novos materiais, tecnologia para indústria de processo.</p>
+        </div>
+        <div class="tese-item">
+          <span class="mono" data-i18n="tese_est_label">Estágio e ticket</span>
+          <p data-i18n="tese_est_body">Co-criação early-stage com time estruturado ou venture em captação ativa. Ticket de €150 mil a €1 milhão.</p>
+        </div>
+        <div class="tese-item">
+          <span class="mono" data-i18n="tese_alav_label">Alavanca oferecida</span>
+          <p data-i18n="tese_alav_body">Internacionalização via matriz global, conhecimento técnico acumulado e alcance industrial em mais de 30 países.</p>
+        </div>
+        <div class="tese-item">
+          <span class="mono" data-i18n="tese_ved_label">Fora da tese</span>
+          <p data-i18n="tese_ved_body">Ideias sem time dedicado por trás e negócios sem conexão com o universo industrial.</p>
+        </div>
+      </div>
+      <p class="tese-nota" data-i18n="tese_nota">Cada corporação escolhe o nível de exposição do seu cartão de tese: aberto, anônimo ou visível apenas para olheiros certificados.</p>
+    </div>
+
+    <div class="score-bench">
+      <div class="reveal">
+        <div class="fit-block">
+          <div class="slider-label"><span data-i18n="dim1">Fit com a tese T·001</span><span id="v-fit">50</span></div>
+          <div class="fit-checks">
+            <label class="fit-check"><input type="checkbox" id="fc1" checked><span data-i18n="fit_c1">Atuo em um dos setores que a tese busca</span></label>
+            <label class="fit-check"><input type="checkbox" id="fc2" checked><span data-i18n="fit_c2">Meu estágio corresponde ao que a tese descreve</span></label>
+            <label class="fit-check"><input type="checkbox" id="fc3"><span data-i18n="fit_c3">Minha captação está na faixa de ticket da tese</span></label>
+            <label class="fit-check"><input type="checkbox" id="fc4"><span data-i18n="fit_c4">Estou fora dos critérios vedados</span></label>
+          </div>
+        </div>
+        <div class="slider-row">
+          <div class="slider-label"><span data-i18n="dim2">Maturidade do time</span><span id="v-time">60</span></div>
+          <input type="range" id="s-time" min="0" max="100" value="60" aria-label="Time">
+          <div class="slider-note" data-i18n="dim2_note">Fundadores complementares, estruturados e dedicados</div>
+        </div>
+        <div class="slider-row">
+          <div class="slider-label"><span data-i18n="dim3">Estágio de captação</span><span id="v-estagio">55</span></div>
+          <input type="range" id="s-estagio" min="0" max="100" value="55" aria-label="Estágio">
+          <div class="slider-note" data-i18n="dim3_note">Rodada ativa ou planejada, com espaço no cap table</div>
+        </div>
+        <div class="slider-row" style="margin-bottom: 0;">
+          <div class="slider-label"><span data-i18n="dim4">Alavanca estratégica</span><span id="v-alavanca">65</span></div>
+          <input type="range" id="s-alavanca" min="0" max="100" value="65" aria-label="Alavanca">
+          <div class="slider-note" data-i18n="dim4_note">Um investidor com alcance industrial e internacionalização aceleraria seu negócio</div>
+        </div>
+      </div>
+      <div class="gem-display reveal">
+        <svg class="gem-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g stroke="#C99633" stroke-width="1.2">
+            <polygon id="f1" points="100,18 145,55 100,70 55,55" fill="#C99633"/>
+            <polygon id="f2" points="55,55 100,70 78,110 40,80" fill="#C99633"/>
+            <polygon id="f3" points="145,55 160,80 122,110 100,70" fill="#C99633"/>
+            <polygon id="f4" points="100,70 122,110 100,182 78,110" fill="#C99633"/>
+            <polygon id="f5" points="40,80 78,110 100,182" fill="#C99633"/>
+            <polygon id="f6" points="160,80 100,182 122,110" fill="#C99633"/>
+          </g>
+        </svg>
+        <div class="score-number" id="score-num">63</div>
+        <div class="score-verdict" id="score-verdict">Bruta</div>
+        <div class="score-desc" id="score-desc"></div>
+        <div class="score-cta-row">
+          <a href="#" class="btn btn-gold" data-i18n="score_cta">Cadastrar minha startup no radar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESULTADOS ============ -->
+<section class="resultados" id="resultados">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="mono" data-i18n="res_eyebrow">Resultados do garimpo</span>
+      <h2 data-i18n="res_title">O que o garimpo já colocou na bancada.</h2>
+    </div>
+    <div class="res-grid reveal">
+      <div class="res-card">
+        <div class="res-num">1</div>
+        <div class="res-label" data-i18n="res1_label">tese ativa em garimpo</div>
+      </div>
+      <div class="res-card">
+        <div class="res-num">40+</div>
+        <div class="res-label" data-i18n="res2_label">oportunidades mapeadas no território</div>
+      </div>
+      <div class="res-card">
+        <div class="res-num">5</div>
+        <div class="res-label" data-i18n="res3_label">gemas em preparação para apresentação</div>
+      </div>
+      <div class="res-card">
+        <div class="res-num">3</div>
+        <div class="res-label" data-i18n="res4_label">negócios em análise pela tese</div>
+      </div>
+    </div>
+    <p class="res-note" data-i18n="res_note">Painel atualizado a cada ciclo mensal de alinhamento.</p>
+  </div>
+</section>
+
+<!-- ============ SERVIÇOS ============ -->
+<section class="serv-section" id="servicos">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="mono" data-i18n="serv_eyebrow">Serviços</span>
+      <h2 data-i18n="serv_title">Quatro frentes, um mesmo método.</h2>
+      <p data-i18n="serv_sub">Frentes para quem investe, para quem empreende e para quem conhece o território.</p>
+    </div>
+    <div class="serv-grid">
+      <div class="serv-card reveal">
+        <div class="serv-num">S·01</div>
+        <h3 data-i18n="serv1_title">Garimpo sob tese</h3>
+        <p data-i18n="serv1_body">Busca contínua de oportunidades contra uma tese ativa. Curadoria proativa, relatório de inteligência do território e alinhamento mensal com a corporação.</p>
+        <div class="serv-para" data-i18n="serv1_para">Para corporates e veículos de investimento</div>
+      </div>
+      <div class="serv-card reveal">
+        <div class="serv-num">S·02</div>
+        <h3 data-i18n="serv2_title">Triagem de deal flow</h3>
+        <p data-i18n="serv2_body">Leitura do fluxo que já chega à corporação: cada oportunidade recebida volta com dossiê, GEMA Score e veredito contra a tese. O funil encurta sem perder sinal.</p>
+        <div class="serv-para" data-i18n="serv2_para">Para corporates e veículos de investimento</div>
+      </div>
+      <div class="serv-card reveal">
+        <div class="serv-num">S·03</div>
+        <h3 data-i18n="serv3_title">Lapidação</h3>
+        <p data-i18n="serv3_body">Preparação de startups com potencial: narrativa de captação, organização de dataroom e prontidão para conversar com investidor estratégico.</p>
+        <div class="serv-para" data-i18n="serv3_para">Para startups em rota de captação</div>
+      </div>
+      <div class="serv-card reveal">
+        <div class="serv-num">S·04</div>
+        <h3 data-i18n="serv4_title">Academy</h3>
+        <p data-i18n="serv4_body">Formação e certificação de olheiros no método GEMA. Quem conclui ganha acesso à plataforma, às teses ativas e à rede.</p>
+        <div class="serv-para" data-i18n="serv4_para">Para profissionais de ecossistema</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INFRA ============ -->
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="mono" data-i18n="infra_eyebrow">Infraestrutura</span>
+      <h2 data-i18n="infra_title">A confiança é humana. Todo o resto é plataforma.</h2>
+    </div>
+    <div class="infra-grid">
+      <div class="infra-card reveal">
+        <span class="mono" data-i18n="infra1_tag">Atribuição registrada</span>
+        <p data-i18n="infra1_body">Cada introdução recebe <strong>carimbo de tempo imutável</strong>. Janela de 12 meses protegida por contrato, válida mesmo quando o deal fecha meses depois da introdução.</p>
+      </div>
+      <div class="infra-card reveal">
+        <span class="mono" data-i18n="infra2_tag">Dossiê assistido por IA</span>
+        <p data-i18n="infra2_body">Enriquecimento automático de dados públicos e primeira triagem contra a tese. <strong>O julgamento permanece humano.</strong></p>
+      </div>
+      <div class="infra-card reveal">
+        <span class="mono" data-i18n="infra3_tag">Feedback obrigatório</span>
+        <p data-i18n="infra3_body">Cada gema recusada volta com devolutiva documentada. <strong>A pontaria do olheiro melhora a cada rodada</strong> e a tese fica mais nítida para os dois lados.</p>
+      </div>
+      <div class="infra-card reveal">
+        <span class="mono" data-i18n="infra4_tag">Comissões em escrow</span>
+        <p data-i18n="infra4_body">Fee por aprovação e success fee fluem pela plataforma, com regras claras de split. <strong>Entregou, recebeu.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ACADEMY ============ -->
+<section class="academy-section" id="academy">
+  <div class="wrap academy-band">
+    <div class="band-text reveal">
+      <span class="mono" style="color: var(--terracota); display: block; margin-bottom: 16px;" data-i18n="acad_eyebrow">Garimpo Academy</span>
+      <h2 data-i18n="acad_title">O ofício de olheiro <em>se ensina.</em></h2>
+      <p data-i18n="acad_body">A certificação forma profissionais na engenharia de crescimento aplicada à originação de negócios. O método GEMA organiza as quatro competências de um Chief Growth Officer em campo: inteligência de território, qualificação de oportunidades, relacionamento de ciclo longo e fechamento com narrativa. Quem conclui ganha acesso à plataforma e à rede.</p>
+      <a href="#" class="btn btn-primary" data-i18n="acad_cta">Entrar na lista da primeira turma</a>
+    </div>
+    <ul class="academy-list reveal">
+      <li data-i18n="acad_li1">Inteligência de território: leitura de ecossistema e mapeamento contra tese</li>
+      <li data-i18n="acad_li2">Qualificação de oportunidades: time, estágio, riscos e economics do negócio</li>
+      <li data-i18n="acad_li3">Relacionamento de ciclo longo: contas-chave, timing e introduções com consentimento</li>
+      <li data-i18n="acad_li4">Narrativa e fechamento: o dossiê como documento de decisão e a negociação de termos</li>
+      <li data-i18n="acad_li5">Ética de originação, atribuição e a construção do seu próprio funil de olheiro</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap footer-inner">
+    <div class="footer-logo"><span class="logo-gem"></span>GARIMPO</div>
+    <span class="mono" data-i18n="footer_tag">Originação com método · uma tese em construção · Porto Alegre, 2026</span>
+  </div>
+</footer>
+
+<script>
+// ============ I18N ============
+const T = {
+  pt: {
+    nav_como: "Como funciona", nav_diag: "Autodiagnóstico", nav_res: "Resultados", nav_servicos: "Serviços", nav_academy: "Academy", nav_cta: "Cadastrar tese",
+    hero_eyebrow: "Plataforma de originação · Brasil & Latam",
+    hero_title: "Boas oportunidades nascem de quem conhece <em>o território.</em>",
+    hero_sub: "O GARIMPO conecta teses de investimento corporativo a olheiros certificados. Deal flow qualificado, com camada de inteligência para construção de fit, análise estruturada e atribuição registrada.",
+    hero_cta1: "Tenho uma tese de investimento", hero_cta2: "Tenho uma startup",
+    ledger_1: "<strong>1</strong> tese ativa em garimpo", ledger_2: "<strong>GEMA</strong> · método proprietário", ledger_stamp: "REG · OPERAÇÃO EM CAMPO · 2026",
+    lados_eyebrow: "O problema, visto dos dois lados",
+    lados_title: "Tese sem território rende pouco. Território sem canal rende nada.",
+    lado1_tag: "Para quem investe",
+    lado1_title: "A tese existe. O funil ainda depende de quem está no território.",
+    lado1_body: "Montar um time local de originação custa caro e demora. O GARIMPO coloca olheiros certificados em campo, com a sua tese como bússola e remuneração por entrega.",
+    lado2_tag: "Para quem conhece o território",
+    lado2_title: "O network existe. Falta um canal que transforme repertório em receita.",
+    lado2_body: "Anos de ecossistema geram relacionamentos e leitura fina de negócios. A plataforma entrega tese clara, método, atribuição protegida e pagamento por gema aprovada.",
+    como_eyebrow: "Como funciona",
+    como_title: "Da tese à gema, com inteligência em cada passo.",
+    como_sub: "Todo lead chega estruturado: a análise conecta cada oportunidade à tese da corporação antes da introdução acontecer.",
+    step1_tag: "Passo 01", step1_title: "Tese estruturada",
+    step1_body: "A empresa cadastra setores, estágio, ticket, alavancas e critérios vedados. A tese vira um documento vivo e verificável.",
+    step2_tag: "Passo 02", step2_title: "Garimpo em campo",
+    step2_body: "Olheiros certificados mapeiam o território, ativam relacionamentos reais e filtram cada sinal contra a tese.",
+    step3_tag: "Passo 03 · o diferencial", step3_title: "Análise conectada à tese",
+    step3_body: "Cada lead chega com dossiê estruturado: fit, time, estágio e riscos lidos contra a tese da corporação. IA enriquece os dados, o julgamento permanece humano.",
+    step4_tag: "Passo 04", step4_title: "Introdução registrada",
+    step4_body: "Gema aprovada recebe introdução formal com carimbo de tempo. Recusas voltam com devolutiva documentada.",
+    metodo_eyebrow: "O método",
+    metodo_title: "GEMA: o ofício do olheiro em quatro movimentos.",
+    metodo_sub: "O método nasceu em campo e organiza o trabalho que separa uma introdução qualificada de um contato solto.",
+    g_title: "Garimpar", g_body: "Mapear o território contra a tese. Fontes vivas, comunidades, eventos e sinais de captação.",
+    e_title: "Examinar", e_body: "Analisar fit, time, estágio e riscos. O dossiê nasce aqui, com julgamento humano.",
+    m_title: "Maturar", m_body: "Aquecer o relacionamento antes da captação. Introdução com contexto e consentimento.",
+    a_title: "Apresentar", a_body: "Dossiê, score e introdução formal com carimbo de tempo. A atribuição de 12 meses começa aqui.",
+    score_eyebrow: "Autodiagnóstico · para startups",
+    score_title: "Sua startup é uma gema?",
+    score_sub: "As mesmas quatro dimensões que os olheiros usam na bancada. Leia a tese ativa abaixo e avalie sua startup contra ela.",
+    tese_tag: "Tese ativa · T·001",
+    tese_title: "Grupo industrial alemão · corporate venturing",
+    tese_set_label: "Setores buscados",
+    tese_set_body: "Instrumentação e sensores industriais, energia e novos materiais, tecnologia para indústria de processo.",
+    tese_est_label: "Estágio e ticket",
+    tese_est_body: "Co-criação early-stage com time estruturado ou venture em captação ativa. Ticket de €150 mil a €1 milhão.",
+    tese_alav_label: "Alavanca oferecida",
+    tese_alav_body: "Internacionalização via matriz global, conhecimento técnico acumulado e alcance industrial em mais de 30 países.",
+    tese_ved_label: "Fora da tese",
+    tese_ved_body: "Ideias sem time dedicado por trás e negócios sem conexão com o universo industrial.",
+    tese_nota: "Cada corporação escolhe o nível de exposição do seu cartão de tese: aberto, anônimo ou visível apenas para olheiros certificados.",
+    dim1: "Fit com a tese T·001",
+    fit_c1: "Atuo em um dos setores que a tese busca",
+    fit_c2: "Meu estágio corresponde ao que a tese descreve",
+    fit_c3: "Minha captação está na faixa de ticket da tese",
+    fit_c4: "Estou fora dos critérios vedados",
+    dim2: "Maturidade do time", dim2_note: "Fundadores complementares, estruturados e dedicados",
+    dim3: "Estágio de captação", dim3_note: "Rodada ativa ou planejada, com espaço no cap table",
+    dim4: "Alavanca estratégica", dim4_note: "Um investidor com alcance industrial e internacionalização aceleraria seu negócio",
+    verdicts: [
+      { v: "Cascalho", d: "Ainda fora das teses ativas. Cadastre sua startup no radar e receba um sinal quando surgir fit." },
+      { v: "Bruta", d: "Potencial real, com pontos a desenvolver. A Lapidação prepara sua startup para o investidor estratégico." },
+      { v: "Gema", d: "Pronta para apresentação. Cadastre sua startup e um olheiro conduz o dossiê e a introdução." },
+      { v: "Gema rara", d: "Perfil prioritário para as teses ativas. Queremos conhecer sua startup agora." }
+    ],
+    score_cta: "Cadastrar minha startup no radar",
+    res_eyebrow: "Resultados do garimpo",
+    res_title: "O que o garimpo já colocou na bancada.",
+    res1_label: "tese ativa em garimpo",
+    res2_label: "oportunidades mapeadas no território",
+    res3_label: "gemas em preparação para apresentação",
+    res4_label: "negócios em análise pela tese",
+    res_note: "Painel atualizado a cada ciclo mensal de alinhamento.",
+    serv_eyebrow: "Serviços",
+    serv_title: "Quatro frentes, um mesmo método.",
+    serv_sub: "Frentes para quem investe, para quem empreende e para quem conhece o território.",
+    serv1_title: "Garimpo sob tese",
+    serv1_body: "Busca contínua de oportunidades contra uma tese ativa. Curadoria proativa, relatório de inteligência do território e alinhamento mensal com a corporação.",
+    serv1_para: "Para corporates e veículos de investimento",
+    serv2_title: "Triagem de deal flow",
+    serv2_body: "Leitura do fluxo que já chega à corporação: cada oportunidade recebida volta com dossiê, GEMA Score e veredito contra a tese. O funil encurta sem perder sinal.",
+    serv2_para: "Para corporates e veículos de investimento",
+    serv3_title: "Lapidação",
+    serv3_body: "Preparação de startups com potencial: narrativa de captação, organização de dataroom e prontidão para conversar com investidor estratégico.",
+    serv3_para: "Para startups em rota de captação",
+    serv4_title: "Academy",
+    serv4_body: "Formação e certificação de olheiros no método GEMA. Quem conclui ganha acesso à plataforma, às teses ativas e à rede.",
+    serv4_para: "Para profissionais de ecossistema",
+    infra_eyebrow: "Infraestrutura",
+    infra_title: "A confiança é humana. Todo o resto é plataforma.",
+    infra1_tag: "Atribuição registrada",
+    infra1_body: "Cada introdução recebe <strong>carimbo de tempo imutável</strong>. Janela de 12 meses protegida por contrato, válida mesmo quando o deal fecha meses depois da introdução.",
+    infra2_tag: "Dossiê assistido por IA",
+    infra2_body: "Enriquecimento automático de dados públicos e primeira triagem contra a tese. <strong>O julgamento permanece humano.</strong>",
+    infra3_tag: "Feedback obrigatório",
+    infra3_body: "Cada gema recusada volta com devolutiva documentada. <strong>A pontaria do olheiro melhora a cada rodada</strong> e a tese fica mais nítida para os dois lados.",
+    infra4_tag: "Comissões em escrow",
+    infra4_body: "Fee por aprovação e success fee fluem pela plataforma, com regras claras de split. <strong>Entregou, recebeu.</strong>",
+    acad_eyebrow: "Garimpo Academy",
+    acad_title: "O ofício de olheiro <em>se ensina.</em>",
+    acad_body: "A certificação forma profissionais na engenharia de crescimento aplicada à originação de negócios. O método GEMA organiza as quatro competências de um Chief Growth Officer em campo: inteligência de território, qualificação de oportunidades, relacionamento de ciclo longo e fechamento com narrativa. Quem conclui ganha acesso à plataforma e à rede.",
+    acad_cta: "Entrar na lista da primeira turma",
+    acad_li1: "Inteligência de território: leitura de ecossistema e mapeamento contra tese",
+    acad_li2: "Qualificação de oportunidades: time, estágio, riscos e economics do negócio",
+    acad_li3: "Relacionamento de ciclo longo: contas-chave, timing e introduções com consentimento",
+    acad_li4: "Narrativa e fechamento: o dossiê como documento de decisão e a negociação de termos",
+    acad_li5: "Ética de originação, atribuição e a construção do seu próprio funil de olheiro",
+    footer_tag: "Originação com método · uma tese em construção · Porto Alegre, 2026"
+  },
+  en: {
+    nav_como: "How it works", nav_diag: "Self-assessment", nav_res: "Results", nav_servicos: "Services", nav_academy: "Academy", nav_cta: "Register a thesis",
+    hero_eyebrow: "Origination platform · Brazil & Latam",
+    hero_title: "Good opportunities are born from those who know <em>the territory.</em>",
+    hero_sub: "GARIMPO connects corporate investment theses to certified scouts. Qualified deal flow, with an intelligence layer that builds fit, structured analysis and registered attribution.",
+    hero_cta1: "I have an investment thesis", hero_cta2: "I have a startup",
+    ledger_1: "<strong>1</strong> active thesis in the field", ledger_2: "<strong>GEMA</strong> · proprietary method", ledger_stamp: "REG · FIELD OPERATION · 2026",
+    lados_eyebrow: "The problem, seen from both sides",
+    lados_title: "A thesis without territory yields little. Territory without a channel yields nothing.",
+    lado1_tag: "For investors",
+    lado1_title: "The thesis exists. The funnel still depends on who is in the territory.",
+    lado1_body: "Building a local origination team is expensive and slow. GARIMPO puts certified scouts in the field, with your thesis as compass and pay per delivery.",
+    lado2_tag: "For those who know the territory",
+    lado2_title: "The network exists. What is missing is a channel that turns repertoire into revenue.",
+    lado2_body: "Years in the ecosystem build relationships and a fine read on businesses. The platform provides a clear thesis, method, protected attribution and payment per approved gem.",
+    como_eyebrow: "How it works",
+    como_title: "From thesis to gem, with intelligence at every step.",
+    como_sub: "Every lead arrives structured: analysis connects each opportunity to the corporation's thesis before any introduction happens.",
+    step1_tag: "Step 01", step1_title: "Structured thesis",
+    step1_body: "The company registers sectors, stage, ticket, leverage points and excluded criteria. The thesis becomes a living, verifiable document.",
+    step2_tag: "Step 02", step2_title: "Scouting in the field",
+    step2_body: "Certified scouts map the territory, activate real relationships and filter every signal against the thesis.",
+    step3_tag: "Step 03 · the differentiator", step3_title: "Analysis connected to the thesis",
+    step3_body: "Every lead arrives with a structured dossier: fit, team, stage and risks read against the corporation's thesis. AI enriches the data, judgment remains human.",
+    step4_tag: "Step 04", step4_title: "Registered introduction",
+    step4_body: "An approved gem receives a formal introduction with a timestamp. Rejections return with documented feedback.",
+    metodo_eyebrow: "The method",
+    metodo_title: "GEMA: the scout's craft in four movements.",
+    metodo_sub: "The method was born in the field and organizes the work that separates a qualified introduction from a loose contact.",
+    g_title: "Garimpar · Prospect", g_body: "Map the territory against the thesis. Live sources, communities, events and fundraising signals.",
+    e_title: "Examinar · Examine", e_body: "Analyze fit, team, stage and risks. The dossier is born here, with human judgment.",
+    m_title: "Maturar · Mature", m_body: "Warm the relationship before the raise. Introductions with context and consent.",
+    a_title: "Apresentar · Present", a_body: "Dossier, score and formal introduction with a timestamp. The 12-month attribution starts here.",
+    score_eyebrow: "Self-assessment · for startups",
+    score_title: "Is your startup a gem?",
+    score_sub: "The same four dimensions scouts use at the bench. Read the active thesis below and assess your startup against it.",
+    tese_tag: "Active thesis · T·001",
+    tese_title: "German industrial group · corporate venturing",
+    tese_set_label: "Sectors sought",
+    tese_set_body: "Industrial instrumentation and sensors, energy and new materials, technology for the process industry.",
+    tese_est_label: "Stage and ticket",
+    tese_est_body: "Early-stage co-creation with a structured team or a venture in active fundraising. Ticket from €150k to €1M.",
+    tese_alav_label: "Leverage offered",
+    tese_alav_body: "Internationalization via a global parent, accumulated technical knowledge and industrial reach in 30+ countries.",
+    tese_ved_label: "Outside the thesis",
+    tese_ved_body: "Ideas without a dedicated team behind them and businesses with no connection to the industrial universe.",
+    tese_nota: "Each corporation chooses the exposure level of its thesis card: open, anonymous or visible only to certified scouts.",
+    dim1: "Fit with thesis T·001",
+    fit_c1: "I operate in one of the sectors the thesis seeks",
+    fit_c2: "My stage matches what the thesis describes",
+    fit_c3: "My fundraising is within the thesis ticket range",
+    fit_c4: "I am outside the excluded criteria",
+    dim2: "Team maturity", dim2_note: "Complementary, structured and dedicated founders",
+    dim3: "Fundraising stage", dim3_note: "Active or planned round, with room on the cap table",
+    dim4: "Strategic leverage", dim4_note: "An investor with industrial reach and internationalization would accelerate your business",
+    verdicts: [
+      { v: "Gravel", d: "Outside active theses for now. Register your startup on the radar and get a signal when fit appears." },
+      { v: "Rough", d: "Real potential, with points to develop. Cutting & polishing prepares your startup for the strategic investor." },
+      { v: "Gem", d: "Ready for presentation. Register your startup and a scout leads the dossier and the introduction." },
+      { v: "Rare gem", d: "Priority profile for active theses. We want to meet your startup now." }
+    ],
+    score_cta: "Register my startup on the radar",
+    res_eyebrow: "Field results",
+    res_title: "What the field has already placed on the bench.",
+    res1_label: "active thesis in the field",
+    res2_label: "opportunities mapped in the territory",
+    res3_label: "gems in preparation for presentation",
+    res4_label: "businesses under review by the thesis",
+    res_note: "Dashboard updated at each monthly alignment cycle.",
+    serv_eyebrow: "Services",
+    serv_title: "Four fronts, one method.",
+    serv_sub: "Fronts for investors, for founders and for those who know the territory.",
+    serv1_title: "Thesis-driven scouting",
+    serv1_body: "Continuous search for opportunities against an active thesis. Proactive curation, territory intelligence report and monthly alignment with the corporation.",
+    serv1_para: "For corporates and investment vehicles",
+    serv2_title: "Deal flow screening",
+    serv2_body: "A read on the flow the corporation already receives: every inbound opportunity returns with a dossier, GEMA Score and a verdict against the thesis. The funnel shortens without losing signal.",
+    serv2_para: "For corporates and investment vehicles",
+    serv3_title: "Cutting & polishing",
+    serv3_body: "Preparing high-potential startups: fundraising narrative, dataroom organization and readiness to talk to a strategic investor.",
+    serv3_para: "For startups on a fundraising path",
+    serv4_title: "Academy",
+    serv4_body: "Training and certification of scouts in the GEMA method. Graduates gain access to the platform, active theses and the network.",
+    serv4_para: "For ecosystem professionals",
+    infra_eyebrow: "Infrastructure",
+    infra_title: "Trust is human. Everything else is platform.",
+    infra1_tag: "Registered attribution",
+    infra1_body: "Every introduction receives an <strong>immutable timestamp</strong>. A 12-month window protected by contract, valid even when the deal closes months after the introduction.",
+    infra2_tag: "AI-assisted dossier",
+    infra2_body: "Automatic enrichment of public data and first screening against the thesis. <strong>Judgment remains human.</strong>",
+    infra3_tag: "Mandatory feedback",
+    infra3_body: "Every rejected gem returns with documented feedback. <strong>The scout's aim improves every round</strong> and the thesis gets sharper for both sides.",
+    infra4_tag: "Commissions in escrow",
+    infra4_body: "Approval fees and success fees flow through the platform, with clear split rules. <strong>Delivered, paid.</strong>",
+    acad_eyebrow: "Garimpo Academy",
+    acad_title: "The scout's craft <em>can be taught.</em>",
+    acad_body: "Certification trains professionals in growth engineering applied to deal origination. The GEMA method organizes the four field competencies of a Chief Growth Officer: territory intelligence, opportunity qualification, long-cycle relationships and narrative-driven closing. Graduates gain access to the platform and the network.",
+    acad_cta: "Join the first cohort's list",
+    acad_li1: "Territory intelligence: ecosystem reading and thesis-driven mapping",
+    acad_li2: "Opportunity qualification: team, stage, risks and business economics",
+    acad_li3: "Long-cycle relationships: key accounts, timing and consent-based introductions",
+    acad_li4: "Narrative and closing: the dossier as a decision document and term negotiation",
+    acad_li5: "Origination ethics, attribution and building your own scout funnel",
+    footer_tag: "Origination with method · a thesis under construction · Porto Alegre, 2026"
+  },
+  es: {
+    nav_como: "Cómo funciona", nav_diag: "Autodiagnóstico", nav_res: "Resultados", nav_servicos: "Servicios", nav_academy: "Academy", nav_cta: "Registrar tesis",
+    hero_eyebrow: "Plataforma de originación · Brasil & Latam",
+    hero_title: "Las buenas oportunidades nacen de quien conoce <em>el territorio.</em>",
+    hero_sub: "GARIMPO conecta tesis de inversión corporativa con ojeadores certificados. Deal flow calificado, con capa de inteligencia para construir fit, análisis estructurado y atribución registrada.",
+    hero_cta1: "Tengo una tesis de inversión", hero_cta2: "Tengo una startup",
+    ledger_1: "<strong>1</strong> tesis activa en campo", ledger_2: "<strong>GEMA</strong> · método propietario", ledger_stamp: "REG · OPERACIÓN EN CAMPO · 2026",
+    lados_eyebrow: "El problema, visto desde ambos lados",
+    lados_title: "Una tesis sin territorio rinde poco. Un territorio sin canal no rinde nada.",
+    lado1_tag: "Para quien invierte",
+    lado1_title: "La tesis existe. El funnel todavía depende de quién está en el territorio.",
+    lado1_body: "Montar un equipo local de originación cuesta caro y demora. GARIMPO pone ojeadores certificados en campo, con su tesis como brújula y pago por entrega.",
+    lado2_tag: "Para quien conoce el territorio",
+    lado2_title: "La red existe. Falta un canal que convierta repertorio en ingresos.",
+    lado2_body: "Años de ecosistema generan relaciones y lectura fina de negocios. La plataforma entrega tesis clara, método, atribución protegida y pago por gema aprobada.",
+    como_eyebrow: "Cómo funciona",
+    como_title: "De la tesis a la gema, con inteligencia en cada paso.",
+    como_sub: "Todo lead llega estructurado: el análisis conecta cada oportunidad con la tesis de la corporación antes de que ocurra la introducción.",
+    step1_tag: "Paso 01", step1_title: "Tesis estructurada",
+    step1_body: "La empresa registra sectores, etapa, ticket, palancas y criterios vedados. La tesis se convierte en un documento vivo y verificable.",
+    step2_tag: "Paso 02", step2_title: "Búsqueda en campo",
+    step2_body: "Ojeadores certificados mapean el territorio, activan relaciones reales y filtran cada señal contra la tesis.",
+    step3_tag: "Paso 03 · el diferencial", step3_title: "Análisis conectado a la tesis",
+    step3_body: "Cada lead llega con dossier estructurado: fit, equipo, etapa y riesgos leídos contra la tesis de la corporación. La IA enriquece los datos, el juicio permanece humano.",
+    step4_tag: "Paso 04", step4_title: "Introducción registrada",
+    step4_body: "La gema aprobada recibe introducción formal con sello de tiempo. Los rechazos vuelven con devolución documentada.",
+    metodo_eyebrow: "El método",
+    metodo_title: "GEMA: el oficio del ojeador en cuatro movimientos.",
+    metodo_sub: "El método nació en campo y organiza el trabajo que separa una introducción calificada de un contacto suelto.",
+    g_title: "Garimpar · Prospectar", g_body: "Mapear el territorio contra la tesis. Fuentes vivas, comunidades, eventos y señales de levantamiento.",
+    e_title: "Examinar", e_body: "Analizar fit, equipo, etapa y riesgos. El dossier nace aquí, con juicio humano.",
+    m_title: "Maturar · Madurar", m_body: "Calentar la relación antes del levantamiento. Introducción con contexto y consentimiento.",
+    a_title: "Apresentar · Presentar", a_body: "Dossier, score e introducción formal con sello de tiempo. La atribución de 12 meses comienza aquí.",
+    score_eyebrow: "Autodiagnóstico · para startups",
+    score_title: "¿Tu startup es una gema?",
+    score_sub: "Las mismas cuatro dimensiones que los ojeadores usan en el banco. Lee la tesis activa abajo y evalúa tu startup contra ella.",
+    tese_tag: "Tesis activa · T·001",
+    tese_title: "Grupo industrial alemán · corporate venturing",
+    tese_set_label: "Sectores buscados",
+    tese_set_body: "Instrumentación y sensores industriales, energía y nuevos materiales, tecnología para la industria de proceso.",
+    tese_est_label: "Etapa y ticket",
+    tese_est_body: "Co-creación early-stage con equipo estructurado o venture en levantamiento activo. Ticket de €150 mil a €1 millón.",
+    tese_alav_label: "Palanca ofrecida",
+    tese_alav_body: "Internacionalización vía matriz global, conocimiento técnico acumulado y alcance industrial en más de 30 países.",
+    tese_ved_label: "Fuera de la tesis",
+    tese_ved_body: "Ideas sin equipo dedicado detrás y negocios sin conexión con el universo industrial.",
+    tese_nota: "Cada corporación elige el nivel de exposición de su tarjeta de tesis: abierta, anónima o visible solo para ojeadores certificados.",
+    dim1: "Fit con la tesis T·001",
+    fit_c1: "Actúo en uno de los sectores que la tesis busca",
+    fit_c2: "Mi etapa corresponde a lo que la tesis describe",
+    fit_c3: "Mi levantamiento está en el rango de ticket de la tesis",
+    fit_c4: "Estoy fuera de los criterios vedados",
+    dim2: "Madurez del equipo", dim2_note: "Fundadores complementarios, estructurados y dedicados",
+    dim3: "Etapa de levantamiento", dim3_note: "Ronda activa o planeada, con espacio en el cap table",
+    dim4: "Palanca estratégica", dim4_note: "Un inversor con alcance industrial e internacionalización aceleraría tu negocio",
+    verdicts: [
+      { v: "Cascajo", d: "Fuera de las tesis activas por ahora. Registra tu startup en el radar y recibe una señal cuando surja fit." },
+      { v: "En bruto", d: "Potencial real, con puntos por desarrollar. La Lapidación prepara tu startup para el inversor estratégico." },
+      { v: "Gema", d: "Lista para presentación. Registra tu startup y un ojeador conduce el dossier y la introducción." },
+      { v: "Gema rara", d: "Perfil prioritario para las tesis activas. Queremos conocer tu startup ahora." }
+    ],
+    score_cta: "Registrar mi startup en el radar",
+    res_eyebrow: "Resultados de campo",
+    res_title: "Lo que el campo ya puso en el banco.",
+    res1_label: "tesis activa en campo",
+    res2_label: "oportunidades mapeadas en el territorio",
+    res3_label: "gemas en preparación para presentación",
+    res4_label: "negocios en análisis por la tesis",
+    res_note: "Panel actualizado en cada ciclo mensual de alineación.",
+    serv_eyebrow: "Servicios",
+    serv_title: "Cuatro frentes, un mismo método.",
+    serv_sub: "Frentes para quien invierte, para quien emprende y para quien conoce el territorio.",
+    serv1_title: "Búsqueda bajo tesis",
+    serv1_body: "Búsqueda continua de oportunidades contra una tesis activa. Curaduría proactiva, informe de inteligencia del territorio y alineación mensual con la corporación.",
+    serv1_para: "Para corporates y vehículos de inversión",
+    serv2_title: "Triaje de deal flow",
+    serv2_body: "Lectura del flujo que ya llega a la corporación: cada oportunidad recibida vuelve con dossier, GEMA Score y veredicto contra la tesis. El funnel se acorta sin perder señal.",
+    serv2_para: "Para corporates y vehículos de inversión",
+    serv3_title: "Lapidación",
+    serv3_body: "Preparación de startups con potencial: narrativa de levantamiento, organización de dataroom y preparación para conversar con un inversor estratégico.",
+    serv3_para: "Para startups en ruta de levantamiento",
+    serv4_title: "Academy",
+    serv4_body: "Formación y certificación de ojeadores en el método GEMA. Quien concluye gana acceso a la plataforma, a las tesis activas y a la red.",
+    serv4_para: "Para profesionales de ecosistema",
+    infra_eyebrow: "Infraestructura",
+    infra_title: "La confianza es humana. Todo lo demás es plataforma.",
+    infra1_tag: "Atribución registrada",
+    infra1_body: "Cada introducción recibe un <strong>sello de tiempo inmutable</strong>. Ventana de 12 meses protegida por contrato, válida incluso cuando el deal cierra meses después de la introducción.",
+    infra2_tag: "Dossier asistido por IA",
+    infra2_body: "Enriquecimiento automático de datos públicos y primer filtrado contra la tesis. <strong>El juicio permanece humano.</strong>",
+    infra3_tag: "Feedback obligatorio",
+    infra3_body: "Cada gema rechazada vuelve con devolución documentada. <strong>La puntería del ojeador mejora en cada ronda</strong> y la tesis se vuelve más nítida para ambos lados.",
+    infra4_tag: "Comisiones en escrow",
+    infra4_body: "Fee por aprobación y success fee fluyen por la plataforma, con reglas claras de split. <strong>Entregó, cobró.</strong>",
+    acad_eyebrow: "Garimpo Academy",
+    acad_title: "El oficio de ojeador <em>se enseña.</em>",
+    acad_body: "La certificación forma profesionales en ingeniería de crecimiento aplicada a la originación de negocios. El método GEMA organiza las cuatro competencias de campo de un Chief Growth Officer: inteligencia de territorio, calificación de oportunidades, relaciones de ciclo largo y cierre con narrativa. Quien concluye gana acceso a la plataforma y a la red.",
+    acad_cta: "Entrar a la lista de la primera cohorte",
+    acad_li1: "Inteligencia de territorio: lectura de ecosistema y mapeo contra tesis",
+    acad_li2: "Calificación de oportunidades: equipo, etapa, riesgos y economics del negocio",
+    acad_li3: "Relaciones de ciclo largo: cuentas clave, timing e introducciones con consentimiento",
+    acad_li4: "Narrativa y cierre: el dossier como documento de decisión y la negociación de términos",
+    acad_li5: "Ética de originación, atribución y la construcción de tu propio funnel de ojeador",
+    footer_tag: "Originación con método · una tesis en construcción · Porto Alegre, 2026"
+  }
+};
+
+let currentLang = 'pt';
+
+function applyLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang === 'pt' ? 'pt-BR' : (lang === 'en' ? 'en' : 'es');
+  const dict = T[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key] !== undefined) el.innerHTML = dict[key];
+  });
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-lang') === lang);
+  });
+  updateScore();
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyLang(btn.getAttribute('data-lang')));
+});
+
+// ============ GEMA SCORE ============
+const sliders = {
+  time: document.getElementById('s-time'),
+  estagio: document.getElementById('s-estagio'),
+  alavanca: document.getElementById('s-alavanca')
+};
+const fitBoxes = ['fc1','fc2','fc3','fc4'].map(id => document.getElementById(id));
+const values = {
+  fit: document.getElementById('v-fit'),
+  time: document.getElementById('v-time'),
+  estagio: document.getElementById('v-estagio'),
+  alavanca: document.getElementById('v-alavanca')
+};
+const scoreNum = document.getElementById('score-num');
+const scoreVerdict = document.getElementById('score-verdict');
+const scoreDesc = document.getElementById('score-desc');
+const facets = ['f1','f2','f3','f4','f5','f6'].map(id => document.getElementById(id));
+
+function verdictFor(score) {
+  const v = T[currentLang].verdicts;
+  if (score < 40) return v[0];
+  if (score < 70) return v[1];
+  if (score < 85) return v[2];
+  return v[3];
+}
+
+function updateScore() {
+  const f = fitBoxes.filter(b => b.checked).length * 25;
+  const t = +sliders.time.value,
+        e = +sliders.estagio.value, a = +sliders.alavanca.value;
+  values.fit.textContent = f;
+  values.time.textContent = t;
+  values.estagio.textContent = e;
+  values.alavanca.textContent = a;
+
+  const score = Math.round(0.35*f + 0.25*t + 0.20*e + 0.20*a);
+  scoreNum.textContent = score;
+
+  const { v, d } = verdictFor(score);
+  scoreVerdict.textContent = v;
+  scoreDesc.textContent = d;
+
+  facets.forEach((facet, i) => {
+    const threshold = (i + 1) / facets.length;
+    const ratio = score / 100;
+    const lit = Math.min(Math.max((ratio - (threshold - 1/facets.length)) * facets.length, 0), 1);
+    facet.setAttribute('fill-opacity', (0.08 + lit * 0.92).toFixed(2));
+  });
+}
+
+Object.values(sliders).forEach(s => s.addEventListener('input', updateScore));
+fitBoxes.forEach(b => b.addEventListener('change', updateScore));
+
+// ============ REVEAL ============
+const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (!prefersReduced && 'IntersectionObserver' in window) {
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) { en.target.classList.add('visible'); io.unobserve(en.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+} else {
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+}
+
+// init
+applyLang('pt');
+updateScore();
+</script>
+
+</body>
+</html>
